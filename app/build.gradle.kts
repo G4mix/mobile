@@ -32,6 +32,7 @@ android {
 }
 
 dependencies {
+    implementation (libs.android.async.http)
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
