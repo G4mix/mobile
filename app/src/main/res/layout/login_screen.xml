@@ -135,7 +135,7 @@
         app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/loginButton"
         android:layout_width="307dp"
         android:layout_height="48dp"
         android:layout_marginStart="25dp"
@@ -162,7 +162,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button3" />
+        app:layout_constraintTop_toBottomOf="@+id/loginButton" />
 
     <LinearLayout
         android:id="@+id/linearLayout2"

@@ -25,7 +25,7 @@ public class Register extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-         btnLogin = findViewById(R.id.button);
+         btnLogin = findViewById(R.id.registerButton);
          txtLogin = findViewById(R.id.textView8);
         passwordInput = findViewById(R.id.passwordInput);
         checkUppercase = findViewById(R.id.imageView10);
