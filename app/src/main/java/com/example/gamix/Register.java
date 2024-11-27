@@ -44,7 +44,6 @@ public class Register extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-         btnLogin = findViewById(R.id.registerButton);
          txtLogin = findViewById(R.id.textView8);
         // Ligação dos componentes do layout
         usernameInput = findViewById(R.id.usernameInput);
@@ -56,7 +55,7 @@ public class Register extends AppCompatActivity {
         checkSpecial = findViewById(R.id.imageView12);
         checkLength = findViewById(R.id.imageView13);
         validationTable = findViewById(R.id.validationTable);
-        btnRegister = findViewById(R.id.button);
+        btnRegister = findViewById(R.id.registerButton);
         txtLogin = findViewById(R.id.textView8);
         termsCheckbox = findViewById(R.id.checkBox);
 
@@ -158,31 +157,25 @@ public class Register extends AppCompatActivity {
         client.post(this, url, entity, "application/json", new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                if (statusCode == 200) {
-                    try {
-
-                        String response = new String(responseBody);
-                        JSONObject jsonResponse = new JSONObject(response);
-
-                        if (jsonResponse.has("accessToken")) {
-                            String accessToken = jsonResponse.getString("accessToken");
-
-                            getSharedPreferences("AppPrefs", MODE_PRIVATE)
-                                    .edit()
-                                    .putString("accessToken", accessToken)
-                                    .apply();
-
-                            Toast.makeText(Register.this, "Registro bem-sucedido! Token salvo.", Toast.LENGTH_SHORT).show();
-
-                            Intent intent = new Intent(Register.this, Login.class);
-                            startActivity(intent);
-                            finish();
-                        } else {
-                            Toast.makeText(Register.this, "Token não recebido!", Toast.LENGTH_SHORT).show();
+                if (statusCode == 201) {
+                    String token = null;
+                    for (Header header : headers) {
+                        if (header.getName().equalsIgnoreCase("Authorization")) {
+                            token = header.getValue();
+                            break;
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        Toast.makeText(Register.this, "Erro ao processar resposta: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    Toast.makeText(Register.this, "Registro bem-sucedido!", Toast.LENGTH_SHORT).show();
+
+                    if (token != null) {
+                        Intent intent = new Intent(Register.this, Feed.class);
+                        intent.putExtra("accessToken", token);
+
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Toast.makeText(Register.this, "Token não recebido!", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(Register.this, "Erro no registro: " + statusCode, Toast.LENGTH_SHORT).show();

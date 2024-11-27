@@ -36,7 +36,7 @@ public class Login extends AppCompatActivity {
 
             usernameInput = findViewById(R.id.editTextUsername);
             passwordInput = findViewById(R.id.editTextPassword);
-            btnLogin = findViewById(R.id.button3);
+            btnLogin = findViewById(R.id.loginButton);
             textRegister = findViewById(R.id.textView15);
 
             textRegister.setOnClickListener(v -> {
@@ -95,15 +95,9 @@ public class Login extends AppCompatActivity {
                         }
 
                         if (token != null) {
-
-                            getSharedPreferences("AppPrefs", MODE_PRIVATE)
-                                    .edit()
-                                    .putString("accessToken", token)
-                                    .apply();
-
-
                             Intent intent = new Intent(Login.this, Feed.class); 
-                             
+                            intent.putExtra("accessToken", token);
+
                             startActivity(intent);                     
                             finish();
                         } else {
