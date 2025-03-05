@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     padding: 16,
     display: 'flex',
     borderRadius: 8,
-    backgroundColor: Colors['dark'].ultraViolet,
+    backgroundColor: Colors['dark'].majorelleBlue,
     alignItems: 'center',
     justifyContent: 'center',
   }

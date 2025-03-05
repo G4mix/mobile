@@ -7,6 +7,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { isValidEmail, isValidPassword } from '@/constants/validations';
 import { useState } from 'react';
 import { Link } from 'expo-router';
+import Colors from '@/constants/Colors';
 
 export default function LoginScreen() {
   const [isEmailValid, setIsEmailValid] = useState<'valid' | 'invalid' | null>(null)
@@ -41,17 +42,31 @@ export default function LoginScreen() {
           placeholder='Digite uma senha'
           isValid={isPasswordValid}
         />
-        <Text>Esqueci minha senha</Text>
+        <Link href='/auth/forget-password'>
+          <Text style={{color: Colors['light'].tropicalIndigo}}>Esqueci minha senha</Text>
+        </Link>
       </View>
-      <Text>Você também pode entrar com:</Text>
+      <Text style={{color: Colors['light'].russianViolet}}>Você também pode entrar com:</Text>
       <View style={styles.connectionMethodsContainer}>
-        <FontAwesome size={28} name='google' color='#000000' style={{display: 'flex'}} />
-        <FontAwesome size={28} name='linkedin-square' color='#000000' style={{display: 'flex'}} />
-        <FontAwesome size={28} name='github' color='#000000' style={{display: 'flex'}} />
+        <Image
+          source={require('../../assets/images/icons/google.svg')}
+          style={{width: 24, height: 24, opacity: 0.7}}
+        />
+        <Image
+          source={require('../../assets/images/icons/linkedin.svg')}
+          style={{width: 24, height: 24, opacity: 0.7}}
+        />
+        <Image
+          source={require('../../assets/images/icons/github.svg')}
+          style={{width: 24, height: 24, opacity: 0.7}}
+        />
       </View>
 
       <Button>Conectar-se</Button>
-      <Link href='/auth/register'><Text>Ainda não tem uma conta?</Text></Link>
+      <Link href='/auth/register'>
+        <Text style={{color: Colors['light'].russianViolet}}>Ainda não tem uma conta?</Text>
+        <Text style={{color: Colors['light'].tropicalIndigo}}> Criar conta</Text>
+      </Link>
     </View>
   );
 }
@@ -72,11 +87,14 @@ const styles = StyleSheet.create({
   },
   connectionMethodsContainer: {
     flexDirection: 'row',
-    gap: 16
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 32
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
+    color: Colors['light'].russianViolet
   },
   separator: {
     marginVertical: 30,

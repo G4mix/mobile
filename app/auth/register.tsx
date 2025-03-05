@@ -84,7 +84,10 @@ export default function RegisterScreen() {
         <Text>Eu li e concordo com os <Link href='/terms' style={{ color: Colors['light'].majorelleBlue }}>termos e política de privacidade</Link></Text>
       </View>
       <Button>Registrar-se</Button>
-      <Link href='/auth/login'><Text>Já tem uma conta?</Text></Link>
+      <Link href='/auth/login'>
+        <Text style={{color: Colors['light'].russianViolet}}>Já tem uma conta?</Text>
+        <Text style={{color: Colors['light'].tropicalIndigo}}> Entrar</Text>
+      </Link>
     </View>
   );
 }

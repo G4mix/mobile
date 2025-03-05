@@ -17,11 +17,18 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(({ placeholder, ic
   return (
     <View style={[styles.container, isValid === 'valid' ? styles.valid : {}, isValid === 'invalid' ? styles.invalid : {}]}>
       {/* <Text style={styles.text}>{children}</Text> */}
-      <FontAwesome size={28} name={icon} color='#FFFFFF' style={{display: 'flex'}} />
+      <FontAwesome
+        size={24}
+        name={icon}
+        color={
+          isValid === null ? Colors['light'].russianViolet : isValid === 'valid' ? 'green' : 'red' 
+        }
+        style={{display: 'flex', width: 24, height: 24, justifyContent: 'center'}}
+      />
       <TextInput
         placeholder={placeholder}
         style={styles.input}
-        placeholderTextColor={Colors['dark'].text}
+        placeholderTextColor={Colors['light'].russianViolet}
         secureTextEntry={isPasswordInput}
         onChangeText={onChangeText}
         ref={ref as any}
@@ -38,8 +45,9 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
-    backgroundColor: Colors['light'].jet,
+    padding: 12,
+    borderColor: Colors['light'].russianViolet,
+    borderWidth: 1,
     borderRadius: 8,
     gap: 8,
     width: '100%',
@@ -50,12 +58,12 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     minHeight: 0,
     padding: 0,
-    color: Colors['dark'].text
+    color: Colors['light'].russianViolet
   },
   valid: {
-    backgroundColor: 'green'
+    borderColor: 'green',
   },
   invalid: {
-    backgroundColor: 'red'
+    borderColor: 'red',
   }
 })
