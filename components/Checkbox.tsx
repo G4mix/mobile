@@ -1,6 +1,6 @@
 import { CheckBox as CheckboxDefault } from '@rneui/themed';
 import { useState } from 'react';
-import Colors from '@/constants/Colors';
+import Colors from '@/constants/colors';
 
 export const Checkbox = () => {
   const [isChecked, setChecked] = useState(false);

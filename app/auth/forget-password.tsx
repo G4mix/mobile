@@ -3,11 +3,10 @@ import { Image, StyleSheet, View } from 'react-native';
 import { Text } from '@/components/Themed';
 import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { isValidEmail, isValidPassword } from '@/constants/validations';
+import { isValidEmail } from '@/constants/validations';
 import { useState } from 'react';
 import { Link } from 'expo-router';
-import Colors from '@/constants/Colors';
+import Colors from '@/constants/colors';
 
 export default function ForgetPasswordScreen() {
   const [isEmailValid, setIsEmailValid] = useState<'valid' | 'invalid' | null>(null)
@@ -22,7 +21,7 @@ export default function ForgetPasswordScreen() {
       <Text style={styles.title}>Recupere sua conta</Text>
       <Input
         icon='envelope'
-        // label='email'
+        label='E-mail'
         isPasswordInput={false}
         placeholder='Digite seu e-mail aqui'
         onChangeText={validateEmail}

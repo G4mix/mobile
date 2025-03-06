@@ -9,7 +9,9 @@ export default {
     russianViolet: '#1D134D',
     majorelleBlue: '#603DFA',
     tropicalIndigo: '#967FFA',
-    periwinkle: '#D8CEFA'
+    periwinkle: '#D8CEFA',
+    green: '#56D22C',
+    red: '#DF1A1A'
   },
   dark: {
     text: '#FFFFFF',
@@ -21,6 +23,8 @@ export default {
     russianViolet: '#1D134D',
     majorelleBlue: '#603DFA',
     tropicalIndigo: '#967FFA',
-    periwinkle: '#D8CEFA'
+    periwinkle: '#D8CEFA',
+    green: '#56D22C',
+    red: '#DF1A1A'
   },
 };
