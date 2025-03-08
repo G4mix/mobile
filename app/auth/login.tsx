@@ -3,24 +3,10 @@ import { Image, StyleSheet, View } from 'react-native';
 import { Text } from '@/components/Themed';
 import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { isValidEmail, isValidPassword } from '@/constants/validations';
-import { useState } from 'react';
 import { Link } from 'expo-router';
 import Colors from '@/constants/colors';
 
 export default function LoginScreen() {
-  const [isEmailValid, setIsEmailValid] = useState<'valid' | 'invalid' | null>(null)
-  const [isPasswordValid, setIsPasswordValid] = useState<'valid' | 'invalid' | null>(null)
-
-  const validateEmail = (value: string) => {
-    setIsEmailValid(isValidEmail(value))
-  }
-
-  const validatePassword = (value: string) => {
-    setIsPasswordValid(isValidPassword(value))
-  }
-
   return (
     <View style={styles.container}>
       <Image source={require('../../assets/images/favicon.png')} />
@@ -30,17 +16,13 @@ export default function LoginScreen() {
         label='E-mail'
         isPasswordInput={false}
         placeholder='Digite seu e-mail aqui'
-        onChangeText={validateEmail}
-        isValid={isEmailValid}
       />
       <View style={styles.passwordContainer}>
         <Input
           icon='lock'
           label='Senha'
           isPasswordInput={true}
-          onChangeText={validatePassword}
-          placeholder='Digite uma senha'
-          isValid={isPasswordValid}
+          placeholder='Digite a sua senha'
         />
         <Link href='/auth/forget-password'>
           <Text style={{color: Colors['light'].tropicalIndigo}}>Esqueci minha senha</Text>

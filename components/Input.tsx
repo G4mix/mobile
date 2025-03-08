@@ -1,5 +1,4 @@
 import { TextInput, View, StyleSheet, NativeSyntheticEvent, TextInputFocusEventData } from 'react-native';
-import {  } from 'react-native';
 import { Text } from '@/components/Themed';
 import Colors from '@/constants/colors';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
@@ -9,15 +8,15 @@ type InputProps = {
   icon: React.ComponentProps<typeof FontAwesome>['name'];
   placeholder: string;
   invalidPhrase?: string;
-  isPasswordInput: boolean;
-  isValid: 'invalid' | 'valid' | null;
-  onChangeText: (value: string) => void;
+  isPasswordInput?: boolean;
+  isValid?: 'invalid' | 'valid' | null;
+  onChangeText?: (value: string) => void;
   onFocus?: (e?: NativeSyntheticEvent<TextInputFocusEventData>) => void;
   onBlur?: (e?: NativeSyntheticEvent<TextInputFocusEventData>) => void;
   label: string;
 }
 
-export const Input = forwardRef<HTMLInputElement, InputProps>(({ placeholder, icon, isValid, invalidPhrase, onChangeText, isPasswordInput, onBlur, onFocus, label }, ref) => {
+export const Input = forwardRef<HTMLInputElement, InputProps>(({ placeholder, icon, isValid=null, invalidPhrase, onChangeText, isPasswordInput, onBlur, onFocus, label }, ref) => {
   return (
     <View style={styles.root}>
       <Text style={styles.inputLabel}>{label}</Text>
