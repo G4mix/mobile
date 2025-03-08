@@ -1,11 +1,11 @@
 import { z } from "zod";
 
 const passwordValidation = z.string().regex(
-  /^(?=.*\d)(?=.*[A-Z])(?=.*[$*&@#! ])[^{}]{6,72}$/,
+  /^(?=.*\d)(?=.*[A-Z])(?=.*[$*&@#! ])[^{}]{6,}$/,
   'INVALID_PASSWORD'
 );
 
-const passwordLengthValidation = z.string().min(6, 'PASSWORD_TOO_SHORT').max(72, 'PASSWORD_TOO_LONG');
+const passwordLengthValidation = z.string().min(6, 'PASSWORD_TOO_SHORT');
 
 const passwordSpecialCharValidation = z.string().regex(/[$*&@#! ]/, 'PASSWORD_NEEDS_SPECIAL_CHAR');
 

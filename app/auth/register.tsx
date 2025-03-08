@@ -60,7 +60,7 @@ export default function RegisterScreen() {
   }
 
   const requirements = [
-    { condition: isPasswordLengthValid, text: '6 a 72 caracteres' },
+    { condition: isPasswordLengthValid, text: '6 caracteres' },
     { condition: isPasswordSpecialCharValid, text: '1 caractere especial' },
     { condition: isPasswordNumberValid, text: '1 número' },
     { condition: isPasswordUppercaseValid, text: '1 caractere maiúsculo' }
