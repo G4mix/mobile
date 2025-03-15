@@ -1,4 +1,4 @@
-import { TextInput, View, StyleSheet, NativeSyntheticEvent, TextInputFocusEventData } from 'react-native';
+import { TextInput, View, StyleSheet, NativeSyntheticEvent, TextInputFocusEventData, ReturnKeyTypeOptions, TextInputSubmitEditingEventData } from 'react-native';
 import { Text } from '@/components/Themed';
 import Colors from '@/constants/colors';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
@@ -13,10 +13,14 @@ type InputProps = {
   onChangeText?: (value: string) => void;
   onFocus?: (e?: NativeSyntheticEvent<TextInputFocusEventData>) => void;
   onBlur?: (e?: NativeSyntheticEvent<TextInputFocusEventData>) => void;
+  returnKeyType?: ReturnKeyTypeOptions;
+  onSubmitEditing?: (e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => void;
   label: string;
 }
 
-export const Input = forwardRef<HTMLInputElement, InputProps>(({ placeholder, icon, isValid=null, invalidPhrase, onChangeText, isPasswordInput, onBlur, onFocus, label }, ref) => {
+export const Input = forwardRef<HTMLInputElement, InputProps>(({
+  placeholder, icon, isValid=null, invalidPhrase, onChangeText, isPasswordInput, onBlur, onFocus, label, returnKeyType, onSubmitEditing
+}, ref) => {
   return (
     <View style={styles.root}>
       <Text style={styles.inputLabel}>{label}</Text>
@@ -38,6 +42,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(({ placeholder, ic
           onFocus={onFocus}
           onBlur={onBlur}
           ref={ref as any}
+          returnKeyType={returnKeyType}
+          onSubmitEditing={onSubmitEditing}
         />
       </View>
       {

@@ -1,28 +1,46 @@
 import { Image, StyleSheet, View } from 'react-native';
 
+import { useForm } from "react-hook-form"
 import { Text } from '@/components/Themed';
 import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
 import { Link } from 'expo-router';
 import Colors from '@/constants/colors';
 
+type FormData = {
+  password: string;
+  email: string;
+}
+
 export default function LoginScreen() {
+  const {
+    setValue,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<FormData>()
+  const onSubmit = handleSubmit((data) => console.log(data))
+
   return (
     <View style={styles.container}>
       <Image source={require('../../assets/images/favicon.png')} />
       <Text style={styles.title}>Acesse sua conta</Text>
-      <Input
-        icon='envelope'
-        label='E-mail'
-        isPasswordInput={false}
-        placeholder='Digite seu e-mail aqui'
-      />
-      <View style={styles.passwordContainer}>
+        <Input
+          icon='envelope'
+          label='E-mail'
+          isPasswordInput={false}
+          placeholder='Digite seu e-mail aqui'
+          onChangeText={(value: string) => setValue('email', value)}
+          returnKeyType='next'
+        />
+        <View style={styles.passwordContainer}>
         <Input
           icon='lock'
           label='Senha'
           isPasswordInput={true}
           placeholder='Digite a sua senha'
+          onChangeText={(value: string) => setValue('password', value)}
+          onSubmitEditing={onSubmit}
+          returnKeyType='done'
         />
         <Link href='/auth/forget-password'>
           <Text style={{color: Colors['light'].tropicalIndigo}}>Esqueci minha senha</Text>
@@ -44,7 +62,7 @@ export default function LoginScreen() {
         />
       </View>
 
-      <Button>Conectar-se</Button>
+      <Button onPress={onSubmit}>Conectar-se</Button>
       <Link href='/auth/register'>
         <Text style={{color: Colors['light'].russianViolet}}>Ainda não tem uma conta?</Text>
         <Text style={{color: Colors['light'].tropicalIndigo}}> Criar conta</Text>

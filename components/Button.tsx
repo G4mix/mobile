@@ -1,15 +1,16 @@
-import { Pressable, StyleSheet } from "react-native";
+import { GestureResponderEvent, Pressable, StyleSheet } from "react-native";
 import { ReactNode } from "react"
 import { Text } from '@/components/Themed';
 import Colors from "@/constants/colors";
 
 type ButtonProps = {
   children: ReactNode;
+  onPress?: (e?: GestureResponderEvent) => void;
 }
 
-export const Button = ({ children }: ButtonProps) => {
+export const Button = ({ children, onPress }: ButtonProps) => {
   return (
-    <Pressable style={styles.root}>
+    <Pressable style={styles.root} onPress={onPress}>
       <Text style={{ color: Colors['dark'].text}}>{children}</Text>
     </Pressable>
   )
