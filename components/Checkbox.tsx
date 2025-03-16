@@ -1,10 +1,13 @@
 import { CheckBox as CheckboxDefault } from '@rneui/themed';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import Colors from '@/constants/colors';
 
-export const Checkbox = () => {
-  const [isChecked, setChecked] = useState(false);
+type CheckboxProps = {
+  isChecked: boolean;
+  setIsChecked: Dispatch<SetStateAction<boolean>>;
+}
 
+export const Checkbox = ({ isChecked, setIsChecked }: CheckboxProps) => {
   return (
     <CheckboxDefault
       style={{padding: 0}}
@@ -13,7 +16,7 @@ export const Checkbox = () => {
       checkedColor={Colors['light'].majorelleBlue}
       uncheckedColor={Colors['light'].russianViolet}
       size={32}
-      onPress={() => setChecked(prevValue => !prevValue)}
+      onPress={() => setIsChecked(prevValue => !prevValue)}
       iconType="material-community"
       checkedIcon="checkbox-outline"
       uncheckedIcon={'checkbox-blank-outline'}

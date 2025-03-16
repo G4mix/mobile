@@ -14,15 +14,24 @@ type FormData = {
 
 export default function LoginScreen() {
   const {
+    watch,
     setValue,
-    handleSubmit,
-    formState: { errors }
-  } = useForm<FormData>()
-  const onSubmit = handleSubmit((data) => console.log(data))
+    handleSubmit
+  } = useForm<FormData>({
+    defaultValues: {
+      email: '',
+      password: ''
+    }
+  })
+
+  const onSubmit = handleSubmit((data: any) => console.log(data))
+  const email = watch('email');
+  const password = watch('password');
+  const isReadyToLogin = email.length > 0 && password.length > 0
 
   return (
     <View style={styles.container}>
-      <Image source={require('../../assets/images/favicon.png')} />
+      <Image source={require('../../../assets/images/favicon.png')} />
       <Text style={styles.title}>Acesse sua conta</Text>
         <Input
           icon='envelope'
@@ -49,20 +58,20 @@ export default function LoginScreen() {
       <Text style={{color: Colors['light'].russianViolet}}>Você também pode entrar com:</Text>
       <View style={styles.connectionMethodsContainer}>
         <Image
-          source={require('../../assets/images/icons/google.svg')}
+          source={require('../../../assets/images/icons/google.svg')}
           style={{width: 24, height: 24, opacity: 0.7}}
         />
         <Image
-          source={require('../../assets/images/icons/linkedin.svg')}
+          source={require('../../../assets/images/icons/linkedin.svg')}
           style={{width: 24, height: 24, opacity: 0.7}}
         />
         <Image
-          source={require('../../assets/images/icons/github.svg')}
+          source={require('../../../assets/images/icons/github.svg')}
           style={{width: 24, height: 24, opacity: 0.7}}
         />
       </View>
 
-      <Button onPress={onSubmit}>Conectar-se</Button>
+      <Button onPress={isReadyToLogin ? onSubmit : undefined} disabled={!isReadyToLogin}>Conectar-se</Button>
       <Link href='/auth/register'>
         <Text style={{color: Colors['light'].russianViolet}}>Ainda não tem uma conta?</Text>
         <Text style={{color: Colors['light'].tropicalIndigo}}> Criar conta</Text>

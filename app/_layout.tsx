@@ -1,21 +1,18 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { useRouter, Stack, usePathname } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/components/useColorScheme';
-
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from 'expo-router';
+import { authEventEmitter } from '@/constants/authEventEmitter';
+import { getToken, removeToken } from '@/constants/token';
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tabs)',
+  initialRouteName: '(tabs)/application',
 };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -51,6 +48,41 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
+  const router = useRouter()
+  const pathname = usePathname();
+
+  const checkAuth = async () => {
+    const accessToken = await getToken('accessToken');
+    const refreshToken = await getToken('refreshToken');
+
+    if (!accessToken || !refreshToken) {
+      // setIsAuthenticated(false);
+      if (pathname !== '/' && !pathname.startsWith('/auth')) { // Evita loop infinito na tela de login
+        router.replace('/'); 
+      }
+      
+      return;
+    }
+
+    // setIsAuthenticated(true);
+  };
+
+  useEffect(() => {
+    checkAuth();
+  }, [pathname]);
+
+  useEffect(() => {
+    const subscription = authEventEmitter.addListener('logout', async () => {
+      await removeToken('accessToken');
+      await removeToken('refreshToken');
+      router.replace('/');
+    });
+
+    return () => {
+      subscription.removeAllListeners();
+    };
+    
+  }, []);
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>

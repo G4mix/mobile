@@ -6,11 +6,12 @@ import Colors from "@/constants/colors";
 type ButtonProps = {
   children: ReactNode;
   onPress?: (e?: GestureResponderEvent) => void;
+  disabled?: boolean;
 }
 
-export const Button = ({ children, onPress }: ButtonProps) => {
+export const Button = ({ children, onPress, disabled=false }: ButtonProps) => {
   return (
-    <Pressable style={styles.root} onPress={onPress}>
+    <Pressable style={[styles.root, disabled ? styles.disabled : {}]} onPress={onPress}>
       <Text style={{ color: Colors['dark'].text}}>{children}</Text>
     </Pressable>
   )
@@ -25,5 +26,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors['dark'].majorelleBlue,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  disabled: {
+    opacity: 0.7
   }
 });

@@ -17,7 +17,7 @@ export default function ForgetPasswordScreen() {
 
   return (
     <View style={styles.container}>
-      <Image source={require('../../assets/images/favicon.png')} />
+      <Image source={require('../../../../assets/images/favicon.png')} />
       <Text style={styles.title}>Recupere sua conta</Text>
       <Input
         icon='envelope'
@@ -28,7 +28,7 @@ export default function ForgetPasswordScreen() {
         isValid={isEmailValid}
       />
       <Button>Enviar e-mail de recuperação</Button>
-      <Link href='/auth/login'>
+      <Link href='/'>
         <Text style={{color: Colors['light'].russianViolet}}>Lembrou sua senha?</Text>
         <Text style={{color: Colors['light'].tropicalIndigo}}> Entrar</Text>
       </Link>

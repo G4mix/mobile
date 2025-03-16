@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, TextInput } from 'react-native';
+import { Alert, Image, StyleSheet, Text, TextInput } from 'react-native';
 import { View } from '@/components/Themed';
 import { Input } from '@/components/Input';
 import { isValidEmail, isValidPassword, isValidPasswordLength, isValidPasswordNumber, isValidPasswordSpecialChar, isValidPasswordUppercase, isValidUsername } from '@/constants/validations';
@@ -8,20 +8,56 @@ import { useRef, useState } from 'react';
 import { Link } from 'expo-router';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Colors from '@/constants/colors';
+import { useForm } from 'react-hook-form';
+import { api } from '@/constants/api';
+
+type FormData = {
+  username: string;
+  password: string;
+  confirmPassword: string;
+  email: string;
+}
 
 export default function RegisterScreen() {
   const [isUsernameValid, setIsUsernameValid] = useState<'valid' | 'invalid' | null>(null)
   const [isEmailValid, setIsEmailValid] = useState<'valid' | 'invalid' | null>(null)
   const [isPasswordValid, setIsPasswordValid] = useState<'valid' | 'invalid' | null>(null)
   const [isRequirementsVisible, setIsRequirementsVisible] = useState(false)
+  const [isChecked, setIsChecked] = useState(false);
   const [isPasswordLengthValid, setIsPasswordLengthValid] = useState<'valid' | 'invalid' | null>(null)
   const [isPasswordSpecialCharValid, setIsPasswordSpecialCharValid] = useState<'valid' | 'invalid' | null>(null)
   const [isPasswordNumberValid, setIsPasswordNumberValid] = useState<'valid' | 'invalid' | null>(null)
   const [isPasswordUppercaseValid, setIsPasswordUppercaseValid] = useState<'valid' | 'invalid' | null>(null)
   const [isConfirmPasswordValid, setIsConfirmPasswordValid] = useState<'valid' | 'invalid' | null>(null)
 
-  const passwordRef = useRef<HTMLInputElement>(null)
-  const confirmPasswordRef  = useRef<HTMLInputElement>(null)
+  const {
+    watch,
+    setValue,
+    handleSubmit
+  } = useForm<FormData>({
+    defaultValues: {
+      confirmPassword: '',
+      password: '',
+      email: '',
+      username: ''
+    }
+  })
+
+  const password = watch('password')
+  const confirmPassword = watch('confirmPassword')
+
+  const onSubmit = handleSubmit(async (data: any) => {
+    const res = await api.post('/auth/signup', data, { skipAuth: true } as any)
+    Alert.alert(res.status.toString())
+    console.log(res.status)
+  })
+
+  const readyToRegister =
+    isUsernameValid === 'valid' &&
+    isEmailValid === 'valid' &&
+    isPasswordValid === 'valid' &&
+    isConfirmPasswordValid === 'valid' &&
+    isChecked
 
   const handleFocus = () => {
     setIsRequirementsVisible(true)
@@ -33,14 +69,17 @@ export default function RegisterScreen() {
 
   const validateUsername = (value: string) => {
     setIsUsernameValid(isValidUsername(value))
+    setValue('username', value)
   }
 
   const validateEmail = (value: string) => {
     setIsEmailValid(isValidEmail(value))
+    setValue('email', value)
   }
 
   const validatePassword = (value: string) => {
-    validatePasswordConfirm(confirmPasswordRef.current?.value || '')
+    setValue('password', value)
+    validatePasswordConfirm(undefined, value)
     setIsPasswordValid(isValidPassword(value))
     setIsPasswordLengthValid(isValidPasswordLength(value))
     setIsPasswordSpecialCharValid(isValidPasswordSpecialChar(value))
@@ -48,11 +87,13 @@ export default function RegisterScreen() {
     setIsPasswordUppercaseValid(isValidPasswordUppercase(value))
   }
 
-  const validatePasswordConfirm = (value: string) => {
-    const actualPassword = passwordRef.current?.value
-    if (actualPassword?.length === 0 || value.length === 0) {
+  const validatePasswordConfirm = (value?: string, actualPassword?: string) => {
+    if (value) setValue('confirmPassword', value)
+    const pwd = actualPassword || password
+    const cp = value || confirmPassword
+    if (pwd.length === 0 || cp.length === 0) {
       setIsConfirmPasswordValid(null)
-    } else if (actualPassword === value) {
+    } else if (pwd === cp) {
       setIsConfirmPasswordValid('valid')
     } else {
       setIsConfirmPasswordValid('invalid')
@@ -68,7 +109,7 @@ export default function RegisterScreen() {
 
   return (
     <View style={styles.container}>
-      <Image source={require('../../assets/images/favicon.png')} />
+      <Image source={require('../../../../assets/images/favicon.png')} />
       <Text style={styles.title}>Criar uma conta</Text>
       <Input
         icon='user'
@@ -77,6 +118,7 @@ export default function RegisterScreen() {
         placeholder='Digite seu nome de usuário aqui'
         onChangeText={validateUsername}
         isValid={isUsernameValid}
+        returnKeyType='next'
       />
       <Input
         icon='envelope'
@@ -85,6 +127,7 @@ export default function RegisterScreen() {
         placeholder='Digite seu e-mail aqui'
         onChangeText={validateEmail}
         isValid={isEmailValid}
+        returnKeyType='next'
       />
       <Input
         icon='lock'
@@ -95,7 +138,7 @@ export default function RegisterScreen() {
         onBlur={handleBlur}
         placeholder='Digite uma senha'
         isValid={isPasswordValid}
-        ref={passwordRef}
+        returnKeyType='next'
       />
       {
         isRequirementsVisible && (
@@ -130,14 +173,15 @@ export default function RegisterScreen() {
         invalidPhrase='As senhas não são iguais'
         placeholder='Digite sua senha novamente'
         isValid={isConfirmPasswordValid}
-        ref={confirmPasswordRef}
+        onSubmitEditing={onSubmit}
+        returnKeyType='done'
       />
       <View style={styles.termsContainer}>
-        <Checkbox />
+        <Checkbox isChecked={isChecked} setIsChecked={setIsChecked} />
         <Text>Eu li e concordo com os <Link href='/terms' style={{ color: Colors['light'].majorelleBlue }}>termos e política de privacidade</Link></Text>
       </View>
-      <Button>Registrar-se</Button>
-      <Link href='/auth/login'>
+      <Button onPress={readyToRegister ? onSubmit : undefined} disabled={!readyToRegister}>Registrar-se</Button>
+      <Link href='/'>
         <Text style={{color: Colors['light'].russianViolet}}>Já tem uma conta?</Text>
         <Text style={{color: Colors['light'].tropicalIndigo}}> Entrar</Text>
       </Link>
