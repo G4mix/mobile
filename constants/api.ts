@@ -1,12 +1,13 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
-import { getToken, removeToken, setToken } from './token';
+import axios, { AxiosInstance } from 'axios';
+import { getToken, setToken } from './token';
 import { authEventEmitter } from './authEventEmitter';
+import { env } from './env';
 
 const globalForAxios = globalThis as unknown as { axiosInstance?: AxiosInstance };
 
 if (!globalForAxios.axiosInstance) {
   globalForAxios.axiosInstance = axios.create({
-    baseURL: 'https://51d3-2804-23d4-9d56-1-00-2.ngrok-free.app/api/v1',
+    baseURL: `${env.EXPO_PUBLIC_API_URL}/api/v1`,
   });
 }
 
