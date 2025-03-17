@@ -1,15 +1,20 @@
-import { Alert, Image, StyleSheet, Text, TextInput } from 'react-native';
+import { Alert, Image, StyleSheet, Text } from 'react-native';
 import { View } from '@/components/Themed';
 import { Input } from '@/components/Input';
 import { isValidEmail, isValidPassword, isValidPasswordLength, isValidPasswordNumber, isValidPasswordSpecialChar, isValidPasswordUppercase, isValidUsername } from '@/constants/validations';
 import { Button } from '@/components/Button';
 import { Checkbox } from "@/components/Checkbox";
-import { useRef, useState } from 'react';
-import { Link } from 'expo-router';
+import { useState } from 'react';
+import { Link, useRouter } from 'expo-router';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Colors from '@/constants/colors';
 import { useForm } from 'react-hook-form';
 import { api } from '@/constants/api';
+import { useToast } from '@/hooks/useToast';
+import { handleRequest } from '@/utils/handleRequest';
+import { setUser, UserState } from '@/features/auth/userSlice';
+import { useDispatch } from 'react-redux';
+import { setItem } from '@/constants/storage';
 
 type FormData = {
   username: string;
@@ -18,17 +23,27 @@ type FormData = {
   email: string;
 }
 
+
 export default function RegisterScreen() {
   const [isUsernameValid, setIsUsernameValid] = useState<'valid' | 'invalid' | null>(null)
   const [isEmailValid, setIsEmailValid] = useState<'valid' | 'invalid' | null>(null)
-  const [isPasswordValid, setIsPasswordValid] = useState<'valid' | 'invalid' | null>(null)
-  const [isRequirementsVisible, setIsRequirementsVisible] = useState(false)
+  const [isConfirmPasswordValid, setIsConfirmPasswordValid] = useState<'valid' | 'invalid' | null>(null)
   const [isChecked, setIsChecked] = useState(false);
+
+  const [isPasswordValid, setIsPasswordValid] = useState<'valid' | 'invalid' | null>(null)
   const [isPasswordLengthValid, setIsPasswordLengthValid] = useState<'valid' | 'invalid' | null>(null)
   const [isPasswordSpecialCharValid, setIsPasswordSpecialCharValid] = useState<'valid' | 'invalid' | null>(null)
   const [isPasswordNumberValid, setIsPasswordNumberValid] = useState<'valid' | 'invalid' | null>(null)
   const [isPasswordUppercaseValid, setIsPasswordUppercaseValid] = useState<'valid' | 'invalid' | null>(null)
-  const [isConfirmPasswordValid, setIsConfirmPasswordValid] = useState<'valid' | 'invalid' | null>(null)
+
+  const [isRequirementsVisible, setIsRequirementsVisible] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { showToast } = useToast()
+
+  const dispatch = useDispatch();
+
+  const router = useRouter()
 
   const {
     watch,
@@ -46,11 +61,22 @@ export default function RegisterScreen() {
   const password = watch('password')
   const confirmPassword = watch('confirmPassword')
 
-  const onSubmit = handleSubmit(async (data: any) => {
-    const res = await api.post('/auth/signup', data, { skipAuth: true } as any)
-    Alert.alert(res.status.toString())
-    console.log(res.status)
-  })
+  const register = async ({ username, password, email }: FormData) => {
+    const data = await handleRequest<{ accessToken: string; refreshToken: string; user: UserState; }>({
+      requestFn: async () => await api.post('/auth/signup', { username, password, email }, { skipAuth: true } as any),
+      showToast,
+      setIsLoading,
+      successMessage: 'Registro concluído com sucesso!'
+    })
+    if (!data) return
+    dispatch(setUser(data.user))
+    await setItem('user', JSON.stringify(data.user))
+    await setItem('accessToken', data.accessToken)
+    await setItem('refreshToken', data.refreshToken)
+    router.replace('/application/feed')
+  }
+
+  const onSubmit = handleSubmit(register)
 
   const readyToRegister =
     isUsernameValid === 'valid' &&
@@ -62,7 +88,7 @@ export default function RegisterScreen() {
   const handleFocus = () => {
     setIsRequirementsVisible(true)
   }
-  
+
   const handleBlur = () => {
     setIsRequirementsVisible(false)
   }
@@ -109,7 +135,7 @@ export default function RegisterScreen() {
 
   return (
     <View style={styles.container}>
-      <Image source={require('../../../../assets/images/favicon.png')} />
+      <Image source={require('../../assets/images/favicon.png')} />
       <Text style={styles.title}>Criar uma conta</Text>
       <Input
         icon='user'
@@ -143,7 +169,7 @@ export default function RegisterScreen() {
       {
         isRequirementsVisible && (
           <View style={styles.passwordRequirements}>
-            <Text style={{color: Colors['light'].russianViolet}}>A senha deve conter no mínimo:</Text>
+            <Text style={{ color: Colors['light'].russianViolet }}>A senha deve conter no mínimo:</Text>
             <View style={styles.requirementsContainer}>
               {
                 requirements.map(({ condition, text }) => (
@@ -178,12 +204,12 @@ export default function RegisterScreen() {
       />
       <View style={styles.termsContainer}>
         <Checkbox isChecked={isChecked} setIsChecked={setIsChecked} />
-        <Text>Eu li e concordo com os <Link href='/terms' style={{ color: Colors['light'].majorelleBlue }}>termos e política de privacidade</Link></Text>
+        <Text style={{ flex: 1, wordWrap: 'break-word', textAlign: 'justify' }}>Eu li e concordo com os <Link asChild href='/terms' style={{ color: Colors['light'].majorelleBlue }}><Text>termos e política de privacidade</Text></Link></Text>
       </View>
-      <Button onPress={readyToRegister ? onSubmit : undefined} disabled={!readyToRegister}>Registrar-se</Button>
+      <Button onPress={readyToRegister && !isLoading ? onSubmit : undefined} disabled={!readyToRegister || isLoading}>Registrar-se</Button>
       <Link href='/'>
-        <Text style={{color: Colors['light'].russianViolet}}>Já tem uma conta?</Text>
-        <Text style={{color: Colors['light'].tropicalIndigo}}> Entrar</Text>
+        <Text style={{ color: Colors['light'].russianViolet }}>Já tem uma conta?</Text>
+        <Text style={{ color: Colors['light'].tropicalIndigo }}> Entrar</Text>
       </Link>
     </View>
   );
@@ -202,9 +228,8 @@ const styles = StyleSheet.create({
   },
   termsContainer: {
     display: 'flex',
-    flexDirection: 'row',
     alignItems: 'center',
-    gap: 10
+    flexDirection: 'row'
   },
   title: {
     fontSize: 20,

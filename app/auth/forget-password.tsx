@@ -17,7 +17,7 @@ export default function ForgetPasswordScreen() {
 
   return (
     <View style={styles.container}>
-      <Image source={require('../../../../assets/images/favicon.png')} />
+      <Image source={require('../../assets/images/favicon.png')} />
       <Text style={styles.title}>Recupere sua conta</Text>
       <Input
         icon='envelope'

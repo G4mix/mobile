@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { getToken, setToken } from './token';
+import { getItem, setItem } from './storage';
 import { authEventEmitter } from './authEventEmitter';
 import { env } from './env';
 
@@ -31,7 +31,7 @@ api.interceptors.request.use(
     }
 
     if (!accessTokenCache) {
-      accessTokenCache = await getToken('accessToken');
+      accessTokenCache = await getItem('accessToken');
     }
     if (accessTokenCache) {
       config.headers = config.headers || {};
@@ -62,12 +62,12 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const refreshToken = await getToken('refreshToken');
+        const refreshToken = await getItem('refreshToken');
         if (!refreshToken) throw new Error('No refresh token available');
 
         const { data } = await api.post('/auth/refresh-token', { refreshToken });
 
-        await setToken('accessToken', data.accessToken);
+        await setItem('accessToken', data.accessToken);
         accessTokenCache = data.accessToken;
         processQueue(null, data.accessToken);
 

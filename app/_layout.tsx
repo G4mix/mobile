@@ -6,13 +6,16 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 
-import { useColorScheme } from '@/components/useColorScheme';
+import { useColorScheme } from '@/hooks/useColorScheme';
 import { authEventEmitter } from '@/constants/authEventEmitter';
-import { getToken, removeToken } from '@/constants/token';
+import { getItem, removeItem } from '@/constants/storage';
+import { ToastProvider } from '@/context/ToastContext';
+import { reduxStore } from '@/constants/reduxStore';
+import { Provider } from 'react-redux'
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tabs)/application',
+  initialRouteName: 'application',
 };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -52,8 +55,8 @@ function RootLayoutNav() {
   const pathname = usePathname();
 
   const checkAuth = async () => {
-    const accessToken = await getToken('accessToken');
-    const refreshToken = await getToken('refreshToken');
+    const accessToken = await getItem('accessToken');
+    const refreshToken = await getItem('refreshToken');
 
     if (!accessToken || !refreshToken) {
       // setIsAuthenticated(false);
@@ -73,8 +76,8 @@ function RootLayoutNav() {
 
   useEffect(() => {
     const subscription = authEventEmitter.addListener('logout', async () => {
-      await removeToken('accessToken');
-      await removeToken('refreshToken');
+      await removeItem('accessToken');
+      await removeItem('refreshToken');
       router.replace('/');
     });
 
@@ -86,12 +89,16 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack screenOptions={{headerShown: false}}>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="auth" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-        <Stack.Screen name="terms" options={{ presentation: 'modal', headerShown: true, title: '' }} />
-      </Stack>
+      <ToastProvider>
+        <Provider store={reduxStore}>
+          <Stack screenOptions={{headerShown: false}}>
+            <Stack.Screen name="application" options={{ headerShown: false }} />
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+            <Stack.Screen name="terms" options={{ presentation: 'modal', headerShown: true, title: '' }} />
+          </Stack>
+        </Provider>
+      </ToastProvider>
     </ThemeProvider>
   );
 }

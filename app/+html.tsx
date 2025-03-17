@@ -41,10 +41,11 @@ input {
   border-with: 0!important;
 }
 body {
-  background-color: #fff;
+  background-color: #ffffff;
 }
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: #000;
-  }
-}`;
+`;
+// @media (prefers-color-scheme: dark) {
+//   body {
+//     background-color: #000;
+//   }
+// }

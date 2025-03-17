@@ -1,11 +1,11 @@
-import { Image, StyleSheet, View } from 'react-native';
-
+import { Image, StyleSheet } from 'react-native';
 import { useForm } from "react-hook-form"
-import { Text } from '@/components/Themed';
+import { Text, View } from '@/components/Themed';
 import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
 import { Link } from 'expo-router';
 import Colors from '@/constants/colors';
+import colors from '@/constants/colors';
 
 type FormData = {
   password: string;
@@ -24,24 +24,45 @@ export default function LoginScreen() {
     }
   })
 
-  const onSubmit = handleSubmit((data: any) => console.log(data))
+  const onSubmit = handleSubmit((data: FormData) => console.log(data))
   const email = watch('email');
   const password = watch('password');
   const isReadyToLogin = email.length > 0 && password.length > 0
 
   return (
     <View style={styles.container}>
-      <Image source={require('../../../assets/images/favicon.png')} />
-      <Text style={styles.title}>Acesse sua conta</Text>
-        <Input
-          icon='envelope'
-          label='E-mail'
-          isPasswordInput={false}
-          placeholder='Digite seu e-mail aqui'
-          onChangeText={(value: string) => setValue('email', value)}
-          returnKeyType='next'
-        />
-        <View style={styles.passwordContainer}>
+      <Image source={require('../assets/images/favicon.png')} />
+      <Text style={styles.title}>Entrar</Text>
+      <View style={styles.connectionMethodsContainer}>
+        <View style={{borderRadius: 8, borderWidth: 1, borderColor: colors.light.tropicalIndigo, padding: 6, opacity: 0.7}}>
+          <Image
+            source={require('../assets/images/icons/google.png')}
+            style={{width: 32, height: 32}}
+          />
+        </View>
+        <View style={{borderRadius: 8, borderWidth: 1, borderColor: colors.light.tropicalIndigo, padding: 6, opacity: 0.7}}>
+          <Image
+            source={require('../assets/images/icons/linkedin.png')}
+            style={{width: 32, height: 32}}
+          />
+        </View>
+        <View style={{borderRadius: 8, borderWidth: 1, borderColor: colors.light.tropicalIndigo, padding: 6, opacity: 0.7}}>
+          <Image
+            source={require('../assets/images/icons/github.png')}
+            style={{width: 32, height: 32}}
+          />
+        </View>
+      </View>
+      <Text style={{color: Colors['dark'].background, fontWeight: 'medium'}}>OU</Text>
+      <Input
+        icon='envelope'
+        label='E-mail'
+        isPasswordInput={false}
+        placeholder='Digite seu e-mail aqui'
+        onChangeText={(value: string) => setValue('email', value)}
+        returnKeyType='next'
+      />
+      <View style={styles.passwordContainer}>
         <Input
           icon='lock'
           label='Senha'
@@ -55,21 +76,7 @@ export default function LoginScreen() {
           <Text style={{color: Colors['light'].tropicalIndigo}}>Esqueci minha senha</Text>
         </Link>
       </View>
-      <Text style={{color: Colors['light'].russianViolet}}>Você também pode entrar com:</Text>
-      <View style={styles.connectionMethodsContainer}>
-        <Image
-          source={require('../../../assets/images/icons/google.svg')}
-          style={{width: 24, height: 24, opacity: 0.7}}
-        />
-        <Image
-          source={require('../../../assets/images/icons/linkedin.svg')}
-          style={{width: 24, height: 24, opacity: 0.7}}
-        />
-        <Image
-          source={require('../../../assets/images/icons/github.svg')}
-          style={{width: 24, height: 24, opacity: 0.7}}
-        />
-      </View>
+
 
       <Button onPress={isReadyToLogin ? onSubmit : undefined} disabled={!isReadyToLogin}>Conectar-se</Button>
       <Link href='/auth/register'>
