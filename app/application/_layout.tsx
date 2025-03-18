@@ -1,17 +1,18 @@
-import React from 'react';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Tabs } from 'expo-router';
+import React from "react";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { Tabs } from "expo-router";
 
-import { Colors } from '@/constants/colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { useClientOnlyValue } from '@/hooks/useClientOnlyValue';
+import { Colors } from "@constants/colors";
+import { useColorScheme } from "@hooks/useColorScheme";
+import { useClientOnlyValue } from "@hooks/useClientOnlyValue";
 
-// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
+type TabBarIconProps = {
+  name: React.ComponentProps<typeof FontAwesome>["name"];
   color: string;
-}) {
-  return <FontAwesome size={28} {...props} />;
+};
+
+function TabBarIcon({ name, color }: TabBarIconProps) {
+  return <FontAwesome size={28} name={name} color={color} />;
 }
 
 export default function TabLayout() {
@@ -20,16 +21,17 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].text,
+        tabBarActiveTintColor: Colors[colorScheme ?? "light"].text,
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
-        headerShown: useClientOnlyValue(false, true),
-      }}>
+        headerShown: useClientOnlyValue(false, true)
+      }}
+    >
       <Tabs.Screen
         name="feed"
         options={{
-          title: 'Feed',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: "Feed",
+          tabBarIcon: ({ color }) => TabBarIcon({ name: "code", color })
         }}
       />
     </Tabs>

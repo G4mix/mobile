@@ -1,6 +1,18 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from "react-native";
 
-import { Text } from '@/components/Themed';
+import { Text } from "@components/Themed";
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: "center",
+    flex: 1,
+    justifyContent: "center"
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: "bold"
+  }
+});
 
 export default function TermsScreen() {
   return (
@@ -9,20 +21,3 @@ export default function TermsScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-});

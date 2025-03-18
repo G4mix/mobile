@@ -7,9 +7,9 @@ export interface UserState {
   verified: boolean;
   created_at: string;
   userProfile: {
-      id: string;
-      icon: string | null;
-      displayName: string | null;
+    id: string;
+    icon: string | null;
+    displayName: string | null;
   };
 }
 
@@ -23,7 +23,7 @@ const initialState: UserState = {
     icon: null
   },
   verified: false,
-  email: "",
+  email: ""
 };
 
 const userSlice = createSlice({
@@ -49,8 +49,8 @@ const userSlice = createSlice({
       state.email = "";
       state.username = "";
       state.verified = false;
-    },
-  },
+    }
+  }
 });
 
 export const { setUser, logout } = userSlice.actions;

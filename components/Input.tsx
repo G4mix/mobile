@@ -1,42 +1,124 @@
-import { TextInput, View, StyleSheet, NativeSyntheticEvent, TextInputFocusEventData, ReturnKeyTypeOptions, TextInputSubmitEditingEventData } from 'react-native';
-import { Text } from '@/components/Themed';
-import { Colors } from '@/constants/colors';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { forwardRef } from 'react';
+import {
+  TextInput,
+  View,
+  StyleSheet,
+  NativeSyntheticEvent,
+  TextInputFocusEventData,
+  ReturnKeyTypeOptions,
+  TextInputSubmitEditingEventData
+} from "react-native";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { ComponentProps, forwardRef } from "react";
+import { Text } from "@components/Themed";
+import { Colors } from "@constants/colors";
 
 type InputProps = {
-  icon: React.ComponentProps<typeof FontAwesome>['name'];
+  icon: ComponentProps<typeof FontAwesome>["name"];
   placeholder: string;
+  label: string;
   invalidPhrase?: string;
   isPasswordInput?: boolean;
-  isValid?: 'invalid' | 'valid' | null;
+  isValid?: "invalid" | "valid" | null;
   onChangeText?: (value: string) => void;
   onFocus?: (e?: NativeSyntheticEvent<TextInputFocusEventData>) => void;
   onBlur?: (e?: NativeSyntheticEvent<TextInputFocusEventData>) => void;
   returnKeyType?: ReturnKeyTypeOptions;
-  onSubmitEditing?: (e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => void;
-  label: string;
-}
+  onSubmitEditing?: (
+    e: NativeSyntheticEvent<TextInputSubmitEditingEventData>
+  ) => void;
+};
 
-export const Input = forwardRef<HTMLInputElement, InputProps>(({
-  placeholder, icon, isValid=null, invalidPhrase, onChangeText, isPasswordInput, onBlur, onFocus, label, returnKeyType, onSubmitEditing
-}, ref) => {
-  return (
+const styles = StyleSheet.create({
+  container: {
+    alignItems: "center",
+    borderColor: Colors.light.russianViolet,
+    borderRadius: 8,
+    borderWidth: 1,
+    display: "flex",
+    flexDirection: "row",
+    gap: 8,
+    padding: 12,
+    width: "100%"
+  },
+  errorMessage: {
+    alignItems: "center",
+    display: "flex",
+    flexDirection: "row",
+    gap: 4,
+    paddingLeft: 6
+  },
+  input: {
+    backgroundColor: "transparent",
+    color: Colors.light.russianViolet,
+    display: "flex",
+    flexGrow: 1,
+    minHeight: 0,
+    padding: 0
+  },
+  inputLabel: {
+    color: Colors.light.russianViolet,
+    fontWeight: "bold"
+  },
+  invalid: {
+    borderColor: "red"
+  },
+  root: {
+    display: "flex",
+    gap: 4,
+    width: "100%"
+  },
+  valid: {
+    borderColor: "green"
+  }
+});
+
+export const Input = forwardRef<HTMLInputElement, InputProps>(
+  (
+    {
+      placeholder,
+      icon,
+      isValid = null,
+      invalidPhrase,
+      onChangeText,
+      isPasswordInput,
+      onBlur,
+      onFocus,
+      label,
+      returnKeyType,
+      onSubmitEditing
+    },
+    ref
+  ) => (
     <View style={styles.root}>
       <Text style={styles.inputLabel}>{label}</Text>
-      <View style={[styles.container, isValid === 'valid' ? styles.valid : {}, isValid === 'invalid' ? styles.invalid : {}]}>
+      <View
+        style={[
+          styles.container,
+          isValid === "valid" ? styles.valid : {},
+          isValid === "invalid" ? styles.invalid : {}
+        ]}
+      >
         <FontAwesome
           size={24}
           name={icon}
           color={
-            isValid === null ? Colors['light'].russianViolet : isValid === 'valid' ? 'green' : 'red' 
+            isValid === null
+              ? Colors.light.russianViolet
+              : isValid === "valid"
+                ? "green"
+                : "red"
           }
-          style={{display: 'flex', width: 24, height: 24, justifyContent: 'center'}}
+          style={{
+            display: "flex",
+            width: 24,
+            height: 24,
+            justifyContent: "center"
+          }}
         />
         <TextInput
           placeholder={placeholder}
           style={styles.input}
-          placeholderTextColor={Colors['light'].russianViolet}
+          placeholderTextColor={Colors.light.russianViolet}
           secureTextEntry={isPasswordInput}
           onChangeText={onChangeText}
           onFocus={onFocus}
@@ -46,58 +128,16 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(({
           onSubmitEditing={onSubmitEditing}
         />
       </View>
-      {
-        isValid === 'invalid' && invalidPhrase && (
-          <View style={styles.errorMessage}>
-            <FontAwesome size={20} name='exclamation-circle' color={Colors['light'].red}/>
-            <Text style={{color: Colors['light'].red}}>{invalidPhrase}</Text>
-          </View>
-        )
-      }
+      {isValid === "invalid" && invalidPhrase && (
+        <View style={styles.errorMessage}>
+          <FontAwesome
+            size={20}
+            name="exclamation-circle"
+            color={Colors.light.red}
+          />
+          <Text style={{ color: Colors.light.red }}>{invalidPhrase}</Text>
+        </View>
+      )}
     </View>
   )
-});
-
-const styles = StyleSheet.create({
-  root: {
-    width: '100%',
-    display: 'flex',
-    gap: 4
-  },
-  container: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 12,
-    borderColor: Colors['light'].russianViolet,
-    borderWidth: 1,
-    borderRadius: 8,
-    gap: 8,
-    width: '100%',
-  },
-  inputLabel: {
-    color: Colors['light'].russianViolet,
-    fontWeight: 'bold'
-  },
-  input: {
-    backgroundColor: 'transparent',
-    display: 'flex',
-    flexGrow: 1,
-    minHeight: 0,
-    padding: 0,
-    color: Colors['light'].russianViolet
-  },
-  valid: {
-    borderColor: 'green',
-  },
-  invalid: {
-    borderColor: 'red',
-  },
-  errorMessage: {
-    display: 'flex',
-    flexDirection: 'row',
-    gap: 4,
-    alignItems: 'center',
-    paddingLeft: 6
-  }
-})
+);
