@@ -3,16 +3,23 @@ import { useForm } from "react-hook-form"
 import { Text, View } from '@/components/Themed';
 import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import Colors from '@/constants/colors';
 import colors from '@/constants/colors';
+import { handleRequest } from '@/utils/handleRequest';
+import { setUser, UserState } from '@/features/auth/userSlice';
+import { api } from '@/constants/api';
+import { useToast } from '@/hooks/useToast';
+import { useRef, useState } from 'react';
+import { setItem } from '@/constants/storage';
+import { useDispatch } from 'react-redux';
 
 type FormData = {
   password: string;
   email: string;
 }
 
-export default function LoginScreen() {
+export default function InitialScreen() {
   const {
     watch,
     setValue,
@@ -24,7 +31,28 @@ export default function LoginScreen() {
     }
   })
 
-  const onSubmit = handleSubmit((data: FormData) => console.log(data))
+  const [isLoading, setIsLoading] = useState(false)
+  const { showToast } = useToast()
+  const dispatch = useDispatch()
+  const router = useRouter()
+  const passwordRef = useRef<HTMLInputElement>(null)
+
+  const login = async ({ password, email }: FormData) => {
+    if (isLoading) return
+    const data = await handleRequest<{ accessToken: string; refreshToken: string; user: UserState; }>({
+      requestFn: async () => await api.post('/auth/signin', { password, email }, { skipAuth: true } as any),
+      showToast,
+      setIsLoading
+    })
+    if (!data) return
+    dispatch(setUser(data.user))
+    await setItem('user', JSON.stringify(data.user))
+    await setItem('accessToken', data.accessToken)
+    await setItem('refreshToken', data.refreshToken)
+    router.replace('/application/feed')
+  }
+
+  const onSubmit = handleSubmit(login)
   const email = watch('email');
   const password = watch('password');
   const isReadyToLogin = email.length > 0 && password.length > 0
@@ -60,6 +88,7 @@ export default function LoginScreen() {
         isPasswordInput={false}
         placeholder='Digite seu e-mail aqui'
         onChangeText={(value: string) => setValue('email', value)}
+        onSubmitEditing={() => passwordRef.current?.focus()}
         returnKeyType='next'
       />
       <View style={styles.passwordContainer}>
@@ -71,14 +100,13 @@ export default function LoginScreen() {
           onChangeText={(value: string) => setValue('password', value)}
           onSubmitEditing={onSubmit}
           returnKeyType='done'
+          ref={passwordRef}
         />
         <Link href='/auth/forget-password'>
           <Text style={{color: Colors['light'].tropicalIndigo}}>Esqueci minha senha</Text>
         </Link>
       </View>
-
-
-      <Button onPress={isReadyToLogin ? onSubmit : undefined} disabled={!isReadyToLogin}>Conectar-se</Button>
+      <Button onPress={isReadyToLogin && !isLoading ? onSubmit : undefined} disabled={!isReadyToLogin || isLoading}>Conectar-se</Button>
       <Link href='/auth/register'>
         <Text style={{color: Colors['light'].russianViolet}}>Ainda não tem uma conta?</Text>
         <Text style={{color: Colors['light'].tropicalIndigo}}> Criar conta</Text>

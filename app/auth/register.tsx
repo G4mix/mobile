@@ -4,7 +4,7 @@ import { Input } from '@/components/Input';
 import { isValidEmail, isValidPassword, isValidPasswordLength, isValidPasswordNumber, isValidPasswordSpecialChar, isValidPasswordUppercase, isValidUsername } from '@/constants/validations';
 import { Button } from '@/components/Button';
 import { Checkbox } from "@/components/Checkbox";
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Link, useRouter } from 'expo-router';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Colors from '@/constants/colors';
@@ -37,11 +37,18 @@ export default function RegisterScreen() {
   const [isPasswordUppercaseValid, setIsPasswordUppercaseValid] = useState<'valid' | 'invalid' | null>(null)
 
   const [isRequirementsVisible, setIsRequirementsVisible] = useState(false)
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingUser, setIsLoadingUser] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
+  const [invalidEmailPhrase, setInvalidEmailPhrase] = useState<string | undefined>(undefined);
 
   const { showToast } = useToast()
 
   const dispatch = useDispatch();
+
+  const emailRef = useRef<HTMLInputElement>(null)
+  const passwordRef = useRef<HTMLInputElement>(null)
+  const confirmPasswordRef = useRef<HTMLInputElement>(null)
+  const emailTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const router = useRouter()
 
@@ -61,7 +68,18 @@ export default function RegisterScreen() {
   const password = watch('password')
   const confirmPassword = watch('confirmPassword')
 
+  const findByEmail = async ({ email }: { email: string; }) => {
+    if (isLoadingUser) return
+    return await handleRequest<{ accessToken: string; refreshToken: string; user: UserState; }>({
+      requestFn: async () => await api.get(`/user/${email}`, { skipAuth: true } as any),
+      showToast,
+      setIsLoading: setIsLoadingUser,
+      ignoreErrors: true
+    })
+  }
+
   const register = async ({ username, password, email }: FormData) => {
+    if (isLoading) return
     const data = await handleRequest<{ accessToken: string; refreshToken: string; user: UserState; }>({
       requestFn: async () => await api.post('/auth/signup', { username, password, email }, { skipAuth: true } as any),
       showToast,
@@ -99,9 +117,30 @@ export default function RegisterScreen() {
   }
 
   const validateEmail = (value: string) => {
-    setIsEmailValid(isValidEmail(value))
-    setValue('email', value)
-  }
+    setValue('email', value);
+
+    const validated = isValidEmail(value);
+    if (validated !== 'valid') {
+      setIsEmailValid(validated);
+      setInvalidEmailPhrase(undefined);
+      return;
+    }
+  
+    if (emailTimeoutRef.current) {
+      clearTimeout(emailTimeoutRef.current);
+    }
+  
+    emailTimeoutRef.current = setTimeout(async () => {
+      const foundedEmail = await findByEmail({ email: value });
+      if (foundedEmail) {
+        setIsEmailValid('invalid');
+        setInvalidEmailPhrase('E-mail já está em uso!');
+      } else {
+        setIsEmailValid('valid');
+      }
+      emailTimeoutRef.current = null
+    }, 1000);
+  };
 
   const validatePassword = (value: string) => {
     setValue('password', value)
@@ -144,6 +183,7 @@ export default function RegisterScreen() {
         placeholder='Digite seu nome de usuário aqui'
         onChangeText={validateUsername}
         isValid={isUsernameValid}
+        onSubmitEditing={() => emailRef.current?.focus()}
         returnKeyType='next'
       />
       <Input
@@ -151,8 +191,11 @@ export default function RegisterScreen() {
         label='E-mail'
         isPasswordInput={false}
         placeholder='Digite seu e-mail aqui'
+        invalidPhrase={invalidEmailPhrase}
         onChangeText={validateEmail}
         isValid={isEmailValid}
+        onSubmitEditing={() => passwordRef.current?.focus()}
+        ref={emailRef}
         returnKeyType='next'
       />
       <Input
@@ -164,6 +207,8 @@ export default function RegisterScreen() {
         onBlur={handleBlur}
         placeholder='Digite uma senha'
         isValid={isPasswordValid}
+        onSubmitEditing={() => confirmPasswordRef.current?.focus()}
+        ref={passwordRef}
         returnKeyType='next'
       />
       {
@@ -200,6 +245,7 @@ export default function RegisterScreen() {
         placeholder='Digite sua senha novamente'
         isValid={isConfirmPasswordValid}
         onSubmitEditing={onSubmit}
+        ref={confirmPasswordRef}
         returnKeyType='done'
       />
       <View style={styles.termsContainer}>
