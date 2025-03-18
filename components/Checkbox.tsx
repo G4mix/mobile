@@ -1,6 +1,6 @@
 import { CheckBox as CheckboxDefault } from '@rneui/themed';
 import { Dispatch, SetStateAction, useState } from 'react';
-import Colors from '@/constants/colors';
+import { Colors } from '@/constants/colors';
 
 type CheckboxProps = {
   isChecked: boolean;

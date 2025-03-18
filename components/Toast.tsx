@@ -1,4 +1,4 @@
-import Colors from "@/constants/colors";
+import { Colors } from "@/constants/colors";
 import { Text, Animated, StyleSheet } from "react-native";
 
 export type ToastProps = {

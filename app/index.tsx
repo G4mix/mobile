@@ -1,18 +1,19 @@
-import { Image, StyleSheet } from 'react-native';
+import { Image, Pressable, StyleSheet } from 'react-native';
 import { useForm } from "react-hook-form"
 import { Text, View } from '@/components/Themed';
 import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
 import { Link, useRouter } from 'expo-router';
-import Colors from '@/constants/colors';
-import colors from '@/constants/colors';
+import { Colors } from '@/constants/colors';
 import { handleRequest } from '@/utils/handleRequest';
 import { setUser, UserState } from '@/features/auth/userSlice';
 import { api } from '@/constants/api';
 import { useToast } from '@/hooks/useToast';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { setItem } from '@/constants/storage';
 import { useDispatch } from 'react-redux';
+import { env } from '@/constants/env';
+import { OAuthLogin } from '@/features/auth/OAuthLogin';
 
 type FormData = {
   password: string;
@@ -20,6 +21,8 @@ type FormData = {
 }
 
 export default function InitialScreen() {
+  const providers = ['google', 'linkedin', 'github']
+
   const {
     watch,
     setValue,
@@ -62,24 +65,9 @@ export default function InitialScreen() {
       <Image source={require('../assets/images/favicon.png')} />
       <Text style={styles.title}>Entrar</Text>
       <View style={styles.connectionMethodsContainer}>
-        <View style={{borderRadius: 8, borderWidth: 1, borderColor: colors.light.tropicalIndigo, padding: 6, opacity: 0.7}}>
-          <Image
-            source={require('../assets/images/icons/google.png')}
-            style={{width: 32, height: 32}}
-          />
-        </View>
-        <View style={{borderRadius: 8, borderWidth: 1, borderColor: colors.light.tropicalIndigo, padding: 6, opacity: 0.7}}>
-          <Image
-            source={require('../assets/images/icons/linkedin.png')}
-            style={{width: 32, height: 32}}
-          />
-        </View>
-        <View style={{borderRadius: 8, borderWidth: 1, borderColor: colors.light.tropicalIndigo, padding: 6, opacity: 0.7}}>
-          <Image
-            source={require('../assets/images/icons/github.png')}
-            style={{width: 32, height: 32}}
-          />
-        </View>
+        {
+          providers.map(provider => <OAuthLogin provider={provider as any} key={`handle-login-with-${provider}`} />)
+        }
       </View>
       <Text style={{color: Colors['dark'].background, fontWeight: 'medium'}}>OU</Text>
       <Input

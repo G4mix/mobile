@@ -7,7 +7,7 @@ import { Checkbox } from "@/components/Checkbox";
 import { useRef, useState } from 'react';
 import { Link, useRouter } from 'expo-router';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import Colors from '@/constants/colors';
+import { Colors } from '@/constants/colors';
 import { useForm } from 'react-hook-form';
 import { api } from '@/constants/api';
 import { useToast } from '@/hooks/useToast';

@@ -1,6 +1,6 @@
 import { TextInput, View, StyleSheet, NativeSyntheticEvent, TextInputFocusEventData, ReturnKeyTypeOptions, TextInputSubmitEditingEventData } from 'react-native';
 import { Text } from '@/components/Themed';
-import Colors from '@/constants/colors';
+import { Colors } from '@/constants/colors';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { forwardRef } from 'react';
 

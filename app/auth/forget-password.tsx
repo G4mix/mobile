@@ -6,7 +6,7 @@ import { Input } from '@/components/Input';
 import { isValidEmail } from '@/constants/validations';
 import { useState } from 'react';
 import { Link } from 'expo-router';
-import Colors from '@/constants/colors';
+import { Colors } from '@/constants/colors';
 
 export default function ForgetPasswordScreen() {
   const [isEmailValid, setIsEmailValid] = useState<'valid' | 'invalid' | null>(null)

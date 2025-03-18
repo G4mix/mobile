@@ -1,7 +1,7 @@
 import { GestureResponderEvent, Pressable, StyleSheet } from "react-native";
 import { ReactNode } from "react"
 import { Text } from '@/components/Themed';
-import Colors from "@/constants/colors";
+import { Colors } from "@/constants/colors";
 
 type ButtonProps = {
   children: ReactNode;
