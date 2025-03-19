@@ -265,7 +265,7 @@ export default function RegisterScreen() {
 
   return (
     <View style={styles.container}>
-      <Image source={favIcon} />
+      <Image source={favIcon} style={{ maxWidth: 120, maxHeight: 120 }} />
       <Text style={styles.title}>Criar uma conta</Text>
       <Input
         icon="user"

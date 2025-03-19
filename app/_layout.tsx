@@ -15,18 +15,8 @@ import { getItem, removeItem } from "@constants/storage";
 import { ToastProvider } from "@context/ToastContext";
 import { reduxStore } from "@constants/reduxStore";
 
-// eslint-disable-next-line camelcase
-export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: "application"
-};
-
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
-SplashScreen.setOptions({
-  duration: 1000,
-  fade: true
-});
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
@@ -73,6 +63,10 @@ function RootLayoutNav() {
             <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen name="modal" options={{ presentation: "modal" }} />
             <Stack.Screen
+              name="auth/loading"
+              options={{ presentation: "modal", headerShown: false }}
+            />
+            <Stack.Screen
               name="terms"
               options={{ presentation: "modal", headerShown: true, title: "" }}
             />
@@ -84,5 +78,9 @@ function RootLayoutNav() {
 }
 
 export default function RootLayout() {
+  useEffect(() => {
+    SplashScreen.hideAsync();
+  }, []);
+
   return <RootLayoutNav />;
 }

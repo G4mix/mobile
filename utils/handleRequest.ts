@@ -23,9 +23,13 @@ export const handleRequest = async <T>({
     if (successMessage)
       showToast({ message: successMessage, color: "success" });
     setIsLoading(false);
+    // eslint-disable-next-line no-console
+    console.log(req);
     return req;
   } catch (error) {
     setIsLoading(false);
+    // eslint-disable-next-line no-console
+    console.log(error);
     if (ignoreErrors) return null;
     if (isAxiosError(error)) {
       const errorMessage =

@@ -42,7 +42,8 @@ module.exports = {
     "@typescript-eslint/no-explicit-any": "off",
     "import/extensions": "off",
     "react/jsx-props-no-spreading": "off",
-    "import/no-unresolved": "off"
-  },
-
+    "import/no-unresolved": "off",
+    "global-require": "off",
+    "@typescript-eslint/no-require-imports": "off"
+  }
 };

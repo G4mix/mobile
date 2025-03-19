@@ -36,7 +36,7 @@ export default function ForgetPasswordScreen() {
 
   return (
     <View style={styles.container}>
-      <Image source={favIcon} />
+      <Image source={favIcon} style={{ maxWidth: 120, maxHeight: 120 }} />
       <Text style={styles.title}>Recupere sua conta</Text>
       <Input
         icon="envelope"

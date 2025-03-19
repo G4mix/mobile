@@ -92,7 +92,7 @@ export default function InitialScreen() {
 
   return (
     <View style={styles.container}>
-      <Image source={favIcon} />
+      <Image source={favIcon} style={{ maxWidth: 120, maxHeight: 120 }} />
       <Text style={styles.title}>Entrar</Text>
       <View style={styles.connectionMethodsContainer}>
         {providers.map((provider) => (
@@ -135,7 +135,7 @@ export default function InitialScreen() {
         onPress={isReadyToLogin && !isLoading ? onSubmit : undefined}
         disabled={!isReadyToLogin || isLoading}
       >
-        <Text>Conectar-se</Text>
+        <Text style={{ color: Colors.light.white }}>Conectar-se</Text>
       </Button>
       <Link href="/auth/register">
         <Text style={{ color: Colors.light.russianViolet }}>

@@ -19,7 +19,16 @@
     },
     "ios": {
       "bundleIdentifier": "com.gamix",
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLSchemes": [
+              "com.googleusercontent.apps.499249588653-dakic31dp5oor0lm5mab40ulivdv5coa"
+            ]
+          }
+        ]
+      }
     },
     "android": {
       "adaptiveIcon": {
