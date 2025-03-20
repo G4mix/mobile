@@ -2,7 +2,7 @@ name: Build and Release Expo App
 
 on:
   push:
-    branches: [main]
+    branches: [build-production]
 
 jobs:
   build:
@@ -58,6 +58,13 @@ jobs:
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
           echo "Nova versão será: $NEW_VERSION"
 
+      - name: env config
+        run: |
+          echo "EXPO_PUBLIC_API_URL=${{ secrets.EXPO_PUBLIC_API_URL }}" >> .env && \
+          echo "EXPO_PUBLIC_GITHUB_CLIENT_ID=${{ secrets.EXPO_PUBLIC_GITHUB_CLIENT_ID }}" >> .env && \
+          echo "EXPO_PUBLIC_LINKEDIN_CLIENT_ID=${{ secrets.EXPO_PUBLIC_LINKEDIN_CLIENT_ID }}" >> .env && \
+          echo "EXPO_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.EXPO_PUBLIC_GOOGLE_CLIENT_ID }}" >> .env && \
+
       - name: Criar build local
         run: eas build --platform android --profile production --local
 
@@ -75,7 +82,7 @@ jobs:
           prerelease: false
           files: ${{ env.APK_PATH }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
 
       - name: Publicar no Expo
         run: expo publish --non-interactive
