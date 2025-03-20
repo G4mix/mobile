@@ -19,16 +19,20 @@ jobs:
           node-version: 20
           cache: 'npm'
 
+      - name: Criar Release no GitHub
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ env.NEW_VERSION }}
+          name: "Release v${{ env.NEW_VERSION }}"
+          body: "Nova versão do aplicativo Expo."
+          draft: false
+          prerelease: false
+          # files: ${{ env.APK_PATH }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+      
       - name: Instalar dependências
         run: npm install
-
-      - name: Check if secret exists
-        run: |
-          if [ -z "${{ secrets.EXPO_PUBLIC_API_URL }}" ]; then
-            echo "Secret MY_SECRET is not set"
-          else
-            echo "Secret MY_SECRET is set"
-          fi
 
       - name: Instalar Expo CLI e EAS CLI
         run: npm install -g expo-cli eas-cli
