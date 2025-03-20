@@ -155,7 +155,7 @@ export default function RegisterScreen() {
       user: UserState;
     }>({
       requestFn: async () =>
-        api.get(`/user/${email}`, { skipAuth: true } as any),
+        api.get(`/user/exists/${email}`, { skipAuth: true } as any),
       showToast,
       setIsLoading: setIsLoadingUser,
       ignoreErrors: true
