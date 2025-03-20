@@ -22,14 +22,14 @@ jobs:
       - name: Criar Release no GitHub
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v${{ env.NEW_VERSION }}
-          name: "Release v${{ env.NEW_VERSION }}"
+          tag_name: v1.0.0
+          name: "Release v1.0.0"
           body: "Nova versão do aplicativo Expo."
           draft: false
           prerelease: false
           # files: ${{ env.APK_PATH }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GHP }}
       
       - name: Instalar dependências
         run: npm install
