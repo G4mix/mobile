@@ -22,6 +22,9 @@ jobs:
       - name: Instalar dependências
         run: npm install
 
+      - name: Show EXPO_PUBLIC_API_URL secret
+        run: echo "EXPO_PUBLIC_API_URL=${{ secrets.EXPO_PUBLIC_API_URL }}"
+
       - name: Instalar Expo CLI e EAS CLI
         run: npm install -g expo-cli eas-cli
 
