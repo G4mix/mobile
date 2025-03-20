@@ -19,18 +19,6 @@ jobs:
           node-version: 20
           cache: 'npm'
 
-      - name: Criar Release no GitHub
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: v1.0.0
-          name: "Release v1.0.0"
-          body: "Nova versão do aplicativo Expo."
-          draft: false
-          prerelease: false
-          # files: ${{ env.APK_PATH }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GHP }}
-      
       - name: Instalar dependências
         run: npm install
 
@@ -94,7 +82,7 @@ jobs:
           prerelease: false
           files: ${{ env.APK_PATH }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GHP }}
 
       - name: Publicar no Expo
         run: expo publish --non-interactive
