@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import "react-native-reanimated";
 
 import { Provider } from "react-redux";
-import { useColorScheme } from "@hooks/useColorScheme";
+import { useColorScheme } from "react-native";
 import { authEventEmitter } from "@constants/authEventEmitter";
 import { getItem, removeItem } from "@constants/storage";
 import { ToastProvider } from "@context/ToastContext";
@@ -22,19 +22,26 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
   const router = useRouter();
   const pathname = usePathname();
+  // const dispatch = useDispatch();
 
   const checkAuth = async () => {
     const accessToken = await getItem("accessToken");
     const refreshToken = await getItem("refreshToken");
-
+    // const user = await getItem("user");
+    // || !user
     if (!accessToken || !refreshToken) {
       // setIsAuthenticated(false);
-      if (pathname !== "/" && !pathname.startsWith("/auth")) {
+      if (
+        pathname !== "/" &&
+        !pathname.startsWith("/auth") &&
+        !["/terms"].includes(pathname)
+      ) {
         // Evita loop infinito na tela de login
         router.replace("/");
       }
     }
 
+    // dispatch(setUser(JSON.parse(user)));
     // setIsAuthenticated(true);
   };
 
@@ -79,7 +86,10 @@ function RootLayoutNav() {
 
 export default function RootLayout() {
   useEffect(() => {
-    SplashScreen.hideAsync();
+    const hideSplash = async () => {
+      await SplashScreen.hideAsync();
+    };
+    hideSplash();
   }, []);
 
   return <RootLayoutNav />;
