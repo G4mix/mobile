@@ -10,10 +10,10 @@ import "react-native-reanimated";
 
 import { Provider } from "react-redux";
 import { useColorScheme } from "react-native";
-import { authEventEmitter } from "@constants/authEventEmitter";
-import { getItem, removeItem } from "@constants/storage";
-import { ToastProvider } from "@context/ToastContext";
-import { reduxStore } from "@constants/reduxStore";
+import { authEventEmitter } from "@/constants/authEventEmitter";
+import { getItem, removeItem } from "@/constants/storage";
+import { ToastProvider } from "@/context/ToastContext";
+import { reduxStore } from "@/constants/reduxStore";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();

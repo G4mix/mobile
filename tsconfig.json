@@ -4,13 +4,7 @@
     "strict": true,
     "baseUrl": "./",
     "paths": {
-      "@context/*": ["./context/*"],
-      "@components/*": ["./components/*"],
-      "@constants/*": ["./constants/*"],
-      "@features/*": ["./features/*"],
-      "@hooks/*": ["./hooks/*"],
-      "@utils/*": ["./utils/*"],
-      "@assets/*": ["./assets/*"],
+      "@/*": ["./*"],
     }
   },
   "include": [

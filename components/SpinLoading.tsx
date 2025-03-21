@@ -1,6 +1,6 @@
-import { Colors } from "@constants/colors";
 import React, { useEffect, useRef } from "react";
 import { View, Animated, Easing, StyleSheet } from "react-native";
+import { Colors } from "@/constants/colors";
 
 const CIRCLE_COUNT = 8;
 const ANIMATION_DURATION = 1200;

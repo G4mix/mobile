@@ -1,9 +1,8 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import * as WebBrowser from "expo-web-browser";
-import { setItem } from "@constants/storage";
-import { env } from "@constants/env";
-
 import * as Crypto from "expo-crypto";
+import { setItem } from "@/constants/storage";
+import { env } from "@/constants/env";
 
 const generateCodeVerifier = async () => {
   const randomBytes = await Crypto.getRandomBytesAsync(32);

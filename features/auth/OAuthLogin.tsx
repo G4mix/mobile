@@ -1,10 +1,10 @@
 import { Image, Pressable, View } from "react-native";
 import * as WebBrowser from "expo-web-browser";
-import { Colors } from "@constants/colors";
 import googleIcon from "@assets/images/icons/google.png";
 import linkedinIcon from "@assets/images/icons/linkedin.png";
 import githubIcon from "@assets/images/icons/github.png";
-import { useOAuth } from "@hooks/useOAuth";
+import { Colors } from "@/constants/colors";
+import { useOAuth } from "@/hooks/useOAuth";
 
 WebBrowser.maybeCompleteAuthSession();
 

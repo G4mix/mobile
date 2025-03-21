@@ -2,12 +2,12 @@ import { Image, StyleSheet, View } from "react-native";
 
 import { useState } from "react";
 import { Link } from "expo-router";
-import { Text } from "@components/Themed";
-import { Button } from "@components/Button";
-import { Input } from "@components/Input";
-import { isValidEmail } from "@constants/validations";
-import { Colors } from "@constants/colors";
-import favIcon from "@assets/images/favicon.png";
+import { Text } from "@/components/Themed";
+import { Button } from "@/components/Button";
+import { Input } from "@/components/Input";
+import { isValidEmail } from "@/constants/validations";
+import { Colors } from "@/constants/colors";
+import favIcon from "@/assets/images/favicon.png";
 
 const styles = StyleSheet.create({
   container: {
