@@ -65,12 +65,14 @@ jobs:
           echo "EXPO_PUBLIC_LINKEDIN_CLIENT_ID=${{ secrets.EXPO_PUBLIC_LINKEDIN_CLIENT_ID }}" >> .env && \
           echo "EXPO_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.EXPO_PUBLIC_GOOGLE_CLIENT_ID }}" >> .env
 
-      - name: Criar build local
-        run: eas build --platform android --profile production --local
+      - name: Build app
+        run: eas build --platform android --profile production --non-interactive --output=gamix.apk
 
-      - name: Encontrar APK gerado
-        id: find-apk
-        run: echo "APK_PATH=$(find . -name '*.apk' | head -n 1)" >> $GITHUB_ENV
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-release.apk
+          path: app-release.apk
 
       - name: Criar Release no GitHub
         uses: softprops/action-gh-release@v2
@@ -80,9 +82,6 @@ jobs:
           body: "Nova versão do aplicativo Expo."
           draft: false
           prerelease: false
-          files: ${{ env.APK_PATH }}
+          files: gamix.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GHP }}
-
-      - name: Publicar no Expo
-        run: expo publish --non-interactive
