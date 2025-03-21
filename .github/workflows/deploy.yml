@@ -71,8 +71,8 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: app-release.apk
-          path: app-release.apk
+          name: gamix
+          path: gamix.apk
 
       - name: Criar Release no GitHub
         uses: softprops/action-gh-release@v2
