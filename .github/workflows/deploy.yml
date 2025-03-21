@@ -27,6 +27,9 @@ jobs:
 
       - name: Autenticar no Expo
         run: echo "EXPO_TOKEN=${{ secrets.EXPO_TOKEN }}" >> $GITHUB_ENV
+      
+      - name: Prebuildar app
+        run: expo prebuild --platform android --non-interactive
 
       - name: Buscar a última versão e gerar a próxima
         id: versioning
@@ -67,12 +70,6 @@ jobs:
 
       - name: Build app
         run: eas build --platform android --profile production --non-interactive --local --output=gamix.apk
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: gamix
-          path: gamix.apk
 
       - name: Criar Release no GitHub
         uses: softprops/action-gh-release@v2
