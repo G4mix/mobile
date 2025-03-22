@@ -1,4 +1,4 @@
-name: Build and Release Expo App
+name: Build and Release App
 
 on:
   push:

@@ -1,4 +1,4 @@
-name: Build and Release Expo App
+name: Verify app
 
 on:
   push:
@@ -26,5 +26,11 @@ jobs:
       - name: Instalar dependências
         run: npm install
 
+      - name: Instalar expo-doctor
+        run: npm install -g expo-doctor
+
       - name: Rodar eslint
         run: npm run lint
+
+      - name: Rodar eslint
+        run: npx expo-doctor
