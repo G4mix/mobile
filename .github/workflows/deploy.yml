@@ -77,8 +77,8 @@ jobs:
       - name: Criar Release no GitHub
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v${{ env.NEW_VERSION }}
-          name: "Release v${{ env.NEW_VERSION }}"
+          tag_name: ${{ env.NEW_VERSION }}
+          name: "Release ${{ env.NEW_VERSION }}"
           body: "Nova versão do aplicativo Expo."
           draft: false
           prerelease: false
