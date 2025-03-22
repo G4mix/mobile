@@ -1,6 +1,6 @@
 import React, { createContext, useState, useCallback, useMemo } from "react";
 import { View, StyleSheet, Animated } from "react-native";
-import { Toast, ToastProps } from "@components/Toast";
+import { Toast, ToastProps } from "@/components/Toast";
 
 type ShowToastProps = {
   message: string;

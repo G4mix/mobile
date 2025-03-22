@@ -1,0 +1,36 @@
+name: Verify app
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  build:
+    name: Build Expo App
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Instalar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Instalar dependências
+        run: npm install
+
+      - name: Instalar expo-doctor
+        run: npm install -g expo-doctor
+
+      - name: Rodar eslint
+        run: npm run lint
+
+      - name: Rodar expo doctor
+        run: npx expo-doctor

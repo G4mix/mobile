@@ -4,8 +4,8 @@ import { Link, useRouter } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { View } from "@components/Themed";
-import { Input } from "@components/Input";
+import { View } from "@/components/Themed";
+import { Input } from "@/components/Input";
 import {
   isValidEmail,
   isValidPassword,
@@ -14,16 +14,16 @@ import {
   isValidPasswordSpecialChar,
   isValidPasswordUppercase,
   isValidUsername
-} from "@constants/validations";
-import { Button } from "@components/Button";
-import { Checkbox } from "@components/Checkbox";
-import { Colors } from "@constants/colors";
-import { api } from "@constants/api";
-import { useToast } from "@hooks/useToast";
-import { handleRequest } from "@utils/handleRequest";
-import { setUser, UserState } from "@features/auth/userSlice";
-import { setItem } from "@constants/storage";
-import favIcon from "@assets/images/favicon.png";
+} from "@/constants/validations";
+import { Button } from "@/components/Button";
+import { Checkbox } from "@/components/Checkbox";
+import { Colors } from "@/constants/colors";
+import { api } from "@/constants/api";
+import { useToast } from "@/hooks/useToast";
+import { handleRequest } from "@/utils/handleRequest";
+import { setUser, UserState } from "@/features/auth/userSlice";
+import { setItem } from "@/constants/storage";
+import favIcon from "@/assets/images/favicon.png";
 
 type FormData = {
   username: string;

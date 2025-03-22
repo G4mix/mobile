@@ -1,5 +1,5 @@
 import { Text, Animated, StyleSheet } from "react-native";
-import { Colors } from "@constants/colors";
+import { Colors } from "@/constants/colors";
 
 export type ToastProps = {
   // eslint-disable-next-line react/no-unused-prop-types, react/require-default-props

@@ -2,11 +2,11 @@ import { StyleSheet } from "react-native";
 
 import { useSelector } from "react-redux";
 import { useRouter } from "expo-router";
-import { Text, View } from "@components/Themed";
-import { RootState } from "@constants/reduxStore";
-import { Button } from "@components/Button";
-import { logout } from "@features/auth/userSlice";
-import { removeItem } from "@constants/storage";
+import { Text, View } from "@/components/Themed";
+import { RootState } from "@/constants/reduxStore";
+import { Button } from "@/components/Button";
+import { logout } from "@/features/auth/userSlice";
+import { removeItem } from "@/constants/storage";
 
 const styles = StyleSheet.create({
   container: {

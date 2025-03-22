@@ -9,8 +9,8 @@ import {
 } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { ComponentProps, forwardRef } from "react";
-import { Text } from "@components/Themed";
-import { Colors } from "@constants/colors";
+import { Text } from "@/components/Themed";
+import { Colors } from "@/constants/colors";
 
 type InputProps = {
   icon: ComponentProps<typeof FontAwesome>["name"];

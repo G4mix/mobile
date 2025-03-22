@@ -1,4 +1,4 @@
-name: Build and Release Expo App
+name: Build and Release App
 
 on:
   push:
@@ -27,19 +27,25 @@ jobs:
 
       - name: Autenticar no Expo
         run: echo "EXPO_TOKEN=${{ secrets.EXPO_TOKEN }}" >> $GITHUB_ENV
+      
+      - name: Prebuildar app
+        run: expo prebuild --platform android --non-interactive
 
       - name: Buscar a última versão e gerar a próxima
         id: versioning
         run: |
-          LAST_TAG=$(git tag --sort=-v:refname | head -n 1)
-
+          # Obtém a última tag usando a API do GitHub
+          LAST_TAG=$(curl -s https://api.github.com/repos/G4mix/mobile/tags | jq -r '.[0].name')
+      
           if [[ -z "$LAST_TAG" ]]; then
             NEW_VERSION="1.0.0"
           else
+            # Remove o prefixo 'v' se existir
+            LAST_TAG=${LAST_TAG#v}
             MAJOR=$(echo $LAST_TAG | cut -d. -f1)
             MINOR=$(echo $LAST_TAG | cut -d. -f2)
             PATCH=$(echo $LAST_TAG | cut -d. -f3)
-
+      
             if [[ "$PATCH" -lt 9 ]]; then
               PATCH=$((PATCH + 1))
             else
@@ -51,19 +57,22 @@ jobs:
                 MAJOR=$((MAJOR + 1))
               fi
             fi
-
-            NEW_VERSION="$MAJOR.$MINOR.$PATCH"
+      
+            NEW_VERSION="v$MAJOR.$MINOR.$PATCH"
           fi
-
+      
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
           echo "Nova versão será: $NEW_VERSION"
+      
+      - name: env config
+        run: |
+          echo "EXPO_PUBLIC_API_URL=${{ secrets.EXPO_PUBLIC_API_URL }}" >> .env && \
+          echo "EXPO_PUBLIC_GITHUB_CLIENT_ID=${{ secrets.EXPO_PUBLIC_GITHUB_CLIENT_ID }}" >> .env && \
+          echo "EXPO_PUBLIC_LINKEDIN_CLIENT_ID=${{ secrets.EXPO_PUBLIC_LINKEDIN_CLIENT_ID }}" >> .env && \
+          echo "EXPO_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.EXPO_PUBLIC_GOOGLE_CLIENT_ID }}" >> .env
 
-      - name: Criar build local
-        run: eas build --platform android --profile production --local
-
-      - name: Encontrar APK gerado
-        id: find-apk
-        run: echo "APK_PATH=$(find . -name '*.apk' | head -n 1)" >> $GITHUB_ENV
+      - name: Build app
+        run: eas build --platform android --profile production --non-interactive --local --output=gamix.apk
 
       - name: Criar Release no GitHub
         uses: softprops/action-gh-release@v2
@@ -73,9 +82,6 @@ jobs:
           body: "Nova versão do aplicativo Expo."
           draft: false
           prerelease: false
-          files: ${{ env.APK_PATH }}
+          files: gamix.apk
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Publicar no Expo
-        run: expo publish --non-interactive
+          GITHUB_TOKEN: ${{ secrets.GHP }}

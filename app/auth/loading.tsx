@@ -1,16 +1,16 @@
 import { StyleSheet } from "react-native";
 
-import { Text, View } from "@components/Themed";
 import { useRouter, useLocalSearchParams } from "expo-router";
-import { setUser, UserState } from "@features/auth/userSlice";
-import { api } from "@constants/api";
-import { handleRequest } from "@utils/handleRequest";
-import { getItem, setItem } from "@constants/storage";
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-import { useToast } from "@hooks/useToast";
-import { SpinLoading } from "@components/SpinLoading";
-import { Colors } from "@constants/colors";
+import { Text, View } from "@/components/Themed";
+import { setUser, UserState } from "@/features/auth/userSlice";
+import { api } from "@/constants/api";
+import { handleRequest } from "@/utils/handleRequest";
+import { getItem, setItem } from "@/constants/storage";
+import { useToast } from "@/hooks/useToast";
+import { SpinLoading } from "@/components/SpinLoading";
+import { Colors } from "@/constants/colors";
 
 const styles = StyleSheet.create({
   container: {

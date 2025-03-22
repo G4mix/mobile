@@ -2,9 +2,9 @@ import React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Tabs } from "expo-router";
 
-import { Colors } from "@constants/colors";
-import { useColorScheme } from "@hooks/useColorScheme";
-import { useClientOnlyValue } from "@hooks/useClientOnlyValue";
+import { useColorScheme } from "react-native";
+import { Colors } from "@/constants/colors";
+import { useClientOnlyValue } from "@/hooks/useClientOnlyValue";
 
 type TabBarIconProps = {
   name: React.ComponentProps<typeof FontAwesome>["name"];

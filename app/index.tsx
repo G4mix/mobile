@@ -3,17 +3,17 @@ import { useForm } from "react-hook-form";
 import { Link, useRouter } from "expo-router";
 import { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { Text, View } from "@components/Themed";
-import { Button } from "@components/Button";
-import { Input } from "@components/Input";
-import { Colors } from "@constants/colors";
-import { handleRequest } from "@utils/handleRequest";
-import { setUser, UserState } from "@features/auth/userSlice";
-import { api } from "@constants/api";
-import { useToast } from "@hooks/useToast";
-import { setItem } from "@constants/storage";
-import { OAuthLogin } from "@features/auth/OAuthLogin";
-import favIcon from "@assets/images/favicon.png";
+import { Text, View } from "@/components/Themed";
+import { Button } from "@/components/Button";
+import { Input } from "@/components/Input";
+import { Colors } from "@/constants/colors";
+import { handleRequest } from "@/utils/handleRequest";
+import { setUser, UserState } from "@/features/auth/userSlice";
+import { api } from "@/constants/api";
+import { useToast } from "@/hooks/useToast";
+import { setItem } from "@/constants/storage";
+import { OAuthLogin } from "@/features/auth/OAuthLogin";
+import favIcon from "@/assets/images/favicon.png";
 
 type FormData = {
   password: string;

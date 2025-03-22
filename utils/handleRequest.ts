@@ -1,6 +1,6 @@
 import { isAxiosError } from "axios";
 import { Dispatch, SetStateAction } from "react";
-import { ToastContextType } from "@context/ToastContext";
+import { ToastContextType } from "@/context/ToastContext";
 
 type RequestFunction<T> = () => Promise<T>;
 
