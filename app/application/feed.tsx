@@ -9,7 +9,6 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     flex: 1,
-    gap: 16
   },
   posts: {
     display: "flex",
@@ -24,7 +23,9 @@ export default function FeedScreen() {
     <View style={styles.container}>
       <ContentTabs />
       <View style={styles.posts}>
-        <Post title="Teste" content="Aoba" user={user} />
+        <Post title="Teste" content="Aoba" user={user}/>
+        <Post title="Shut a lonely day" content="alfkjaslkfjalksdfjlkasdjflkjasd" user={user}/>
+
       </View>
     </View>
   );

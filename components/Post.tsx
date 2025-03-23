@@ -3,6 +3,9 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Colors } from "@/constants/colors";
 import { UserState } from "@/features/auth/userSlice";
+import { Dimensions } from 'react-native';
+
+const { width } = Dimensions.get('window');
 
 type PostProps = {
   user: UserState;
@@ -14,34 +17,32 @@ type PostProps = {
 const styles = StyleSheet.create({
   actionContainer: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
     marginTop: 10
   },
-  button: {
-    backgroundColor: "#007bff",
-    borderRadius: 5,
-    paddingHorizontal: 16,
-    paddingVertical: 8
+  actionOption: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 3
   },
-  buttonText: {
-    color: "#fff",
-    fontSize: 14,
-    fontWeight: "bold"
+  firstRow: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 10
   },
   imageProfile: {
+    width: 18,
+    height: 18,
     borderRadius: 10
   },
   postContainer: {
     backgroundColor: Colors.light.white,
     borderColor: Colors.light.periwinkle,
-    borderRadius: 8,
-    elevation: 3,
-    margin: 10,
+    borderBottomWidth: 2,
     padding: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4
+    width: width 
   },
   postDescription: {
     color: "#555",
@@ -54,40 +55,58 @@ const styles = StyleSheet.create({
     width: "100%"
   },
   postTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 8
+    fontSize: 13.33,
+    fontWeight: 'bold'
+  },
+  postUserInformation: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10
+  },
+  userName: {
+    fontSize: 13.33
   }
 });
 
 export function Post({ user, title, content, postImage }: PostProps) {
   return (
     <View style={styles.postContainer}>
-      <Image
-        source={{
-          uri:
-            user.userProfile.icon ||
-            "https://static.vecteezy.com/system/resources/previews/009/292/244/original/default-avatar-icon-of-social-media-user-vector.jpg"
-        }}
-        style={styles.imageProfile}
-      />
+      <View style={styles.firstRow}>
+        <View style={styles.postUserInformation}>
+        <Image
+          source={{
+            uri: user?.userProfile?.icon || 
+                "https://static.vecteezy.com/system/resources/previews/009/292/244/original/default-avatar-icon-of-social-media-user-vector.jpg"
+          }}
+          style={[styles.imageProfile]}
+        />
+        <Text style={styles.userName}>{user.username} • 12/02/2025</Text>
+        </View>
+      <FontAwesome size={16} name="ellipsis-h" />
+      </View>
       <Text style={styles.postTitle}>{title}</Text>
-
       <Text style={styles.postDescription}>{content}</Text>
 
-      <Image
-        source={{ uri: postImage || "https://via.placeholder.com/300" }}
-        style={styles.postImage}
-      />
-
       <View style={styles.actionContainer}>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Curtir</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Comentar</Text>
-        </TouchableOpacity>
-        <FontAwesome size={24} name="bar-chart" />
+        <View style={styles.actionOption}>
+          <TouchableOpacity >
+            <FontAwesome size={18} name="thumbs-o-up" />
+          </TouchableOpacity>
+          <Text>12k</Text>
+        </View>
+        <View style={styles.actionOption}>
+          <TouchableOpacity>
+            <FontAwesome size={18} name="commenting-o" />
+          </TouchableOpacity>
+          <Text>12k</Text>
+        </View>
+        <View style={styles.actionOption}>
+          <FontAwesome size={18} name="bar-chart" />
+          <Text>12k</Text>
+        </View>
+        <FontAwesome size={18} name="share-alt" />
       </View>
     </View>
   );
