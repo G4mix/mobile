@@ -1,5 +1,9 @@
 import { StyleSheet } from "react-native";
+import { useRouter } from "expo-router";
 import { Text } from "@/components/Themed";
+import { removeItem } from "@/constants/storage";
+import { Button } from "@/components/Button";
+import { logout } from "@/features/auth/userSlice";
 
 const styles = StyleSheet.create({
   title: {
@@ -9,5 +13,21 @@ const styles = StyleSheet.create({
 });
 
 export default function ProfileScreen() {
-  return <Text style={styles.title}>Feed</Text>;
+  const router = useRouter();
+
+  return (
+    <Text style={styles.title}>
+      <Button
+        onPress={() => {
+          logout();
+          removeItem("user");
+          removeItem("accessToken");
+          removeItem("refreshToken");
+          router.replace("/");
+        }}
+      >
+        <Text>Logout</Text>
+      </Button>
+    </Text>
+  );
 }

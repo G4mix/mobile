@@ -1,44 +1,31 @@
 import { StyleSheet } from "react-native";
-
 import { useSelector } from "react-redux";
-import { useRouter } from "expo-router";
-import { Text, View } from "@/components/Themed";
+import { View } from "@/components/Themed";
+import { ContentTabs } from "@/components/ContentTabs";
+import { Post } from "@/components/Post";
 import { RootState } from "@/constants/reduxStore";
-import { Button } from "@/components/Button";
-import { logout } from "@/features/auth/userSlice";
-import { removeItem } from "@/constants/storage";
 
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     flex: 1,
-    justifyContent: "center"
+    gap: 16
   },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold"
+  posts: {
+    display: "flex",
+    flexDirection: "column"
   }
 });
 
 export default function FeedScreen() {
   const user = useSelector((state: RootState) => state.user);
-  const router = useRouter();
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Feed</Text>
-      <Text>Nome do usuário: {user.username}</Text>
-      <Button
-        onPress={() => {
-          logout();
-          removeItem("user");
-          removeItem("accessToken");
-          removeItem("refreshToken");
-          router.replace("/");
-        }}
-      >
-        <Text>Logout</Text>
-      </Button>
+      <ContentTabs />
+      <View style={styles.posts}>
+        <Post title="Teste" content="Aoba" user={user} />
+      </View>
     </View>
   );
 }
