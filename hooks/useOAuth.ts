@@ -1,30 +1,8 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import * as WebBrowser from "expo-web-browser";
-import * as Crypto from "expo-crypto";
 import { setItem } from "@/constants/storage";
 import { env } from "@/constants/env";
-
-const generateCodeVerifier = async () => {
-  const randomBytes = await Crypto.getRandomBytesAsync(32);
-  return btoa(String.fromCharCode(...randomBytes))
-    .replace(/=/g, "")
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_");
-};
-
-const generateCodeChallenge = async ({
-  codeVerifier
-}: {
-  codeVerifier: string;
-}) => {
-  const hashed = await Crypto.digestStringAsync(
-    Crypto.CryptoDigestAlgorithm.SHA256,
-    codeVerifier,
-    { encoding: Crypto.CryptoEncoding.BASE64 }
-  );
-
-  return hashed.replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
-};
+import { generateCodeChallenge, generateCodeVerifier } from "@/utils/pkce";
 
 type Providers = "google" | "linkedin" | "github";
 

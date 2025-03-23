@@ -1,17 +1,22 @@
 import React from "react";
-import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions
+} from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Colors } from "@/constants/colors";
 import { UserState } from "@/features/auth/userSlice";
-import { Dimensions } from 'react-native';
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 type PostProps = {
   user: UserState;
   title?: string;
   content?: string;
-  postImage?: string;
 };
 
 const styles = StyleSheet.create({
@@ -21,9 +26,9 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   actionOption: {
+    alignItems: "center",
     display: "flex",
     flexDirection: "row",
-    alignItems: "center",
     gap: 3
   },
   firstRow: {
@@ -33,65 +38,61 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   imageProfile: {
-    width: 18,
+    borderRadius: 10,
     height: 18,
-    borderRadius: 10
+    width: 18
   },
   postContainer: {
     backgroundColor: Colors.light.white,
-    borderColor: Colors.light.periwinkle,
     borderBottomWidth: 2,
+    borderColor: Colors.light.periwinkle,
     padding: 16,
-    width: width 
+    width
   },
   postDescription: {
     color: "#555",
     fontSize: 14,
     marginVertical: 8
   },
-  postImage: {
-    borderRadius: 8,
-    height: 200,
-    width: "100%"
-  },
   postTitle: {
     fontSize: 13.33,
-    fontWeight: 'bold'
+    fontWeight: "bold"
   },
   postUserInformation: {
+    alignItems: "center",
     display: "flex",
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 10
+    gap: 10,
+    justifyContent: "center"
   },
   userName: {
     fontSize: 13.33
   }
 });
 
-export function Post({ user, title, content, postImage }: PostProps) {
+export function Post({ user, title, content }: PostProps) {
   return (
     <View style={styles.postContainer}>
       <View style={styles.firstRow}>
         <View style={styles.postUserInformation}>
-        <Image
-          source={{
-            uri: user?.userProfile?.icon || 
+          <Image
+            source={{
+              uri:
+                user?.userProfile?.icon ||
                 "https://static.vecteezy.com/system/resources/previews/009/292/244/original/default-avatar-icon-of-social-media-user-vector.jpg"
-          }}
-          style={[styles.imageProfile]}
-        />
-        <Text style={styles.userName}>{user.username} • 12/02/2025</Text>
+            }}
+            style={styles.imageProfile}
+          />
+          <Text style={styles.userName}>{user.username} • 12/02/2025</Text>
         </View>
-      <FontAwesome size={16} name="ellipsis-h" />
+        <FontAwesome size={16} name="ellipsis-h" />
       </View>
       <Text style={styles.postTitle}>{title}</Text>
       <Text style={styles.postDescription}>{content}</Text>
 
       <View style={styles.actionContainer}>
         <View style={styles.actionOption}>
-          <TouchableOpacity >
+          <TouchableOpacity>
             <FontAwesome size={18} name="thumbs-o-up" />
           </TouchableOpacity>
           <Text>12k</Text>
