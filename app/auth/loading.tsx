@@ -7,7 +7,7 @@ import { Text, View } from "@/components/Themed";
 import { setUser, UserState } from "@/features/auth/userSlice";
 import { api } from "@/constants/api";
 import { handleRequest } from "@/utils/handleRequest";
-import { getItem, setItem } from "@/constants/storage";
+import { setItem } from "@/constants/storage";
 import { useToast } from "@/hooks/useToast";
 import { SpinLoading } from "@/components/SpinLoading";
 import { Colors } from "@/constants/colors";
@@ -37,22 +37,28 @@ export default function AuthLoadingScreen() {
   const handleProviderSignin = async () => {
     if (isLoading) return;
 
-    const code = params.code as string;
-    const provider = params.provider as string;
-
-    if (!code || !provider) {
+    const error = params.error as string;
+    if (error) {
       router.replace("/");
+      showToast({ message: error, color: "error" });
       return;
     }
-    let codeVerifier: any;
-    if (provider === "google") codeVerifier = await getItem("codeVerifier");
+    const token = params.token as string;
+    const provider = params.provider as string;
+
+    if (!token || !provider) {
+      router.replace("/");
+      showToast({ message: "WITHOUT_NECESSARY_DATA", color: "error" });
+      return;
+    }
+
     const data = await handleRequest<{
       accessToken: string;
       refreshToken: string;
       user: UserState;
     }>({
       requestFn: async () =>
-        api.post(`/auth/social-login/${provider}`, { code, codeVerifier }, {
+        api.post(`/auth/social-login/${provider}`, { token }, {
           skipAuth: true
         } as any),
       showToast,
