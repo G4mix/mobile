@@ -1,7 +1,6 @@
 import { Image, StyleSheet, Text } from "react-native";
 import { useRef, useState } from "react";
 import { Link, useRouter } from "expo-router";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { View } from "@/components/Themed";
@@ -24,6 +23,7 @@ import { handleRequest } from "@/utils/handleRequest";
 import { setUser, UserState } from "@/features/auth/userSlice";
 import { setItem } from "@/constants/storage";
 import favIcon from "@/assets/images/favicon.png";
+import { Icon } from "@/components/Icon";
 
 type FormData = {
   username: string;
@@ -318,10 +318,10 @@ export default function RegisterScreen() {
                 key={text}
               >
                 {condition === "valid" && (
-                  <FontAwesome name="check" size={20} color="green" />
+                  <Icon name="check" size={20} color="green" />
                 )}
                 {condition === "invalid" && (
-                  <FontAwesome name="times" size={20} color="red" />
+                  <Icon name="x" size={20} color="red" />
                 )}
                 <Text
                   style={{

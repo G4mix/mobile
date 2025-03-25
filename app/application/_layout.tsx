@@ -1,5 +1,4 @@
 import React from "react";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import {
   Tabs,
   TabList,
@@ -11,9 +10,11 @@ import { Pressable, StyleSheet, View } from "react-native";
 
 import { Href } from "expo-router";
 import { Colors } from "@/constants/colors";
+import { icons } from "@/constants/icons";
+import { Icon } from "@/components/Icon";
 
 interface TabBarIconProps extends React.PropsWithChildren, TabTriggerSlotProps {
-  name: React.ComponentProps<typeof FontAwesome>["name"];
+  name: keyof typeof icons;
   size: number;
 }
 
@@ -29,7 +30,7 @@ const TabBarIcon = React.forwardRef<View, TabBarIconProps>((props, ref) => (
       justifyContent: "center"
     }}
   >
-    <FontAwesome
+    <Icon
       size={props.size}
       name={props.name}
       color={
@@ -68,7 +69,7 @@ export default function TabLayout() {
   const tabs: {
     name: string;
     href: Href;
-    iconName: React.ComponentProps<typeof FontAwesome>["name"];
+    iconName: keyof typeof icons;
     size: number;
   }[] = [
     {

@@ -7,9 +7,9 @@ import {
   StyleSheet,
   Dimensions
 } from "react-native";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Colors } from "@/constants/colors";
 import { UserState } from "@/features/auth/userSlice";
+import { Icon } from "./Icon";
 
 const { width } = Dimensions.get("window");
 
@@ -85,7 +85,7 @@ export function Post({ user, title, content }: PostProps) {
           />
           <Text style={styles.userName}>{user.username} • 12/02/2025</Text>
         </View>
-        <FontAwesome size={16} name="ellipsis-h" />
+        <Icon size={16} name="ellipsis-h" color="gray" />
       </View>
       <Text style={styles.postTitle}>{title}</Text>
       <Text style={styles.postDescription}>{content}</Text>
@@ -93,21 +93,21 @@ export function Post({ user, title, content }: PostProps) {
       <View style={styles.actionContainer}>
         <View style={styles.actionOption}>
           <TouchableOpacity>
-            <FontAwesome size={18} name="thumbs-o-up" />
+            <Icon size={18} name="thumbs-o-up" color="gray" />
           </TouchableOpacity>
           <Text>12k</Text>
         </View>
         <View style={styles.actionOption}>
           <TouchableOpacity>
-            <FontAwesome size={18} name="commenting-o" />
+            <Icon size={18} name="commenting-o" color="gray" />
           </TouchableOpacity>
           <Text>12k</Text>
         </View>
         <View style={styles.actionOption}>
-          <FontAwesome size={18} name="bar-chart" />
+          <Icon size={18} name="chart-bar" color="gray" />
           <Text>12k</Text>
         </View>
-        <FontAwesome size={18} name="share-alt" />
+        <Icon size={18} name="share-alt" color="gray" />
       </View>
     </View>
   );

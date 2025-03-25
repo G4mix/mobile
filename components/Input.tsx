@@ -7,13 +7,14 @@ import {
   ReturnKeyTypeOptions,
   TextInputSubmitEditingEventData
 } from "react-native";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { ComponentProps, forwardRef } from "react";
+import { forwardRef } from "react";
 import { Text } from "@/components/Themed";
 import { Colors } from "@/constants/colors";
+import { icons } from "@/constants/icons";
+import { Icon } from "./Icon";
 
 type InputProps = {
-  icon: ComponentProps<typeof FontAwesome>["name"];
+  icon: keyof typeof icons;
   placeholder: string;
   label: string;
   invalidPhrase?: string;
@@ -98,7 +99,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           isValid === "invalid" ? styles.invalid : {}
         ]}
       >
-        <FontAwesome
+        <Icon
           size={24}
           name={icon}
           color={
@@ -130,11 +131,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       </View>
       {isValid === "invalid" && invalidPhrase && (
         <View style={styles.errorMessage}>
-          <FontAwesome
-            size={20}
-            name="exclamation-circle"
-            color={Colors.light.red}
-          />
+          <Icon size={20} name="exclamation-circle" color={Colors.light.red} />
           <Text style={{ color: Colors.light.red }}>{invalidPhrase}</Text>
         </View>
       )}
