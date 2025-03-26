@@ -10,11 +10,10 @@ import { Pressable, StyleSheet, View } from "react-native";
 
 import { Href } from "expo-router";
 import { Colors } from "@/constants/colors";
-import { icons } from "@/constants/icons";
-import { Icon } from "@/components/Icon";
+import { Icon, IconName } from "@/components/Icon";
 
 interface TabBarIconProps extends React.PropsWithChildren, TabTriggerSlotProps {
-  name: keyof typeof icons;
+  name: IconName;
   size: number;
 }
 
@@ -69,7 +68,7 @@ export default function TabLayout() {
   const tabs: {
     name: string;
     href: Href;
-    iconName: keyof typeof icons;
+    iconName: IconName;
     size: number;
   }[] = [
     {
@@ -81,7 +80,7 @@ export default function TabLayout() {
     {
       name: "search",
       href: "/application/search",
-      iconName: "search",
+      iconName: "magnifying-glass",
       size: 24
     },
     {
@@ -93,7 +92,7 @@ export default function TabLayout() {
     {
       name: "team",
       href: "/application/team",
-      iconName: "users",
+      iconName: "user-group",
       size: 24
     },
     {

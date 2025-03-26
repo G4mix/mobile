@@ -85,7 +85,7 @@ export function Post({ user, title, content }: PostProps) {
           />
           <Text style={styles.userName}>{user.username} • 12/02/2025</Text>
         </View>
-        <Icon size={16} name="ellipsis-h" color="gray" />
+        <Icon size={16} name="ellipsis-horizontal" color="gray" />
       </View>
       <Text style={styles.postTitle}>{title}</Text>
       <Text style={styles.postDescription}>{content}</Text>
@@ -93,13 +93,13 @@ export function Post({ user, title, content }: PostProps) {
       <View style={styles.actionContainer}>
         <View style={styles.actionOption}>
           <TouchableOpacity>
-            <Icon size={18} name="thumbs-o-up" color="gray" />
+            <Icon size={18} name="hand-thumb-up" color="gray" />
           </TouchableOpacity>
           <Text>12k</Text>
         </View>
         <View style={styles.actionOption}>
           <TouchableOpacity>
-            <Icon size={18} name="commenting-o" color="gray" />
+            <Icon size={18} name="chat-bubble-left-right" color="gray" />
           </TouchableOpacity>
           <Text>12k</Text>
         </View>
@@ -107,7 +107,7 @@ export function Post({ user, title, content }: PostProps) {
           <Icon size={18} name="chart-bar" color="gray" />
           <Text>12k</Text>
         </View>
-        <Icon size={18} name="share-alt" color="gray" />
+        <Icon size={18} name="share" color="gray" />
       </View>
     </View>
   );

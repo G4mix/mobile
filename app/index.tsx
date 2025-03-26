@@ -106,7 +106,7 @@ export default function InitialScreen() {
         OU
       </Text>
       <Input
-        icon="envelope"
+        icon="home"
         label="E-mail"
         isPasswordInput={false}
         placeholder="Digite seu e-mail aqui"
@@ -116,7 +116,7 @@ export default function InitialScreen() {
       />
       <View style={styles.passwordContainer}>
         <Input
-          icon="lock"
+          icon="lock-closed"
           label="Senha"
           isPasswordInput
           placeholder="Digite a sua senha"

@@ -10,6 +10,7 @@ import "react-native-reanimated";
 
 import { Provider } from "react-redux";
 import { useColorScheme } from "react-native";
+import { useFonts } from "expo-font";
 import { ToastProvider } from "@/context/ToastContext";
 import { reduxStore } from "@/constants/reduxStore";
 import { Middleware } from "@/components/Middleware";
@@ -64,12 +65,23 @@ function RootLayoutNav() {
 }
 
 export default function RootLayout() {
+  const [loaded, error] = useFonts({
+    heroicons: require("../assets/heroicons/heroicons.ttf")
+  });
+
   useEffect(() => {
-    const hideSplash = async () => {
-      await SplashScreen.hideAsync();
-    };
-    hideSplash();
-  }, []);
+    if (error) throw error;
+  }, [error]);
+
+  useEffect(() => {
+    if (loaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded]);
+
+  if (!loaded) {
+    return null;
+  }
 
   return <RootLayoutNav />;
 }

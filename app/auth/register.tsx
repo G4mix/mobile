@@ -290,7 +290,7 @@ export default function RegisterScreen() {
         returnKeyType="next"
       />
       <Input
-        icon="lock"
+        icon="lock-closed"
         label="Senha"
         isPasswordInput
         onChangeText={validatePassword}
@@ -321,7 +321,7 @@ export default function RegisterScreen() {
                   <Icon name="check" size={20} color="green" />
                 )}
                 {condition === "invalid" && (
-                  <Icon name="x" size={20} color="red" />
+                  <Icon name="x-mark" size={20} color="red" />
                 )}
                 <Text
                   style={{
@@ -341,7 +341,7 @@ export default function RegisterScreen() {
         </View>
       )}
       <Input
-        icon="lock"
+        icon="lock-closed"
         label="Confirme a senha"
         isPasswordInput
         onChangeText={validatePasswordConfirm}

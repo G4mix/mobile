@@ -7,14 +7,13 @@ import {
   ReturnKeyTypeOptions,
   TextInputSubmitEditingEventData
 } from "react-native";
-import { forwardRef } from "react";
+import React, { forwardRef } from "react";
 import { Text } from "@/components/Themed";
 import { Colors } from "@/constants/colors";
-import { icons } from "@/constants/icons";
-import { Icon } from "./Icon";
+import { Icon, IconName } from "./Icon";
 
 type InputProps = {
-  icon: keyof typeof icons;
+  icon: IconName;
   placeholder: string;
   label: string;
   invalidPhrase?: string;
