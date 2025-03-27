@@ -39,7 +39,7 @@ export default function AuthLoadingScreen() {
 
     const error = params.error as string;
     if (error) {
-      router.replace("/");
+      router.replace("/auth/signin");
       showToast({ message: error, color: "error" });
       return;
     }
@@ -47,7 +47,7 @@ export default function AuthLoadingScreen() {
     const provider = params.provider as string;
 
     if (!token || !provider) {
-      router.replace("/");
+      router.replace("/auth/signin");
       showToast({ message: "WITHOUT_NECESSARY_DATA", color: "error" });
       return;
     }
@@ -66,7 +66,7 @@ export default function AuthLoadingScreen() {
     });
 
     if (!data) {
-      router.replace("/");
+      router.replace("/auth/signin");
       return;
     }
 

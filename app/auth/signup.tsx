@@ -371,7 +371,7 @@ export default function RegisterScreen() {
       >
         <Text>Registrar-se</Text>
       </Button>
-      <Link href="/">
+      <Link href="/auth/signin">
         <Text style={{ color: Colors.light.russianViolet }}>
           Já tem uma conta?
         </Text>

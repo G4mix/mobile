@@ -49,7 +49,7 @@ export default function ForgetPasswordScreen() {
       <Button>
         <Text>Enviar e-mail de recuperação</Text>
       </Button>
-      <Link href="/">
+      <Link href="/auth/signin">
         <Text style={{ color: Colors.light.russianViolet }}>
           Lembrou sua senha?
         </Text>

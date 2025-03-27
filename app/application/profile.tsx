@@ -23,7 +23,7 @@ export default function ProfileScreen() {
           removeItem("user");
           removeItem("accessToken");
           removeItem("refreshToken");
-          router.replace("/");
+          router.replace("/auth/signin");
         }}
       >
         <Text>Logout</Text>

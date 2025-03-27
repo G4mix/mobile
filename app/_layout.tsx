@@ -13,52 +13,56 @@ import { useColorScheme } from "react-native";
 import { useFonts } from "expo-font";
 import { ToastProvider } from "@/context/ToastContext";
 import { reduxStore } from "@/constants/reduxStore";
-import { Middleware } from "@/components/Middleware";
+import { useMiddleware } from "@/hooks/useMiddleware";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
+  const { checkAuth, defineListeners, pathname } = useMiddleware();
+
+  useEffect(() => {
+    checkAuth();
+  }, [pathname]);
+
+  useEffect(() => defineListeners(), []);
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <ToastProvider>
-        <Provider store={reduxStore}>
-          <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen
-              name="application/create"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="application/feed"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="application/profile"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="application/search"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="application/team"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen name="index" options={{ headerShown: false }} />
-            <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-            <Stack.Screen
-              name="auth/loading"
-              options={{ presentation: "modal", headerShown: false }}
-            />
-            <Stack.Screen
-              name="terms"
-              options={{ presentation: "modal", headerShown: true, title: "" }}
-            />
-          </Stack>
-          <Middleware />
-        </Provider>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen
+            name="application/create"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="application/feed"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="application/profile"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="application/search"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="application/team"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+          <Stack.Screen
+            name="auth/loading"
+            options={{ presentation: "modal", headerShown: false }}
+          />
+          <Stack.Screen
+            name="terms"
+            options={{ presentation: "modal", headerShown: true, title: "" }}
+          />
+        </Stack>
       </ToastProvider>
     </ThemeProvider>
   );
@@ -83,5 +87,9 @@ export default function RootLayout() {
     return null;
   }
 
-  return <RootLayoutNav />;
+  return (
+    <Provider store={reduxStore}>
+      <RootLayoutNav />
+    </Provider>
+  );
 }

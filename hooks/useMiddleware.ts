@@ -1,12 +1,11 @@
 import { useRouter, usePathname } from "expo-router";
 import { getItem } from "expo-secure-store";
-import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/features/auth/userSlice";
 import { removeItem } from "@/constants/storage";
 import { authEventEmitter } from "@/constants/authEventEmitter";
 
-export function Middleware() {
+export function useMiddleware() {
   const router = useRouter();
   const pathname = usePathname();
   const dispatch = useDispatch();
@@ -18,33 +17,32 @@ export function Middleware() {
 
     if (!accessToken || !refreshToken || !user) {
       if (
-        pathname !== "/" &&
+        pathname !== "/auth/signin" &&
         !pathname.startsWith("/auth") &&
         !["/terms"].includes(pathname)
       ) {
-        router.replace("/");
+        router.replace("/auth/signin");
       }
       return;
     }
 
     dispatch(setUser(JSON.parse(user)));
+
+    if (!pathname.startsWith("/application")) {
+      router.replace("/application/feed");
+    }
   };
 
-  useEffect(() => {
-    checkAuth();
-  }, [pathname]);
-
-  useEffect(() => {
+  const defineListeners = () => {
     const subscription = authEventEmitter.addListener("logout", async () => {
       await removeItem("accessToken");
       await removeItem("refreshToken");
-      router.replace("/");
+      router.replace("/auth/signin");
     });
-
     return () => {
       subscription.removeAllListeners();
     };
-  }, []);
+  };
 
-  return null;
+  return { checkAuth, defineListeners, pathname };
 }
