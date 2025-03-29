@@ -48,6 +48,29 @@
         "expo-font", {
           "fonts": ["./assets/heroicons/heroicons.ttf"]
         }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Permitir ao $(PRODUCT_NAME) o acesso a câmera?",
+          "microphonePermission": "Permitir ao $(PRODUCT_NAME) o acesso ao microfone?",
+          "recordAudioAndroid": true
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Permitir ao $(PRODUCT_NAME) o acesso as fotos?",
+          "savePhotosPermission": "Permitir ao $(PRODUCT_NAME) salvar fotos?",
+          "isAccessMediaLocationEnabled": true
+        }
+      ],
+      [
+        "expo-calendar",
+        {
+          "calendarPermission": "Permitir ao $(PRODUCT_NAME) acessar o seu calendário?",
+          "remindersPermission": "Permitir ao $(PRODUCT_NAME) acessar os lembretes?"
+        }
       ]
     ],
     "experiments": {
