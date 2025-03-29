@@ -4,7 +4,7 @@ import { Text } from "../Themed";
 import { UserState } from "@/features/auth/userSlice";
 import { Colors } from "@/constants/colors";
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   firstRow: {
     color: Colors.dark.background,
     display: "flex",

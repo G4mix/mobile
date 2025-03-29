@@ -13,9 +13,10 @@ import { Colors } from "@/constants/colors";
 import { Icon, IconName } from "./Icon";
 
 type InputProps = {
-  icon: IconName;
+  icon?: IconName;
+  color?: string;
   placeholder: string;
-  label: string;
+  label?: string;
   invalidPhrase?: string;
   isPasswordInput?: boolean;
   isValid?: "invalid" | "valid" | null;
@@ -31,7 +32,6 @@ type InputProps = {
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    borderColor: Colors.light.russianViolet,
     borderRadius: 8,
     borderWidth: 1,
     display: "flex",
@@ -49,14 +49,12 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: "transparent",
-    color: Colors.light.russianViolet,
     display: "flex",
     flexGrow: 1,
     minHeight: 0,
     padding: 0
   },
   inputLabel: {
-    color: Colors.light.russianViolet,
     fontWeight: "bold"
   },
   invalid: {
@@ -76,6 +74,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
   (
     {
       placeholder,
+      color = Colors.light.russianViolet,
       icon,
       isValid = null,
       invalidPhrase,
@@ -90,35 +89,40 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     ref
   ) => (
     <View style={styles.root}>
-      <Text style={styles.inputLabel}>{label}</Text>
+      {label && <Text style={[styles.inputLabel, { color }]}>{label}</Text>}
       <View
         style={[
           styles.container,
           isValid === "valid" ? styles.valid : {},
-          isValid === "invalid" ? styles.invalid : {}
+          isValid === "invalid" ? styles.invalid : {},
+          { borderColor: color }
         ]}
       >
-        <Icon
-          size={24}
-          name={icon}
-          color={
-            isValid === null
-              ? Colors.light.russianViolet
-              : isValid === "valid"
-                ? "green"
-                : "red"
-          }
-          style={{
-            display: "flex",
-            width: 24,
-            height: 24,
-            justifyContent: "center"
-          }}
-        />
+        {
+          icon && (
+            <Icon
+              size={24}
+              name={icon}
+              color={
+                isValid === null
+                  ? color
+                  : isValid === "valid"
+                    ? "green"
+                    : "red"
+              }
+              style={{
+                display: "flex",
+                width: 24,
+                height: 24,
+                justifyContent: "center"
+              }}
+            />
+          )
+        }
         <TextInput
           placeholder={placeholder}
-          style={styles.input}
-          placeholderTextColor={Colors.light.russianViolet}
+          style={[styles.input, { color }]}
+          placeholderTextColor={color}
           secureTextEntry={isPasswordInput}
           onChangeText={onChangeText}
           onFocus={onFocus}
