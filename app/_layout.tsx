@@ -70,7 +70,8 @@ function RootLayoutNav() {
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    heroicons: require("../assets/heroicons/heroicons.ttf")
+    heroicons: require("../assets/heroicons/heroicons.ttf"),
+    roboto: require("../assets/fonts/roboto.ttf")
   });
 
   useEffect(() => {

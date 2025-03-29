@@ -1,18 +1,22 @@
 import createIconSetFromIcoMoon from "@expo/vector-icons/createIconSetFromIcoMoon";
-import React, { CSSProperties } from "react";
+import React from "react";
+import { StyleProp, ViewStyle } from "react-native";
 import icoMoonConfig from "@/assets/heroicons/selection.json";
 
 export type IconName =
   | "chart-bar"
   | "chat-bubble-left-right"
   | "check"
+  | "code-bracket"
   | "ellipsis-horizontal"
   | "envelope"
   | "exclamation-circle"
   | "hand-thumb-up"
   | "home"
+  | "link"
   | "lock-closed"
   | "magnifying-glass"
+  | "photo"
   | "plus-circle"
   | "share"
   | "user"
@@ -28,5 +32,5 @@ export const Icon = createIconSetFromIcoMoon(
   name: IconName;
   size?: number;
   color?: string;
-  style?: CSSProperties;
+  style?: StyleProp<ViewStyle>;
 }>;

@@ -6,7 +6,13 @@ import {
   TabTrigger,
   TabTriggerSlotProps
 } from "expo-router/ui";
-import { Pressable, StyleSheet, View } from "react-native";
+import {
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle
+} from "react-native";
 
 import { Href } from "expo-router";
 import { Colors } from "@/constants/colors";
@@ -15,19 +21,23 @@ import { Icon, IconName } from "@/components/Icon";
 interface TabBarIconProps extends React.PropsWithChildren, TabTriggerSlotProps {
   name: IconName;
   size: number;
+  style?: StyleProp<ViewStyle>;
 }
 
 const TabBarIcon = React.forwardRef<View, TabBarIconProps>((props, ref) => (
   <Pressable
     ref={ref}
     {...props}
-    style={{
-      width: props.size,
-      height: props.size,
-      flex: 1,
-      alignItems: "center",
-      justifyContent: "center"
-    }}
+    style={[
+      {
+        width: props.size,
+        height: props.size,
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center"
+      },
+      props.style || {}
+    ]}
   >
     <Icon
       size={props.size}
@@ -70,6 +80,7 @@ export default function TabLayout() {
     href: Href;
     iconName: IconName;
     size: number;
+    disabled?: boolean;
   }[] = [
     {
       name: "feed",
@@ -81,7 +92,8 @@ export default function TabLayout() {
       name: "search",
       href: "/application/search",
       iconName: "magnifying-glass",
-      size: 24
+      size: 24,
+      disabled: true
     },
     {
       name: "create",
@@ -93,7 +105,8 @@ export default function TabLayout() {
       name: "team",
       href: "/application/team",
       iconName: "user-group",
-      size: 24
+      size: 24,
+      disabled: true
     },
     {
       name: "profile",
@@ -106,12 +119,13 @@ export default function TabLayout() {
     <Tabs>
       <TabSlot />
       <TabList style={styles.tabList}>
-        {tabs.map(({ name, href, iconName, size }) => (
+        {tabs.map(({ name, href, iconName, size, disabled }) => (
           <TabTrigger
             key={`tab-${href}`}
             name={name}
             href={href}
-            style={styles.tabTrigger}
+            disabled={disabled}
+            style={[styles.tabTrigger, disabled ? { opacity: 0.5 } : {}]}
             asChild
           >
             <TabBarIcon name={iconName} size={size} />

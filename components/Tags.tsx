@@ -1,30 +1,26 @@
 import {
-  TextInput,
-  View,
-  StyleSheet,
   NativeSyntheticEvent,
-  TextInputFocusEventData,
   ReturnKeyTypeOptions,
+  StyleSheet,
+  TextInput,
+  TextInputFocusEventData,
   TextInputSubmitEditingEventData
 } from "react-native";
-import React, { forwardRef } from "react";
-import { Text } from "@/components/Themed";
+import { forwardRef, ReactNode } from "react";
+import { Text, View } from "./Themed";
 import { Colors } from "@/constants/colors";
-import { Icon, IconName } from "./Icon";
+import { Icon } from "./Icon";
 
-type InputProps = {
-  icon?: IconName;
-  color?: string;
+type TagsProps = {
+  children: ReactNode;
   placeholder: string;
-  label?: string;
-  invalidPhrase?: string;
-  isPasswordInput?: boolean;
+  label: string;
+  showPlaceholder?: boolean;
   isValid?: "invalid" | "valid" | null;
   onChangeText?: (value: string) => void;
   onFocus?: (e?: NativeSyntheticEvent<TextInputFocusEventData>) => void;
   onBlur?: (e?: NativeSyntheticEvent<TextInputFocusEventData>) => void;
   returnKeyType?: ReturnKeyTypeOptions;
-  borderWidth?: number;
   onSubmitEditing?: (
     e: NativeSyntheticEvent<TextInputSubmitEditingEventData>
   ) => void;
@@ -33,6 +29,7 @@ type InputProps = {
 export const styles = StyleSheet.create({
   container: {
     alignItems: "center",
+    borderColor: Colors.light.tropicalIndigo,
     borderRadius: 8,
     borderWidth: 1,
     display: "flex",
@@ -40,13 +37,6 @@ export const styles = StyleSheet.create({
     gap: 8,
     padding: 12,
     width: "100%"
-  },
-  errorMessage: {
-    alignItems: "center",
-    display: "flex",
-    flexDirection: "row",
-    gap: 4,
-    paddingLeft: 6
   },
   input: {
     backgroundColor: "transparent",
@@ -56,6 +46,7 @@ export const styles = StyleSheet.create({
     padding: 0
   },
   inputLabel: {
+    color: Colors.light.majorelleBlue,
     fontWeight: "bold"
   },
   invalid: {
@@ -71,55 +62,55 @@ export const styles = StyleSheet.create({
   }
 });
 
-export const Input = forwardRef<HTMLInputElement, InputProps>(
+export const Tags = forwardRef<HTMLInputElement, TagsProps>(
   (
     {
+      children,
       placeholder,
-      borderWidth = 1,
-      color = Colors.light.russianViolet,
-      icon,
       isValid = null,
-      invalidPhrase,
       onChangeText,
-      isPasswordInput,
       onBlur,
       onFocus,
       label,
       returnKeyType,
+      showPlaceholder = true,
       onSubmitEditing
     },
     ref
   ) => (
     <View style={styles.root}>
-      {label && <Text style={[styles.inputLabel, { color }]}>{label}</Text>}
+      <Text style={styles.inputLabel}>{label}</Text>
       <View
         style={[
           styles.container,
-          { borderColor: color, borderWidth },
           isValid === "valid" ? styles.valid : {},
           isValid === "invalid" ? styles.invalid : {}
         ]}
       >
-        {icon && (
-          <Icon
-            size={24}
-            name={icon}
-            color={
-              isValid === null ? color : isValid === "valid" ? "green" : "red"
-            }
-            style={{
-              display: "flex",
-              width: 24,
-              height: 24,
-              justifyContent: "center"
-            }}
-          />
-        )}
+        <Icon
+          size={24}
+          name="plus-circle"
+          color={
+            isValid === null
+              ? Colors.light.majorelleBlue
+              : isValid === "valid"
+                ? "green"
+                : "red"
+          }
+          style={{
+            display: "flex",
+            width: 24,
+            height: 24,
+            justifyContent: "center"
+          }}
+        />
+        {children}
         <TextInput
           placeholder={placeholder}
           style={styles.input}
-          placeholderTextColor={color}
-          secureTextEntry={isPasswordInput}
+          placeholderTextColor={
+            showPlaceholder ? Colors.light.tropicalIndigo : "transparent"
+          }
           onChangeText={onChangeText}
           onFocus={onFocus}
           onBlur={onBlur}
@@ -128,12 +119,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           onSubmitEditing={onSubmitEditing}
         />
       </View>
-      {isValid === "invalid" && invalidPhrase && (
-        <View style={styles.errorMessage}>
-          <Icon size={20} name="exclamation-circle" color={Colors.light.red} />
-          <Text style={{ color: Colors.light.red }}>{invalidPhrase}</Text>
-        </View>
-      )}
     </View>
   )
 );

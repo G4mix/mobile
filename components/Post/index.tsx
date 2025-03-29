@@ -29,7 +29,7 @@ export function Post({ user, title, content }: PostProps) {
     <View style={styles.postContainer}>
       <PostHeader user={user} />
       <PostBody title={title} content={content} />
-      <PostActions />
+      <PostActions postId={0} />
     </View>
   );
 }
