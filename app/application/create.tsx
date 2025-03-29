@@ -57,16 +57,16 @@ export default function CreateScreen() {
       </View>
     <View style={styles.postUserInformation}>
       {user.userProfile.icon ? (
-          <Image
-              source={{ uri: user?.userProfile?.icon }}
-              style={styles.imageProfile}
-          />
-          ) : (
-            <Icon size={24} name="user-circle" color={Colors.light.majorelleBlue} />
-          )}
-          <Text style={styles.userName}>{user.username}</Text>
+        <Image
+          source={{ uri: user?.userProfile?.icon }}
+          style={styles.imageProfile}
+        />
+        ) : (
+          <Icon size={24} name="user-circle" color={Colors.light.majorelleBlue} />
+        )}
+        <Text style={styles.userName}>{user.username}</Text>
       </View>
-      <Input placeholder="Qual é o título da sua ideia?" color={Colors.light.tropicalIndigo} />
+      <Input placeholder="Qual é o título da sua ideia?" color={Colors.light.tropicalIndigo} borderWidth={2} />
     </View>
   );
 }

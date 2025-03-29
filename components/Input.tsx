@@ -24,6 +24,7 @@ type InputProps = {
   onFocus?: (e?: NativeSyntheticEvent<TextInputFocusEventData>) => void;
   onBlur?: (e?: NativeSyntheticEvent<TextInputFocusEventData>) => void;
   returnKeyType?: ReturnKeyTypeOptions;
+  borderWidth?: number;
   onSubmitEditing?: (
     e: NativeSyntheticEvent<TextInputSubmitEditingEventData>
   ) => void;
@@ -74,6 +75,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
   (
     {
       placeholder,
+      borderWidth = 1,
       color = Colors.light.russianViolet,
       icon,
       isValid = null,
@@ -95,7 +97,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           styles.container,
           isValid === "valid" ? styles.valid : {},
           isValid === "invalid" ? styles.invalid : {},
-          { borderColor: color }
+          { borderColor: color, borderWidth }
         ]}
       >
         {
