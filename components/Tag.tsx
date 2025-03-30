@@ -1,20 +1,23 @@
+import { TouchableOpacity } from "react-native";
 import { Colors } from "@/constants/colors";
-import { Text, View } from "./Themed";
+import { Text } from "./Themed";
 
 type TagProps = {
+  onPress?: () => void;
   name: string;
 };
 
-export function Tag({ name }: TagProps) {
+export function Tag({ name, onPress }: TagProps) {
   return (
-    <View
+    <TouchableOpacity
       style={{
         backgroundColor: Colors.light.majorelleBlue,
         padding: 6,
         borderRadius: 8
       }}
+      onPress={onPress}
     >
       <Text style={{ color: "white" }}>{name}</Text>
-    </View>
+    </TouchableOpacity>
   );
 }

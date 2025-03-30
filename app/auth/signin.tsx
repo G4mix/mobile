@@ -121,7 +121,7 @@ export default function LoginScreen() {
           isPasswordInput
           placeholder="Digite a sua senha"
           onChangeText={(value: string) => setValue("password", value)}
-          onSubmitEditing={onSubmit}
+          onSubmitEditing={isReadyToLogin && !isLoading ? onSubmit : undefined}
           returnKeyType="done"
           ref={passwordRef}
         />

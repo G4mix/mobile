@@ -34,6 +34,7 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     display: "flex",
     flexDirection: "row",
+    flexWrap: "wrap",
     gap: 8,
     padding: 12,
     width: "100%"
@@ -114,6 +115,7 @@ export const Tags = forwardRef<HTMLInputElement, TagsProps>(
           onChangeText={onChangeText}
           onFocus={onFocus}
           onBlur={onBlur}
+          submitBehavior="submit"
           ref={ref as any}
           returnKeyType={returnKeyType}
           onSubmitEditing={onSubmitEditing}
