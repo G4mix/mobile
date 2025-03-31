@@ -13,6 +13,7 @@ import { TextArea } from "@/components/TextArea";
 import { Tags } from "@/components/Tags";
 import { Tag } from "@/components/Tag";
 import { useToast } from "@/hooks/useToast";
+import { PostLink } from "@/components/Post/PostLink";
 
 const styles = StyleSheet.create({
   container: {
@@ -137,9 +138,9 @@ export default function CreateScreen() {
   const { watch, setValue, handleSubmit } = useForm<FormData>();
   const { showToast } = useToast();
   const contentRef = useRef<HTMLInputElement>(null);
+  const addLinkRef = useRef<HTMLInputElement>(null);
   const tagsRef = useRef<HTMLInputElement>(null);
 
-  // onChangeText={(value: string) => setValue("email", value)}
   const createPost = ({ title, content, images, links, tags }: FormData) => {
     if (isLoading) return;
     if (!title && !content && !images && !links) {
@@ -153,6 +154,7 @@ export default function CreateScreen() {
 
   const onSubmit = handleSubmit(createPost);
 
+  const links = watch("links");
   const tags = watch("tags");
 
   const postContentActions: { name: IconName; handleClick?: () => void }[] = [
@@ -171,6 +173,18 @@ export default function CreateScreen() {
       name: "code-bracket"
     }
   ];
+
+  const handleLoadLinkError = ({ url }: { url: string }) => {
+    setValue(
+      "links",
+      links?.filter((link) => link !== url)
+    );
+    showToast({
+      message:
+        "Houve um erro ao tentar encontrar informações sobre o link fornecido!",
+      color: "error"
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -234,11 +248,60 @@ export default function CreateScreen() {
             ref={contentRef}
             onChangeText={(value: string) => setValue("content", value)}
           />
+          {links?.map((url) => (
+            <PostLink
+              key={`post-link-${url}`}
+              handleError={() => handleLoadLinkError({ url })}
+              url={url}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  setValue(
+                    "links",
+                    links?.filter((link) => link !== url)
+                  );
+                }}
+                style={{
+                  position: "absolute",
+                  right: 12,
+                  top: 12
+                }}
+              >
+                <Icon
+                  size={24}
+                  name="x-mark"
+                  color={Colors.light.tropicalIndigo}
+                  style={{
+                    height: 24,
+                    width: 24,
+                    display: "flex",
+                    justifyContent: "center"
+                  }}
+                />
+              </TouchableOpacity>
+            </PostLink>
+          ))}
           {isAddLinkVisible && (
             <View style={{ padding: 16 }}>
               <Input
                 placeholder="Adicione um link"
                 color={Colors.light.tropicalIndigo}
+                icon="x-mark"
+                iconRight
+                handlePressIcon={() => {
+                  if (addLinkRef.current) (addLinkRef.current as any).clear();
+                  setIsAddLinkVisible(false);
+                }}
+                onSubmitEditing={(e) => {
+                  const currentLinks = links || [];
+                  const url = e.nativeEvent.text.trim();
+                  if (url === "" || currentLinks.includes(url)) return;
+                  if (addLinkRef.current) (addLinkRef.current as any).clear();
+                  setValue("links", [...currentLinks, url]);
+                  setIsAddLinkVisible(false);
+                }}
+                returnKeyType="done"
+                ref={addLinkRef}
               />
             </View>
           )}

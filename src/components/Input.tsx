@@ -5,7 +5,8 @@ import {
   NativeSyntheticEvent,
   TextInputFocusEventData,
   ReturnKeyTypeOptions,
-  TextInputSubmitEditingEventData
+  TextInputSubmitEditingEventData,
+  TouchableOpacity
 } from "react-native";
 import React, { forwardRef } from "react";
 import { Text } from "@/components/Themed";
@@ -17,6 +18,8 @@ type InputProps = {
   color?: string;
   placeholder: string;
   label?: string;
+  iconRight?: boolean;
+  handlePressIcon?: () => void;
   invalidPhrase?: string;
   isPasswordInput?: boolean;
   isValid?: "invalid" | "valid" | null;
@@ -78,6 +81,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       borderWidth = 1,
       color = Colors.light.russianViolet,
       icon,
+      iconRight = false,
+      handlePressIcon,
       isValid = null,
       invalidPhrase,
       onChangeText,
@@ -95,26 +100,51 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       <View
         style={[
           styles.container,
-          { borderColor: color, borderWidth },
+          {
+            borderColor: color,
+            borderWidth,
+            flexDirection: iconRight ? "row-reverse" : "row"
+          },
           isValid === "valid" ? styles.valid : {},
           isValid === "invalid" ? styles.invalid : {}
         ]}
       >
-        {icon && (
-          <Icon
-            size={24}
-            name={icon}
-            color={
-              isValid === null ? color : isValid === "valid" ? "green" : "red"
-            }
-            style={{
-              display: "flex",
-              width: 24,
-              height: 24,
-              justifyContent: "center"
-            }}
-          />
-        )}
+        {icon &&
+          (handlePressIcon ? (
+            <TouchableOpacity onPress={handlePressIcon}>
+              <Icon
+                size={24}
+                name={icon}
+                color={
+                  isValid === null
+                    ? color
+                    : isValid === "valid"
+                      ? "green"
+                      : "red"
+                }
+                style={{
+                  display: "flex",
+                  width: 24,
+                  height: 24,
+                  justifyContent: "center"
+                }}
+              />
+            </TouchableOpacity>
+          ) : (
+            <Icon
+              size={24}
+              name={icon}
+              color={
+                isValid === null ? color : isValid === "valid" ? "green" : "red"
+              }
+              style={{
+                display: "flex",
+                width: 24,
+                height: 24,
+                justifyContent: "center"
+              }}
+            />
+          ))}
         <TextInput
           placeholder={placeholder}
           style={styles.input}
