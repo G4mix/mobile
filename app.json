@@ -44,6 +44,7 @@
     },
     "plugins": [
       "expo-router",
+      "expo-image-picker",
       [
         "expo-font", {
           "fonts": ["./src/assets/heroicons/heroicons.ttf"]
@@ -60,7 +61,7 @@
       [
         "expo-media-library",
         {
-          "photosPermission": "Permitir ao $(PRODUCT_NAME) o acesso as fotos?",
+          "photosPermission": "Permitir ao $(PRODUCT_NAME) o acesso aos arquivos de mídia?",
           "savePhotosPermission": "Permitir ao $(PRODUCT_NAME) salvar fotos?",
           "isAccessMediaLocationEnabled": true
         }

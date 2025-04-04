@@ -4,6 +4,7 @@ import { StyleProp, ViewStyle } from "react-native";
 import icoMoonConfig from "@/assets/heroicons/selection.json";
 
 export type IconName =
+  | "camera"
   | "chart-bar"
   | "chat-bubble-left-right"
   | "check"
