@@ -22,7 +22,7 @@ export function CreateScreenAddLink({
 
   if (!isAddLinkVisible) return null;
   return (
-    <View style={{ padding: 16 }}>
+    <View style={{ paddingRight: 16, paddingLeft: 16 }}>
       <Input
         placeholder="Adicione um link"
         color={Colors.light.tropicalIndigo}

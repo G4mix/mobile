@@ -37,11 +37,11 @@
     "expo-dev-client": "~5.0.15",
     "expo-font": "~13.0.4",
     "expo-haptics": "~14.0.1",
+    "expo-image-picker": "~16.0.6",
     "expo-linking": "~7.0.5",
     "expo-media-library": "~17.0.6",
     "expo-router": "~4.0.19",
     "expo-secure-store": "^14.0.1",
-    "expo-sharing": "~13.0.1",
     "expo-splash-screen": "~0.29.22",
     "expo-status-bar": "~2.0.1",
     "expo-symbols": "~0.2.2",
@@ -60,7 +60,7 @@
     "react-redux": "^9.2.0",
     "redux": "^5.0.1",
     "zod": "^3.24.2",
-    "expo-image-picker": "~16.0.6"
+    "expo-file-system": "~18.0.12"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

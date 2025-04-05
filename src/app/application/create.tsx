@@ -13,6 +13,8 @@ import { CreateScreenPostLink } from "@/components/CreateScreen/CreateScreenPost
 import { CreateScreenAddLink } from "@/components/CreateScreen/CreateScreenAddLink";
 import { CreateScreenContentActions } from "@/components/CreateScreen/CreateScreenContentActions";
 import { IconName } from "@/components/Icon";
+import { CreateScreenCamera } from "@/components/CreateScreen/CreateScreenCamera";
+import { CreateScreenImage } from "@/components/CreateScreen/CreateScreenImage";
 
 const styles = StyleSheet.create({
   container: {
@@ -30,7 +32,9 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     display: "flex",
     flexDirection: "column",
-    justifyContent: "center"
+    gap: 16,
+    justifyContent: "center",
+    paddingBottom: 16
   },
   postContentRoot: {
     display: "flex",
@@ -44,13 +48,14 @@ const styles = StyleSheet.create({
 export type CreateScreenFormData = {
   title?: string;
   content?: string;
-  images?: Blob[];
+  images?: { blob: Blob; uri: string }[];
   links?: string[];
   tags?: string[];
 };
 
 export default function CreateScreen() {
   const [isAddLinkVisible, setIsAddLinkVisible] = useState(false);
+  const [isCameraVisible, setIsCameraVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const { watch, setValue, handleSubmit } = useForm<CreateScreenFormData>();
@@ -79,7 +84,7 @@ export default function CreateScreen() {
   const postContentActions: { name: IconName; handleClick?: () => void }[] = [
     {
       name: "camera",
-      handleClick: () => undefined
+      handleClick: () => setIsCameraVisible(true)
     },
     {
       name: "chart-bar"
@@ -93,7 +98,16 @@ export default function CreateScreen() {
     }
   ];
 
+  const images = watch("images");
   const links = watch("links");
+
+  const handleDeleteImage = (src: string) => {
+    const currentImages = images || [];
+    setValue(
+      "images",
+      currentImages.filter((currentImage) => currentImage.uri !== src)
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -115,6 +129,13 @@ export default function CreateScreen() {
             ref={contentRef}
             onChangeText={(value: string) => setValue("content", value)}
           />
+          {images?.map((img) => (
+            <CreateScreenImage
+              key={`post-image-${img}`}
+              src={img.uri}
+              handleDeleteImage={handleDeleteImage}
+            />
+          ))}
           {links?.map((link) => (
             <CreateScreenPostLink
               setValue={setValue}
@@ -127,6 +148,12 @@ export default function CreateScreen() {
             isAddLinkVisible={isAddLinkVisible}
             setIsAddLinkVisible={setIsAddLinkVisible}
             setValue={setValue}
+          />
+          <CreateScreenCamera
+            isCameraVisible={isCameraVisible}
+            setIsCameraVisible={setIsCameraVisible}
+            setValue={setValue}
+            images={images}
           />
         </View>
         <CreateScreenContentActions postContentActions={postContentActions} />

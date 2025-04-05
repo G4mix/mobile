@@ -4,6 +4,10 @@ import { StyleProp, ViewStyle } from "react-native";
 import icoMoonConfig from "@/assets/heroicons/selection.json";
 
 export type IconName =
+  | "arrow-path"
+  | "bolt-auto-enabled"
+  | "bolt-disabled"
+  | "bolt-enabled"
   | "camera"
   | "chart-bar"
   | "chat-bubble-left-right"
