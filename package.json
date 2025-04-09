@@ -26,6 +26,7 @@
     "@react-navigation/native-stack": "^7.2.0",
     "@reduxjs/toolkit": "^2.6.1",
     "@rneui/themed": "^4.0.0-rc.8",
+    "@tanstack/react-query": "^5.72.1",
     "axios": "^1.8.3",
     "expo": "~52.0.41",
     "expo-blur": "~14.0.3",
@@ -35,6 +36,7 @@
     "expo-constants": "~17.0.8",
     "expo-crypto": "^14.0.2",
     "expo-dev-client": "~5.0.15",
+    "expo-file-system": "~18.0.12",
     "expo-font": "~13.0.4",
     "expo-haptics": "~14.0.1",
     "expo-image-picker": "~16.0.6",
@@ -59,8 +61,7 @@
     "react-native-webview": "13.12.5",
     "react-redux": "^9.2.0",
     "redux": "^5.0.1",
-    "zod": "^3.24.2",
-    "expo-file-system": "~18.0.12"
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

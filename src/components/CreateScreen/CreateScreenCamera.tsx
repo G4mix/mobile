@@ -17,7 +17,6 @@ import * as ImagePicker from "expo-image-picker";
 import { UseFormSetValue } from "react-hook-form";
 import { Icon } from "../Icon";
 import { Colors } from "@/constants/colors";
-import { useToast } from "@/hooks/useToast";
 import { CreateScreenFormData } from "@/app/application/create";
 import { pathToBlob } from "@/utils/pathToBlob";
 
@@ -104,7 +103,6 @@ export function CreateScreenCamera({
   const [facing, setFacing] = useState<CameraType>("back");
   const [flash, setFlash] = useState<FlashMode>("off");
   const [permission, requestPermission] = useCameraPermissions();
-  const { showToast } = useToast();
   const cameraRef = useRef<any>(null);
 
   if (!isCameraVisible) return null;
@@ -127,6 +125,10 @@ export function CreateScreenCamera({
     setFacing((current) => (current === "back" ? "front" : "back"));
   };
 
+  const closeCamera = async () => {
+    setIsCameraVisible(false);
+  };
+
   const pickImageAsync = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
@@ -134,22 +136,19 @@ export function CreateScreenCamera({
       quality: 1
     });
 
-    if (!result.canceled) {
-      const convertedImages: { blob: Blob; uri: string }[] = [];
+    if (result.canceled) return;
+
+    const convertedImages = await Promise.all(
       result.assets.map(async (image) => {
         const photo = await pathToBlob(image.uri);
-        if (!photo) return;
-        convertedImages.push({ blob: photo, uri: image.uri });
-      });
-      const currentImages = images || [];
-      setValue("images", [...currentImages, ...convertedImages]);
-    } else {
-      showToast({ message: "Você não selecionou nenhuma imagem..." });
-    }
-  };
+        if (!photo) throw new Error("Erro ao converter imagem");
+        return { blob: photo, uri: image.uri };
+      })
+    );
 
-  const closeCamera = async () => {
-    setIsCameraVisible(false);
+    const currentImages = images || [];
+    setValue("images", [...currentImages, ...convertedImages]);
+    closeCamera();
   };
 
   const handleTakePhoto = async () => {

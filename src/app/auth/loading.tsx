@@ -1,31 +1,12 @@
-import { StyleSheet } from "react-native";
-
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-import { Text, View } from "@/components/Themed";
 import { setUser, UserState } from "@/features/auth/userSlice";
 import { api } from "@/constants/api";
 import { handleRequest } from "@/utils/handleRequest";
 import { setItem } from "@/constants/storage";
 import { useToast } from "@/hooks/useToast";
 import { SpinLoading } from "@/components/SpinLoading";
-import { Colors } from "@/constants/colors";
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: "center",
-    flex: 1,
-    flexDirection: "column",
-    gap: 16,
-    justifyContent: "center"
-  },
-  title: {
-    color: Colors.light.majorelleBlue,
-    fontSize: 20,
-    fontWeight: "bold"
-  }
-});
 
 export default function AuthLoadingScreen() {
   const [isLoading, setIsLoading] = useState(false);
@@ -81,10 +62,5 @@ export default function AuthLoadingScreen() {
     handleProviderSignin();
   }, []);
 
-  return (
-    <View style={styles.container}>
-      <SpinLoading />
-      <Text style={styles.title}>Carregando...</Text>
-    </View>
-  );
+  return <SpinLoading />;
 }

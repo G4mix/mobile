@@ -1,6 +1,9 @@
 import { StyleSheet } from "react-native";
 import { useForm } from "react-hook-form";
 import { useRef, useState } from "react";
+import { InfiniteData, useQueryClient } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
+import { useRouter } from "expo-router";
 import { View } from "@/components/Themed";
 import { Colors } from "@/constants/colors";
 import { Input } from "@/components/Input";
@@ -15,6 +18,11 @@ import { CreateScreenContentActions } from "@/components/CreateScreen/CreateScre
 import { IconName } from "@/components/Icon";
 import { CreateScreenCamera } from "@/components/CreateScreen/CreateScreenCamera";
 import { CreateScreenImage } from "@/components/CreateScreen/CreateScreenImage";
+import { api } from "@/constants/api";
+import { handleRequest } from "@/utils/handleRequest";
+import { objectToFormData } from "@/utils/objectToFormData";
+import { PostType } from "@/components/Post";
+import { SpinLoading } from "@/components/SpinLoading";
 
 const styles = StyleSheet.create({
   container: {
@@ -53,30 +61,97 @@ export type CreateScreenFormData = {
   tags?: string[];
 };
 
+export type CreateScreenForm = {
+  title?: string;
+  content?: string;
+  images?: Blob[];
+  links?: string[];
+  tags?: string[];
+};
+
 export default function CreateScreen() {
   const [isAddLinkVisible, setIsAddLinkVisible] = useState(false);
   const [isCameraVisible, setIsCameraVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const lastFetchTime = useSelector((state: any) => state.feed.lastFetchTime);
+  const queryClient = useQueryClient();
+  const router = useRouter();
 
   const { watch, setValue, handleSubmit } = useForm<CreateScreenFormData>();
   const { showToast } = useToast();
+  const titleRef = useRef<HTMLInputElement>(null);
   const contentRef = useRef<HTMLInputElement>(null);
 
-  const createPost = ({
+  const createPost = async ({
     title,
     content,
     images,
     links,
     tags
-  }: CreateScreenFormData) => {
+  }: CreateScreenFormData | CreateScreenForm) => {
     if (isLoading) return;
     if (!title && !content && !images && !links) {
       showToast({ message: "Você precisa preencher ao menos um campo!" });
       setIsLoading(false);
       return;
     }
-    // eslint-disable-next-line no-console
-    console.log({ title, content, images, links, tags });
+
+    if (images) images = images.map((img: any) => img.blob);
+    const formData = objectToFormData({ title, content, images, links, tags });
+    console.log(formData);
+
+    const data = await handleRequest<PostType>({
+      requestFn: async () =>
+        api.post("/post", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        }),
+      showToast,
+      setIsLoading
+    });
+    if (!data) return;
+    queryClient.setQueryData(
+      ["posts", "recommendations", lastFetchTime],
+      (
+        oldData:
+          | InfiniteData<
+              {
+                page: number;
+                nextPage: number | null;
+                pages: number;
+                total: number;
+                data: PostType[];
+              } | null,
+              unknown
+            >
+          | undefined
+      ) => {
+        if (!oldData || !oldData.pages[0]) return oldData;
+
+        const newData = {
+          ...oldData,
+          pages: [
+            {
+              ...oldData.pages[0],
+              data: [data, ...oldData.pages[0].data],
+              total: oldData.pages[0].total + 1
+            },
+            ...oldData.pages.slice(1)
+          ]
+        };
+
+        return newData;
+      }
+    );
+    router.replace("/application/feed");
+    setValue("title", undefined);
+    (titleRef.current as any).clear();
+    setValue("content", undefined);
+    (contentRef.current as any).clear();
+    setValue("tags", []);
+    setValue("images", []);
+    setValue("links", []);
   };
 
   const onSubmit = handleSubmit(createPost);
@@ -111,6 +186,7 @@ export default function CreateScreen() {
 
   return (
     <View style={styles.container}>
+      {isLoading && <SpinLoading />}
       <CreateScreenHeader isLoading={isLoading} onSubmit={onSubmit} />
       <CreateScreenAuthor />
       <Input
@@ -120,6 +196,7 @@ export default function CreateScreen() {
         onChangeText={(value: string) => setValue("title", value)}
         onSubmitEditing={() => contentRef.current?.focus()}
         returnKeyType="next"
+        ref={titleRef}
       />
       <View style={styles.postContentRoot}>
         <View style={styles.postContent}>

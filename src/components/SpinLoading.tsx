@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
-import { View, Animated, Easing, StyleSheet } from "react-native";
+import { View, Animated, Easing, StyleSheet, Modal } from "react-native";
 import { Colors } from "@/constants/colors";
+import { Text } from "./Themed";
 
 const CIRCLE_COUNT = 8;
 const ANIMATION_DURATION = 1200;
@@ -20,7 +21,23 @@ const styles = StyleSheet.create({
     alignItems: "center",
     height: 100,
     justifyContent: "center",
-    width: 100
+    position: "fixed",
+    width: "100%"
+  },
+  root: {
+    alignItems: "center",
+    flex: 1,
+    flexDirection: "column",
+    gap: 16,
+    justifyContent: "center",
+    position: "fixed",
+    width: "100%",
+    zIndex: 9999
+  },
+  title: {
+    color: Colors.light.majorelleBlue,
+    fontSize: 20,
+    fontWeight: "bold"
   }
 });
 
@@ -56,36 +73,41 @@ export function SpinLoading() {
   }, [fadeAnimations]);
 
   return (
-    <View style={styles.container}>
-      {fadeAnimations.map((anim, i) => {
-        const angle = (360 / CIRCLE_COUNT) * i;
-        const radius = MAX_RADIUS;
-        const x = radius * Math.cos((angle * Math.PI) / 180);
-        const y = radius * Math.sin((angle * Math.PI) / 180);
+    <Modal style={{ flex: 1 }}>
+      <View style={styles.root}>
+        <View style={styles.container}>
+          {fadeAnimations.map((anim, i) => {
+            const angle = (360 / CIRCLE_COUNT) * i;
+            const radius = MAX_RADIUS;
+            const x = radius * Math.cos((angle * Math.PI) / 180);
+            const y = radius * Math.sin((angle * Math.PI) / 180);
 
-        const scale = anim.interpolate({
-          inputRange: [0.3, 1],
-          outputRange: [MIN_SCALE, MAX_SCALE] // Menor quando menos visível, maior quando mais visível
-        });
+            const scale = anim.interpolate({
+              inputRange: [0.3, 1],
+              outputRange: [MIN_SCALE, MAX_SCALE] // Menor quando menos visível, maior quando mais visível
+            });
 
-        return (
-          <Animated.View
-            // eslint-disable-next-line react/no-array-index-key
-            key={i}
-            style={[
-              styles.circle,
-              {
-                opacity: anim,
-                transform: [
-                  { translateX: x },
-                  { translateY: y },
-                  { scale } // Anima o tamanho sem erro do Native Driver
-                ]
-              }
-            ]}
-          />
-        );
-      })}
-    </View>
+            return (
+              <Animated.View
+                // eslint-disable-next-line react/no-array-index-key
+                key={i}
+                style={[
+                  styles.circle,
+                  {
+                    opacity: anim,
+                    transform: [
+                      { translateX: x },
+                      { translateY: y },
+                      { scale } // Anima o tamanho sem erro do Native Driver
+                    ]
+                  }
+                ]}
+              />
+            );
+          })}
+        </View>
+        <Text style={styles.title}>Carregando...</Text>
+      </View>
+    </Modal>
   );
 }

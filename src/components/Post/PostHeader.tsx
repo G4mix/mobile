@@ -1,7 +1,6 @@
 import { Image, StyleSheet, View } from "react-native";
 import { Icon } from "../Icon";
 import { Text } from "../Themed";
-import { UserState } from "@/features/auth/userSlice";
 import { Colors } from "@/constants/colors";
 
 export const styles = StyleSheet.create({
@@ -36,22 +35,32 @@ export const styles = StyleSheet.create({
   }
 });
 
-type PostHeaderProps = { user: UserState };
+type PostHeaderProps = {
+  author: {
+    id: string;
+    icon: string | null;
+    displayName: string | null;
+    user: {
+      id: string;
+      username: string;
+      email: string;
+      verified: boolean;
+      created_at: string;
+    };
+  };
+};
 
-export function PostHeader({ user }: PostHeaderProps) {
+export function PostHeader({ author }: PostHeaderProps) {
   return (
     <View style={styles.firstRow}>
       <View style={styles.leftSide}>
         <View style={styles.postUserInformation}>
-          {user.userProfile.icon ? (
-            <Image
-              source={{ uri: user?.userProfile?.icon }}
-              style={styles.imageProfile}
-            />
+          {author.icon ? (
+            <Image source={{ uri: author.icon }} style={styles.imageProfile} />
           ) : (
             <Icon size={18} name="user-circle" color={Colors.dark.background} />
           )}
-          <Text style={styles.userName}>{user.username}</Text>
+          <Text style={styles.userName}>{author.user.username}</Text>
         </View>
         <Text>•</Text>
         <Text>05 mar. 25</Text>

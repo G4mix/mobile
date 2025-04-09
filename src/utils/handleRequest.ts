@@ -20,11 +20,13 @@ export const handleRequest = async <T>({
   try {
     setIsLoading(true);
     const req = ((await requestFn()) as any).data;
+    console.log(req)
     if (successMessage)
       showToast({ message: successMessage, color: "success" });
     setIsLoading(false);
     return req;
   } catch (error) {
+    console.log(error.message);
     setIsLoading(false);
     if (ignoreErrors) return null;
     if (isAxiosError(error)) {

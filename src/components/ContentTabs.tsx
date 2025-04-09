@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
 import { Text } from "@/components/Themed";
@@ -28,16 +28,23 @@ const styles = StyleSheet.create({
   }
 });
 
-type Tab = {
+export type Tab = {
   name: string;
   key: "following" | "recommendations" | "highlights";
+  disabled?: boolean;
 };
 
-export function ContentTabs() {
-  const [actualTab, setActualTab] = useState<Tab["key"]>("recommendations");
+export function ContentTabs({
+  actualTab,
+  setActualTab
+}: {
+  actualTab: Tab["key"];
+  setActualTab: Dispatch<SetStateAction<Tab["key"]>>;
+}) {
   const tabs: Tab[] = [
     {
       name: "Destaques",
+      disabled: true,
       key: "following"
     },
     {
@@ -46,6 +53,7 @@ export function ContentTabs() {
     },
     {
       name: "Seguindo",
+      disabled: true,
       key: "highlights"
     }
   ];
@@ -56,14 +64,15 @@ export function ContentTabs() {
 
   return (
     <View style={styles.contentTabList}>
-      {tabs.map(({ key, name }) => (
+      {tabs.map(({ key, name, disabled }) => (
         <Pressable
           key={`content-tab-${name}`}
           style={[
             styles.contentTabItem,
-            actualTab === key ? styles.actualTab : {}
+            actualTab === key ? styles.actualTab : {},
+            disabled ? { opacity: 0.7 } : {}
           ]}
-          onPress={() => handlePress(key)}
+          onPress={disabled ? undefined : () => handlePress(key)}
         >
           <Text
             style={{

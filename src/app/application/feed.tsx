@@ -1,14 +1,15 @@
-import { StyleSheet } from "react-native";
-import { useSelector } from "react-redux";
-import { View } from "@/components/Themed";
-import { ContentTabs } from "@/components/ContentTabs";
+import { StyleSheet, ScrollView, View } from "react-native";
+import { useRef, useState } from "react";
+import { ContentTabs, Tab } from "@/components/ContentTabs";
 import { Post } from "@/components/Post";
-import { RootState } from "@/constants/reduxStore";
+import { useFeed } from "@/hooks/useFeed";
+import { InView } from "@/components/InView";
 
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    flex: 1
+    flex: 1,
+    flexDirection: "column"
   },
   posts: {
     display: "flex",
@@ -19,31 +20,24 @@ const styles = StyleSheet.create({
 });
 
 export default function FeedScreen() {
-  const user = useSelector((state: RootState) => state.user);
+  const [actualTab, setActualTab] = useState<Tab["key"]>("recommendations");
 
-  const posts = [
-    { title: "Teste", content: "Aoba" },
-    {
-      title: "Shut a lonely day",
-      content:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it..."
-    },
-    { title: "Outro post", content: "Conteúdo aleatório" }
-  ];
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useFeed(actualTab);
+  const posts = data?.pages?.flatMap((page) => page?.data);
+  const scrollRef = useRef<ScrollView>(null);
 
   return (
     <View style={styles.container}>
-      <ContentTabs />
+      <ContentTabs actualTab={actualTab} setActualTab={setActualTab} />
       <View style={styles.posts}>
-        {posts.map((post) => (
-          <Post
-            key={post.content}
-            title={post.title}
-            content={post.content}
-            user={user}
-          />
+        {posts?.map((post, index) => (
+          <Post key={`post-${post?.id || index}`} post={post} />
         ))}
       </View>
+      {isFetchingNextPage || !hasNextPage ? null : (
+        <InView onInView={fetchNextPage} scrollRef={scrollRef} />
+      )}
     </View>
   );
 }
