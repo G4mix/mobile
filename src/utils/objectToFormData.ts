@@ -13,16 +13,26 @@ export const objectToFormData = (
     } else if (value instanceof File || value instanceof Blob) {
       formData.append(key, value);
     } else if (Array.isArray(value)) {
-      value.forEach((element) => {
-        // const arrayKey = `${key}[${index}]`;
-        if (element instanceof File || element instanceof Blob) {
-          formData.append(key, element);
-        } else if (typeof element === "object" && element !== null) {
-          objectToFormData(element, formData, key);
-        } else {
-          formData.append(key, String(element));
-        }
-      });
+      if (
+        value.some(
+          (e) =>
+            e instanceof File ||
+            e instanceof Blob ||
+            (typeof e === "object" && e !== null)
+        )
+      ) {
+        value.forEach((element) => {
+          if (element instanceof File || element instanceof Blob) {
+            formData.append(key, element);
+          } else if (typeof element === "object" && element !== null) {
+            objectToFormData(element, formData, key);
+          } else {
+            formData.append(key, String(element));
+          }
+        });
+      } else {
+        formData.append(key, String(value));
+      }
     } else if (typeof value === "object" && value !== null) {
       objectToFormData(value, formData, key);
     } else if (value !== undefined && value !== null) {
