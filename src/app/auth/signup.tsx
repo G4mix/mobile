@@ -24,6 +24,7 @@ import { setUser, UserState } from "@/features/auth/userSlice";
 import { setItem } from "@/constants/storage";
 import favIcon from "@/assets/images/favicon.png";
 import { Icon } from "@/components/Icon";
+import { SpinLoading } from "@/components/SpinLoading";
 
 type FormData = {
   username: string;
@@ -265,6 +266,7 @@ export default function RegisterScreen() {
 
   return (
     <View style={styles.container}>
+      {isLoading && <SpinLoading />}
       <Image source={favIcon} style={{ maxWidth: 120, maxHeight: 120 }} />
       <Text style={styles.title}>Criar uma conta</Text>
       <Input

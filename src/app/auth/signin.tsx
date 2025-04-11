@@ -14,6 +14,7 @@ import { useToast } from "@/hooks/useToast";
 import { setItem } from "@/constants/storage";
 import { OAuthLogin } from "@/features/auth/OAuthLogin";
 import favIcon from "@/assets/images/favicon.png";
+import { SpinLoading } from "@/components/SpinLoading";
 
 type FormData = {
   password: string;
@@ -92,6 +93,7 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
+      {isLoading && <SpinLoading />}
       <Image source={favIcon} style={{ maxWidth: 120, maxHeight: 120 }} />
       <Text style={styles.title}>Entrar</Text>
       <View style={styles.connectionMethodsContainer}>
@@ -106,7 +108,7 @@ export default function LoginScreen() {
         OU
       </Text>
       <Input
-        icon="home"
+        icon="envelope"
         label="E-mail"
         isPasswordInput={false}
         placeholder="Digite seu e-mail aqui"
