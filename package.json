@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "scripts": {
     "start": "expo start --dev-client --reset-cache",
-    "start:tunnel": "expo start --tunnel --reset-cache",
+    "start:tunnel": "expo start --tunnel",
+    "start:tunnel:rc": "expo start --tunnel --reset-cache",
     "prebuild": "expo prebuild",
     "android": "expo run:android",
     "update": "eas update --environment development",

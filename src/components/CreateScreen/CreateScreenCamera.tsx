@@ -18,7 +18,6 @@ import { UseFormSetValue } from "react-hook-form";
 import { Icon } from "../Icon";
 import { Colors } from "@/constants/colors";
 import { CreateScreenFormData } from "@/app/application/create";
-import { pathToBlob } from "@/utils/pathToBlob";
 
 const styles = StyleSheet.create({
   camera: {
@@ -91,7 +90,7 @@ type CreateScreenCameraProps = {
   isCameraVisible: boolean;
   setIsCameraVisible: Dispatch<SetStateAction<boolean>>;
   setValue: UseFormSetValue<CreateScreenFormData>;
-  images?: { blob: Blob; uri: string }[];
+  images?: ImagePicker.ImagePickerAsset[];
 };
 
 export function CreateScreenCamera({
@@ -111,14 +110,8 @@ export function CreateScreenCamera({
   }
 
   if (!permission.granted) {
-    return (
-      <Modal style={styles.container}>
-        <Text style={styles.message}>
-          We need your permission to show the camera
-        </Text>
-        <Button onPress={requestPermission} title="grant permission" />
-      </Modal>
-    );
+    requestPermission()
+    return null;
   }
 
   const toggleCameraFacing = () => {
@@ -133,6 +126,7 @@ export function CreateScreenCamera({
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
       allowsEditing: true,
+      allowsMultipleSelection: true,
       quality: 1
     });
 
@@ -140,9 +134,7 @@ export function CreateScreenCamera({
 
     const convertedImages = await Promise.all(
       result.assets.map(async (image) => {
-        const photo = await pathToBlob(image.uri);
-        if (!photo) throw new Error("Erro ao converter imagem");
-        return { blob: photo, uri: image.uri };
+        return image;
       })
     );
 
@@ -153,12 +145,10 @@ export function CreateScreenCamera({
 
   const handleTakePhoto = async () => {
     const takedPhoto = await cameraRef.current?.takePictureAsync();
-    const photo = await pathToBlob(takedPhoto.uri);
-    if (!photo) return;
     const currentImages = images || [];
     setValue("images", [
       ...currentImages,
-      { blob: photo, uri: takedPhoto.uri }
+      takedPhoto
     ]);
     closeCamera();
   };

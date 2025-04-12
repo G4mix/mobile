@@ -4,6 +4,7 @@ import { Colors } from "@/constants/colors";
 import { PostHeader } from "./PostHeader";
 import { PostBody } from "./PostBody";
 import { PostActions } from "./PostActions";
+import { PostLink } from "./PostLink";
 
 export type PostType = {
   id: number;
@@ -61,6 +62,9 @@ export function Post({ post }: PostProps) {
     <View style={styles.postContainer}>
       <PostHeader author={post.author} />
       <PostBody title={post.title} content={post.content} />
+      {
+        post.links.map((link) => <PostLink key={`link-${link.postId}-${link.id}`} url={link.url} />)
+      }
       <PostActions postId={post.id} />
     </View>
   );
