@@ -1,10 +1,14 @@
-import { View, TouchableOpacity, StyleSheet, Share, Alert } from "react-native";
+import { View, TouchableOpacity, StyleSheet, Share } from "react-native";
+import { useRouter } from "expo-router";
+import { useRef, useState } from "react";
 import { Icon, IconName } from "../Icon";
 import { Text } from "../Themed";
 import { Colors } from "@/constants/colors";
 import { useToast } from "@/hooks/useToast";
 import { abbreviateNumber } from "@/utils/abbreviateNumber";
-import { useRouter } from "expo-router";
+import { handleRequest } from "@/utils/handleRequest";
+import { debounce } from "@/utils/debounce";
+import { api } from "@/constants/api";
 
 const styles = StyleSheet.create({
   actionContainer: {
@@ -26,15 +30,38 @@ type PostActionsProps = {
   viewsCount: number;
 };
 
-export function PostActions({ postId, likesCount, commentsCount, viewsCount }: PostActionsProps) {
+export function PostActions({
+  postId,
+  likesCount,
+  commentsCount,
+  viewsCount
+}: PostActionsProps) {
   const { showToast } = useToast();
+  const [isLiked, setIsLiked] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const likePost = async () => {}
+  const likePostRequest = async () => {
+    if (isLoading) return;
+    handleRequest({
+      requestFn: async () =>
+        api.get(`/like/post?isLiked=${isLiked}&postId=${postId}`),
+      showToast,
+      setIsLoading,
+      ignoreErrors: true
+    });
+  };
+
+  const debouncedLikePost = useRef(debounce(likePostRequest, 700)).current;
+
+  const likePost = async () => {
+    setIsLiked((prevValue) => !prevValue);
+    debouncedLikePost();
+  };
 
   const commentPost = async () => {
     router.push(`/posts/${postId}`);
-  }
+  };
 
   const sharePost = async () => {
     try {
@@ -50,7 +77,7 @@ export function PostActions({ postId, likesCount, commentsCount, viewsCount }: P
         color: "error"
       });
     }
-  }
+  };
 
   const actions: {
     icon: IconName;
@@ -60,8 +87,8 @@ export function PostActions({ postId, likesCount, commentsCount, viewsCount }: P
   }[] = [
     {
       icon: "hand-thumb-up",
-      color: Colors.light.russianViolet,
-      content: abbreviateNumber(likesCount),
+      color: isLiked ? Colors.light.green : Colors.light.russianViolet,
+      content: abbreviateNumber(isLiked ? likesCount + 1 : likesCount),
       handlePress: likePost
     },
     {

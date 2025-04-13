@@ -1,7 +1,9 @@
 import { Image, StyleSheet, View } from "react-native";
+import { useSelector } from "react-redux";
 import { Icon } from "../Icon";
 import { Text } from "../Themed";
 import { Colors } from "@/constants/colors";
+import { UserState } from "@/features/auth/userSlice";
 
 export const styles = StyleSheet.create({
   firstRow: {
@@ -51,6 +53,9 @@ type PostHeaderProps = {
 };
 
 export function PostHeader({ author }: PostHeaderProps) {
+  const userProfileId = useSelector(
+    (state: { user: UserState }) => state.user.userProfile.id
+  );
   return (
     <View style={styles.firstRow}>
       <View style={styles.leftSide}>
@@ -65,11 +70,13 @@ export function PostHeader({ author }: PostHeaderProps) {
         <Text>•</Text>
         <Text>05 mar. 25</Text>
       </View>
-      <Icon
-        size={24}
-        name="ellipsis-horizontal"
-        color={Colors.dark.background}
-      />
+      {userProfileId === author.id && (
+        <Icon
+          size={24}
+          name="ellipsis-horizontal"
+          color={Colors.dark.background}
+        />
+      )}
     </View>
   );
 }

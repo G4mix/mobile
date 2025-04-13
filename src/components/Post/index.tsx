@@ -1,9 +1,10 @@
-import React from "react";
-import { View, StyleSheet } from "react-native";
+import React, { RefObject } from "react";
+import { View, StyleSheet, ScrollView } from "react-native";
 import { Colors } from "@/constants/colors";
 import { PostHeader } from "./PostHeader";
 import { PostBody } from "./PostBody";
 import { PostActions } from "./PostActions";
+import { InView } from "../InView";
 
 export type PostType = {
   id: string;
@@ -41,7 +42,10 @@ export type PostType = {
 };
 
 type PostProps = {
+  alreadyVisualized: boolean;
   post?: PostType;
+  onInView: () => void;
+  scrollRef: RefObject<ScrollView>;
 };
 
 const styles = StyleSheet.create({
@@ -56,13 +60,26 @@ const styles = StyleSheet.create({
   }
 });
 
-export function Post({ post }: PostProps) {
+export function Post({
+  alreadyVisualized,
+  post,
+  onInView,
+  scrollRef
+}: PostProps) {
   if (!post) return null;
   return (
     <View style={styles.postContainer}>
       <PostHeader author={post.author} />
       <PostBody title={post.title} content={post.content} />
-      <PostActions postId={post.id} likesCount={post.likesCount} commentsCount={post.commentsCount} viewsCount={post.viewsCount} />
+      <PostActions
+        postId={post.id}
+        likesCount={post.likesCount}
+        commentsCount={post.commentsCount}
+        viewsCount={post.viewsCount}
+      />
+      {!alreadyVisualized && (
+        <InView scrollRef={scrollRef} onInView={onInView} />
+      )}
     </View>
   );
 }

@@ -32,9 +32,10 @@ function RootLayoutNav() {
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <ToastProvider>
         <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
-            name="(application)"
-            options={{ headerShown: false }}
+            name="posts/[postId]"
+            options={{ presentation: "modal", headerShown: true, title: "" }}
           />
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen

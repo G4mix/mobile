@@ -3,11 +3,9 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setNewPostIndicator,
-  setLastFetchTime,
-  loadLastFetchTime
+  setLastFetchTime
 } from "../features/feed/feedSlice";
 import { api } from "@/constants/api";
-import { getItem } from "@/constants/storage";
 import { handleRequest } from "@/utils/handleRequest";
 import { useToast } from "./useToast";
 import { PostType } from "@/components/Post";
@@ -21,13 +19,8 @@ export const useFeed = (selectedTab: string) => {
 
   useEffect(() => {
     const loadTimeFromStorage = async () => {
-      const storedTime = await getItem("lastFetchTime");
-      if (storedTime) {
-        dispatch(loadLastFetchTime(storedTime));
-      } else {
-        const now = new Date().toISOString();
-        dispatch(setLastFetchTime(now));
-      }
+      const now = new Date().toISOString();
+      dispatch(setLastFetchTime(now));
     };
     loadTimeFromStorage();
   }, [dispatch]);

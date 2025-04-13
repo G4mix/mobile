@@ -84,6 +84,7 @@ export default function TabLayout() {
     iconName: IconName;
     size: number;
     disabled?: boolean;
+    hidden?: boolean;
   }[] = [
     {
       name: "feed",

@@ -9,12 +9,18 @@ export function useMiddleware() {
   const router = useRouter();
   const pathname = usePathname();
   const dispatch = useDispatch();
+  const initialPaths: string[] = [
+    "/auth/signin",
+    "/auth/signup",
+    "/auth/forget-password",
+    "/auth/loading",
+    "/"
+  ];
 
   const checkAuth = async () => {
     const accessToken = await getItem("accessToken");
     const refreshToken = await getItem("refreshToken");
     const user = await getItem("user");
-
     if (!accessToken || !refreshToken || !user) {
       if (
         pathname !== "/auth/signin" &&
@@ -27,8 +33,7 @@ export function useMiddleware() {
     }
 
     dispatch(setUser(JSON.parse(user)));
-
-    if (pathname.startsWith("/auth")) {
+    if (initialPaths.includes(pathname)) {
       router.replace("/feed");
     }
   };
