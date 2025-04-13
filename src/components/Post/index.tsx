@@ -6,11 +6,12 @@ import { PostBody } from "./PostBody";
 import { PostActions } from "./PostActions";
 
 export type PostType = {
-  id: number;
+  id: string;
   title: string;
   content: string;
   likesCount: number;
   viewsCount: number;
+  commentsCount: number;
   author: {
     id: string;
     icon: string | null;
@@ -61,7 +62,7 @@ export function Post({ post }: PostProps) {
     <View style={styles.postContainer}>
       <PostHeader author={post.author} />
       <PostBody title={post.title} content={post.content} />
-      <PostActions postId={post.id} />
+      <PostActions postId={post.id} likesCount={post.likesCount} commentsCount={post.commentsCount} viewsCount={post.viewsCount} />
     </View>
   );
 }

@@ -183,7 +183,7 @@ export default function RegisterScreen() {
     await setItem("user", JSON.stringify(data.user));
     await setItem("accessToken", data.accessToken);
     await setItem("refreshToken", data.refreshToken);
-    router.replace("/application/feed");
+    router.replace("/feed");
   };
 
   const onSubmit = handleSubmit(register);

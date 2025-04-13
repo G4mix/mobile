@@ -98,7 +98,6 @@ export default function CreateScreen() {
 
     if (images) images = images.map((img: any) => img.blob);
     const formData = objectToFormData({ title, content, images, links, tags });
-    console.log(formData);
 
     const data = await handleRequest<PostType>({
       requestFn: async () =>
@@ -144,7 +143,7 @@ export default function CreateScreen() {
         return newData;
       }
     );
-    router.replace("/application/feed");
+    router.replace("/feed");
     setValue("title", undefined);
     (titleRef.current as any).clear();
     setValue("content", undefined);

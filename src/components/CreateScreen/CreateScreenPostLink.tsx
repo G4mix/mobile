@@ -4,7 +4,7 @@ import { PostLink } from "../Post/PostLink";
 import { Colors } from "@/constants/colors";
 import { Icon } from "../Icon";
 import { useToast } from "@/hooks/useToast";
-import { CreateScreenFormData } from "@/app/application/create";
+import { CreateScreenFormData } from "@/app/(application)/create";
 
 type CreateScreenPostLinkProps = {
   setValue: UseFormSetValue<CreateScreenFormData>;

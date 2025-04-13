@@ -1,8 +1,10 @@
-import { View, TouchableOpacity, StyleSheet, Share } from "react-native";
+import { View, TouchableOpacity, StyleSheet, Share, Alert } from "react-native";
 import { Icon, IconName } from "../Icon";
 import { Text } from "../Themed";
 import { Colors } from "@/constants/colors";
 import { useToast } from "@/hooks/useToast";
+import { abbreviateNumber } from "@/utils/abbreviateNumber";
+import { useRouter } from "expo-router";
 
 const styles = StyleSheet.create({
   actionContainer: {
@@ -18,11 +20,37 @@ const styles = StyleSheet.create({
 });
 
 type PostActionsProps = {
-  postId: number;
+  postId: string;
+  likesCount: number;
+  commentsCount: number;
+  viewsCount: number;
 };
 
-export function PostActions({ postId }: PostActionsProps) {
+export function PostActions({ postId, likesCount, commentsCount, viewsCount }: PostActionsProps) {
   const { showToast } = useToast();
+  const router = useRouter();
+
+  const likePost = async () => {}
+
+  const commentPost = async () => {
+    router.push(`/posts/${postId}`);
+  }
+
+  const sharePost = async () => {
+    try {
+      await Share.share({
+        title: "Olha só esse post do Gamix!",
+        message: "Venha conferir esse novo post do Gamix comigo!",
+        url: `https://g4mix.vercel.app/posts/${postId}`
+      });
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (err) {
+      showToast({
+        message: "Houve um erro ao tentar compartilhar o post!",
+        color: "error"
+      });
+    }
+  }
 
   const actions: {
     icon: IconName;
@@ -33,38 +61,24 @@ export function PostActions({ postId }: PostActionsProps) {
     {
       icon: "hand-thumb-up",
       color: Colors.light.russianViolet,
-      content: "12k",
-      handlePress: () => undefined
+      content: abbreviateNumber(likesCount),
+      handlePress: likePost
     },
     {
       icon: "chat-bubble-left-right",
       color: Colors.light.russianViolet,
-      content: "12k",
-      handlePress: () => undefined
+      content: abbreviateNumber(commentsCount),
+      handlePress: commentPost
     },
     {
       icon: "chart-bar",
       color: Colors.light.russianViolet,
-      content: "12k"
+      content: abbreviateNumber(viewsCount)
     },
     {
       icon: "share",
       color: Colors.dark.background,
-      handlePress: async () => {
-        try {
-          await Share.share({
-            title: "Olha só esse post do Gamix!",
-            message: "Venha conferir esse novo post do Gamix comigo!",
-            url: `https://g4mix.vercel.app/posts/${postId}`
-          });
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        } catch (err) {
-          showToast({
-            message: "Houve um erro ao tentar compartilhar o post!",
-            color: "error"
-          });
-        }
-      }
+      handlePress: sharePost
     }
   ];
 

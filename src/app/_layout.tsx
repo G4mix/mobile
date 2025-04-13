@@ -33,27 +33,10 @@ function RootLayoutNav() {
       <ToastProvider>
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen
-            name="application/create"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="application/feed"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="application/profile"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="application/search"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="application/team"
+            name="(application)"
             options={{ headerShown: false }}
           />
           <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="modal" options={{ presentation: "modal" }} />
           <Stack.Screen
             name="auth/loading"
             options={{ presentation: "modal", headerShown: false }}

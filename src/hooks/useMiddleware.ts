@@ -28,8 +28,8 @@ export function useMiddleware() {
 
     dispatch(setUser(JSON.parse(user)));
 
-    if (!pathname.startsWith("/application")) {
-      router.replace("/application/feed");
+    if (pathname.startsWith("/auth")) {
+      router.replace("/feed");
     }
   };
 

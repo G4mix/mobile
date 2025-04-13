@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import { UseFormSetValue, UseFormWatch } from "react-hook-form";
 import { Tag } from "../Tag";
 import { Tags } from "../Tags";
-import { CreateScreenFormData } from "@/app/application/create";
+import { CreateScreenFormData } from "@/app/(application)/create";
 
 const styles = StyleSheet.create({
   recommendedTagsRoot: {
