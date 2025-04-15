@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { useRouter } from "expo-router";
+import { router } from "expo-router";
 import { Text } from "@/components/Themed";
 import { removeItem } from "@/constants/storage";
 import { Button } from "@/components/Button";
@@ -13,8 +13,6 @@ const styles = StyleSheet.create({
 });
 
 export default function ProfileScreen() {
-  const router = useRouter();
-
   return (
     <Text style={styles.title}>
       <Button

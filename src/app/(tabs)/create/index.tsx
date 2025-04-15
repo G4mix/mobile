@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useRef, useState } from "react";
 import { InfiniteData, useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
-import { useRouter } from "expo-router";
+import { router } from "expo-router";
 import { View } from "@/components/Themed";
 import { Colors } from "@/constants/colors";
 import { Input } from "@/components/Input";
@@ -23,6 +23,7 @@ import { handleRequest } from "@/utils/handleRequest";
 import { objectToFormData } from "@/utils/objectToFormData";
 import { PostType } from "@/components/Post";
 import { SpinLoading } from "@/components/SpinLoading";
+import { addNewPostQuery } from "@/features/feed/queries/addNewPostQuery";
 
 const styles = StyleSheet.create({
   container: {
@@ -75,7 +76,6 @@ export default function CreateScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const lastFetchTime = useSelector((state: any) => state.feed.lastFetchTime);
   const queryClient = useQueryClient();
-  const router = useRouter();
 
   const { watch, setValue, handleSubmit } = useForm<CreateScreenFormData>();
   const { showToast } = useToast();
@@ -110,39 +110,12 @@ export default function CreateScreen() {
       setIsLoading
     });
     if (!data) return;
-    queryClient.setQueryData(
-      ["posts", "recommendations", lastFetchTime],
-      (
-        oldData:
-          | InfiniteData<
-              {
-                page: number;
-                nextPage: number | null;
-                pages: number;
-                total: number;
-                data: PostType[];
-              } | null,
-              unknown
-            >
-          | undefined
-      ) => {
-        if (!oldData || !oldData.pages[0]) return oldData;
-
-        const newData = {
-          ...oldData,
-          pages: [
-            {
-              ...oldData.pages[0],
-              data: [data, ...oldData.pages[0].data],
-              total: oldData.pages[0].total + 1
-            },
-            ...oldData.pages.slice(1)
-          ]
-        };
-
-        return newData;
-      }
-    );
+    addNewPostQuery({
+      actualTab: "recommendations",
+      data,
+      lastFetchTime,
+      queryClient
+    })
     router.replace("/feed");
     setValue("title", undefined);
     (titleRef.current as any).clear();

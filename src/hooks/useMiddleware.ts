@@ -1,4 +1,4 @@
-import { useRouter, usePathname } from "expo-router";
+import { router, usePathname } from "expo-router";
 import { getItem } from "expo-secure-store";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/features/auth/userSlice";
@@ -6,7 +6,6 @@ import { removeItem } from "@/constants/storage";
 import { authEventEmitter } from "@/constants/authEventEmitter";
 
 export function useMiddleware() {
-  const router = useRouter();
   const pathname = usePathname();
   const dispatch = useDispatch();
   const initialPaths: string[] = [

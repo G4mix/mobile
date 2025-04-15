@@ -6,9 +6,10 @@ import { useToast } from "./useToast";
 import { getItem, setItem } from "@/constants/storage";
 import { debounce } from "@/utils/debounce";
 import { api } from "@/constants/api";
-import { PostType } from "@/components/Post";
+import { increaseViewsInPostsQuery } from "@/features/feed/queries/increaseViewsInPostsQuery";
+import { Tab } from "@/components/ContentTabs";
 
-export const useViewPosts = (selectedTab: string) => {
+export const useViewPosts = (actualTab: Tab["key"]) => {
   const [isSavingPosts, setIsSavingPosts] = useState(false);
   const [visualizedPosts, setVisualizedPosts] = useState<string[]>([]);
   const lastFetchTime = useSelector((state: any) => state.feed.lastFetchTime);
@@ -23,25 +24,6 @@ export const useViewPosts = (selectedTab: string) => {
       showToast,
       setIsLoading: setIsSavingPosts
     });
-  };
-
-  const updatePostsCache = (updatedPosts: string[]) => {
-    queryClient.setQueryData(
-      ["posts", selectedTab, lastFetchTime],
-      (oldData: any) => {
-        const updatedPostsData = oldData.pages.map((page: any) => ({
-          ...page,
-          data: page.data.map((post: PostType) => {
-            const updatedPost = updatedPosts.find((p) => p === post.id);
-            if (updatedPost) {
-              return { ...post, viewCount: post.viewsCount + 1 };
-            }
-            return post;
-          })
-        }));
-        return { ...oldData, pages: updatedPostsData };
-      }
-    );
   };
 
   const saveVisualizedPostsInStorage = async (posts: string[]) => {
@@ -64,7 +46,12 @@ export const useViewPosts = (selectedTab: string) => {
       debounce(async (posts: string[]) => {
         if (posts.length === 0) return;
         await saveVisualizedPostsReq(posts);
-        updatePostsCache(posts);
+        increaseViewsInPostsQuery({
+          actualTab,
+          lastFetchTime,
+          queryClient,
+          updatedPosts: posts
+        });
         await saveVisualizedPostsInStorage(posts);
         setVisualizedPosts([]);
       }, 10000),

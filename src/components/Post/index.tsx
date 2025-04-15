@@ -13,6 +13,8 @@ export type PostType = {
   likesCount: number;
   viewsCount: number;
   commentsCount: number;
+  created_at: string;
+  updated_at?: string;
   author: {
     id: string;
     icon: string | null;
@@ -44,6 +46,7 @@ export type PostType = {
 type PostProps = {
   alreadyVisualized: boolean;
   post?: PostType;
+  showOptions: () => void;
   onInView: () => void;
   scrollRef: RefObject<ScrollView>;
 };
@@ -64,12 +67,18 @@ export function Post({
   alreadyVisualized,
   post,
   onInView,
-  scrollRef
+  scrollRef,
+  showOptions
 }: PostProps) {
   if (!post) return null;
   return (
     <View style={styles.postContainer}>
-      <PostHeader author={post.author} />
+      <PostHeader
+        author={post.author}
+        createdAt={post.created_at}
+        updatedAt={post.updated_at}
+        showOptions={showOptions}
+      />
       <PostBody title={post.title} content={post.content} />
       <PostActions
         postId={post.id}

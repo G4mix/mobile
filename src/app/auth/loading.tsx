@@ -1,4 +1,4 @@
-import { useRouter, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { setUser, UserState } from "@/features/auth/userSlice";
@@ -11,7 +11,6 @@ import { SpinLoading } from "@/components/SpinLoading";
 export default function AuthLoadingScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const { showToast } = useToast();
-  const router = useRouter();
   const params = useLocalSearchParams();
   const dispatch = useDispatch();
 

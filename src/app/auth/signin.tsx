@@ -1,6 +1,6 @@
 import { Image, StyleSheet } from "react-native";
 import { useForm } from "react-hook-form";
-import { Link, useRouter } from "expo-router";
+import { Link, router } from "expo-router";
 import { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Text, View } from "@/components/Themed";
@@ -61,7 +61,6 @@ export default function LoginScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const { showToast } = useToast();
   const dispatch = useDispatch();
-  const router = useRouter();
   const passwordRef = useRef<HTMLInputElement>(null);
 
   const login = async ({ password, email }: FormData) => {

@@ -1,5 +1,5 @@
 import { View, TouchableOpacity, StyleSheet, Share } from "react-native";
-import { useRouter } from "expo-router";
+import { router } from "expo-router";
 import { useRef, useState } from "react";
 import { Icon, IconName } from "../Icon";
 import { Text } from "../Themed";
@@ -39,7 +39,6 @@ export function PostActions({
   const { showToast } = useToast();
   const [isLiked, setIsLiked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
 
   const likePostRequest = async () => {
     if (isLoading) return;

@@ -1,11 +1,17 @@
 import { StyleSheet, ScrollView, View, TouchableOpacity } from "react-native";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { router } from "expo-router";
 import { ContentTabs, Tab } from "@/components/ContentTabs";
 import { Post } from "@/components/Post";
 import { useFeed } from "@/hooks/useFeed";
 import { InView } from "@/components/InView";
 import { useViewPosts } from "@/hooks/useViewPosts";
+import { FloatingOptions } from "@/components/FloatingOptions";
+import { IconName } from "@/components/Icon";
+import { api } from "@/constants/api";
+import { handleRequest } from "@/utils/handleRequest";
+import { useToast } from "@/hooks/useToast";
+import { removePostFromQuery } from "@/features/feed/queries/removePostFromQuery";
 
 const styles = StyleSheet.create({
   container: {
@@ -20,27 +26,67 @@ const styles = StyleSheet.create({
     width: "100%"
   },
   scroll: {
-    marginBottom: 56,
+    marginBottom: 60,
     width: "100%"
   }
 });
 
 export default function FeedScreen() {
   const [actualTab, setActualTab] = useState<Tab["key"]>("recommendations");
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useFeed(actualTab);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    lastFetchTime,
+    queryClient
+  } = useFeed(actualTab);
 
-  const posts = Array.from(
-    new Map(
-      data?.pages
-        ?.flatMap((page) => page?.data || [])
-        .map((post) => [post.id, post])
-    ).values()
-  );
-
+  const posts = data?.pages?.flatMap((page) => page?.data || []);
+  const { showToast } = useToast();
   const { alreadyVisualized, setVisualizedPosts } = useViewPosts(actualTab);
 
   const scrollRef = useRef<ScrollView>(null);
+
+  const options: {
+    name: string;
+    iconName: IconName;
+    onPress: (props: any) => void;
+  }[] = useMemo(
+    () => [
+      {
+        name: "Editar",
+        iconName: "check",
+        onPress: ({ selectedPost }: any) => {
+          router.push(`/create?id=${selectedPost}`);
+        }
+      },
+      {
+        name: "Deletar",
+        iconName: "x-mark",
+        onPress: async ({ selectedPost }: any) => {
+          if (isDeleting) return;
+          await handleRequest({
+            requestFn: async () => api.delete(`/post?postId=${selectedPost}`),
+            showToast,
+            setIsLoading: setIsDeleting
+          });
+          removePostFromQuery({
+            queryClient,
+            actualTab,
+            lastFetchTime,
+            selectedPost
+          });
+        }
+      }
+    ],
+    []
+  );
+
+  const [selectedPost, setSelectedPost] = useState("");
 
   return (
     <View style={styles.container}>
@@ -63,13 +109,23 @@ export default function FeedScreen() {
                 alreadyVisualized={
                   post ? alreadyVisualized.current.has(post.id) : false
                 }
+                showOptions={() => {
+                  setIsVisible(true);
+                  setSelectedPost(post.id);
+                }}
               />
             </TouchableOpacity>
           ))}
         </View>
-        {isFetchingNextPage || !hasNextPage ? null : (
+        {isFetchingNextPage || !hasNextPage || isLoading ? null : (
           <InView onInView={fetchNextPage} scrollRef={scrollRef} />
         )}
+        <FloatingOptions
+          isVisible={isVisible}
+          setIsVisible={setIsVisible}
+          options={options}
+          optionProps={{ selectedPost }}
+        />
       </ScrollView>
     </View>
   );

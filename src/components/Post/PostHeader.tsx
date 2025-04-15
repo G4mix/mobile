@@ -1,9 +1,11 @@
-import { Image, StyleSheet, View } from "react-native";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useSelector } from "react-redux";
 import { Icon } from "../Icon";
 import { Text } from "../Themed";
 import { Colors } from "@/constants/colors";
 import { UserState } from "@/features/auth/userSlice";
+import { formatDate } from "@/utils/formatDate";
+import { PostType } from ".";
 
 export const styles = StyleSheet.create({
   firstRow: {
@@ -38,21 +40,18 @@ export const styles = StyleSheet.create({
 });
 
 type PostHeaderProps = {
-  author: {
-    id: string;
-    icon: string | null;
-    displayName: string | null;
-    user: {
-      id: string;
-      username: string;
-      email: string;
-      verified: boolean;
-      created_at: string;
-    };
-  };
+  author: PostType["author"];
+  createdAt: string;
+  updatedAt?: string;
+  showOptions: () => void;
 };
 
-export function PostHeader({ author }: PostHeaderProps) {
+export function PostHeader({
+  author,
+  createdAt,
+  updatedAt,
+  showOptions
+}: PostHeaderProps) {
   const userProfileId = useSelector(
     (state: { user: UserState }) => state.user.userProfile.id
   );
@@ -68,14 +67,16 @@ export function PostHeader({ author }: PostHeaderProps) {
           <Text style={styles.userName}>{author.user.username}</Text>
         </View>
         <Text>•</Text>
-        <Text>05 mar. 25</Text>
+        <Text>{formatDate(createdAt, updatedAt)}</Text>
       </View>
       {userProfileId === author.id && (
-        <Icon
-          size={24}
-          name="ellipsis-horizontal"
-          color={Colors.dark.background}
-        />
+        <TouchableOpacity onPress={showOptions}>
+          <Icon
+            size={24}
+            name="ellipsis-horizontal"
+            color={Colors.dark.background}
+          />
+        </TouchableOpacity>
       )}
     </View>
   );

@@ -1,6 +1,6 @@
 import { Image, StyleSheet, Text } from "react-native";
 import { useRef, useState } from "react";
-import { Link, useRouter } from "expo-router";
+import { Link, router } from "expo-router";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { View } from "@/components/Themed";
@@ -133,8 +133,6 @@ export default function RegisterScreen() {
   const confirmPasswordRef = useRef<HTMLInputElement>(null);
   // eslint-disable-next-line no-undef
   const emailTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  const router = useRouter();
 
   const { watch, setValue, handleSubmit } = useForm<FormData>({
     defaultValues: {

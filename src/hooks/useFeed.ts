@@ -10,6 +10,14 @@ import { handleRequest } from "@/utils/handleRequest";
 import { useToast } from "./useToast";
 import { PostType } from "@/components/Post";
 
+type PostPageable = {
+  page: number;
+  nextPage: number | null;
+  pages: number;
+  total: number;
+  data: PostType[];
+};
+
 export const useFeed = (selectedTab: string) => {
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
@@ -29,13 +37,7 @@ export const useFeed = (selectedTab: string) => {
     useInfiniteQuery({
       queryKey: ["posts", selectedTab, lastFetchTime],
       queryFn: async ({ pageParam }) =>
-        handleRequest<{
-          page: number;
-          nextPage: number | null;
-          pages: number;
-          total: number;
-          data: PostType[];
-        }>({
+        handleRequest<PostPageable>({
           requestFn: async () =>
             api.get("/post", {
               params: {
@@ -49,7 +51,7 @@ export const useFeed = (selectedTab: string) => {
           setIsLoading
         }),
       initialPageParam: 0,
-      getNextPageParam: (lastPage) => lastPage?.nextPage ?? 1,
+      getNextPageParam: (lastPage) => lastPage?.nextPage,
       enabled: !!lastFetchTime
     });
 
@@ -72,6 +74,8 @@ export const useFeed = (selectedTab: string) => {
     isLoading,
     fetchNextPage,
     hasNextPage,
-    isFetchingNextPage
+    isFetchingNextPage,
+    lastFetchTime,
+    queryClient
   };
 };
