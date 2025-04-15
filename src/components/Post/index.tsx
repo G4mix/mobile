@@ -4,6 +4,7 @@ import { Colors } from "@/constants/colors";
 import { PostHeader } from "./PostHeader";
 import { PostBody } from "./PostBody";
 import { PostActions } from "./PostActions";
+import { PostLink } from "./PostLink";
 import { InView } from "../InView";
 
 export type PostType = {
@@ -80,6 +81,9 @@ export function Post({
         showOptions={showOptions}
       />
       <PostBody title={post.title} content={post.content} />
+      {
+        post.links.map((link) => <PostLink key={`link-${link.postId}-${link.id}`} url={link.url} />)
+      }
       <PostActions
         postId={post.id}
         likesCount={post.likesCount}

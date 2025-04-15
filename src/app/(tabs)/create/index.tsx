@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { Alert, StyleSheet } from "react-native";
 import { useForm } from "react-hook-form";
 import { useRef, useState } from "react";
 import { InfiniteData, useQueryClient } from "@tanstack/react-query";
@@ -23,7 +23,7 @@ import { handleRequest } from "@/utils/handleRequest";
 import { objectToFormData } from "@/utils/objectToFormData";
 import { PostType } from "@/components/Post";
 import { SpinLoading } from "@/components/SpinLoading";
-import { addNewPostQuery } from "@/features/feed/queries/addNewPostQuery";
+import { ImagePickerAsset } from "expo-image-picker";
 
 const styles = StyleSheet.create({
   container: {
@@ -57,15 +57,7 @@ const styles = StyleSheet.create({
 export type CreateScreenFormData = {
   title?: string;
   content?: string;
-  images?: { blob: Blob; uri: string }[];
-  links?: string[];
-  tags?: string[];
-};
-
-export type CreateScreenForm = {
-  title?: string;
-  content?: string;
-  images?: Blob[];
+  images?: ImagePickerAsset[];
   links?: string[];
   tags?: string[];
 };
@@ -88,17 +80,20 @@ export default function CreateScreen() {
     images,
     links,
     tags
-  }: CreateScreenFormData | CreateScreenForm) => {
+  }: CreateScreenFormData) => {
     if (isLoading) return;
     if (!title && !content && !images && !links) {
       showToast({ message: "Você precisa preencher ao menos um campo!" });
       setIsLoading(false);
       return;
     }
-
-    if (images) images = images.map((img: any) => img.blob);
-    const formData = objectToFormData({ title, content, images, links, tags });
-
+    let files: {
+      uri?: string | null;
+      name?: string | null;
+      type?: string | null;
+    }[] = []
+    if (images) files = images.map((img) => ({ uri: img.uri, name: img.fileName, type: img.mimeType }));
+    const formData = objectToFormData({ title, content, images: files, links, tags });
     const data = await handleRequest<PostType>({
       requestFn: async () =>
         api.post("/post", formData, {
@@ -180,7 +175,7 @@ export default function CreateScreen() {
           />
           {images?.map((img) => (
             <CreateScreenImage
-              key={`post-image-${img}`}
+              key={`post-image-${img.uri}`}
               src={img.uri}
               handleDeleteImage={handleDeleteImage}
             />
@@ -197,6 +192,7 @@ export default function CreateScreen() {
             isAddLinkVisible={isAddLinkVisible}
             setIsAddLinkVisible={setIsAddLinkVisible}
             setValue={setValue}
+            links={links}
           />
           <CreateScreenCamera
             isCameraVisible={isCameraVisible}
