@@ -5,19 +5,12 @@ import {
   FlashMode
 } from "expo-camera";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
-import {
-  Button,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  Modal
-} from "react-native";
+import { StyleSheet, TouchableOpacity, View, Modal } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { UseFormSetValue } from "react-hook-form";
 import { Icon } from "../Icon";
 import { Colors } from "@/constants/colors";
-import { CreateScreenFormData } from "@/app/(application)/create";
+import { CreateScreenFormData } from "@/app/(tabs)/create";
 
 const styles = StyleSheet.create({
   camera: {
@@ -42,10 +35,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center"
-  },
-  message: {
-    paddingBottom: 10,
-    textAlign: "center"
   },
   photoFlip: {
     backgroundColor: Colors.light.majorelleBlue,
@@ -110,7 +99,7 @@ export function CreateScreenCamera({
   }
 
   if (!permission.granted) {
-    requestPermission()
+    requestPermission();
     return null;
   }
 
@@ -133,9 +122,7 @@ export function CreateScreenCamera({
     if (result.canceled) return;
 
     const convertedImages = await Promise.all(
-      result.assets.map(async (image) => {
-        return image;
-      })
+      result.assets.map(async (image) => image)
     );
 
     const currentImages = images || [];
@@ -146,10 +133,7 @@ export function CreateScreenCamera({
   const handleTakePhoto = async () => {
     const takedPhoto = await cameraRef.current?.takePictureAsync();
     const currentImages = images || [];
-    setValue("images", [
-      ...currentImages,
-      takedPhoto
-    ]);
+    setValue("images", [...currentImages, takedPhoto]);
     closeCamera();
   };
 

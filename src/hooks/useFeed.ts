@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   // setNewPostIndicator,
-  setLastFetchTime,
+  setLastFetchTime
   // loadLastFetchTime
 } from "../features/feed/feedSlice";
 import { api } from "@/constants/api";
@@ -77,7 +77,6 @@ export const useFeed = (selectedTab: string) => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-    lastFetchTime,
-    queryClient
+    lastFetchTime
   };
 };

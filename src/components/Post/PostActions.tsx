@@ -86,7 +86,7 @@ export function PostActions({
   }[] = [
     {
       icon: "hand-thumb-up",
-      color: isLiked ? Colors.light.green : Colors.light.russianViolet,
+      color: isLiked ? Colors.light.majorelleBlue : Colors.light.russianViolet,
       content: abbreviateNumber(isLiked ? likesCount + 1 : likesCount),
       handlePress: likePost
     },

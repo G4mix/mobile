@@ -1,9 +1,9 @@
-import { Alert, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { useForm } from "react-hook-form";
 import { useRef, useState } from "react";
-import { InfiniteData, useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import { router } from "expo-router";
+import { ImagePickerAsset } from "expo-image-picker";
 import { View } from "@/components/Themed";
 import { Colors } from "@/constants/colors";
 import { Input } from "@/components/Input";
@@ -23,7 +23,7 @@ import { handleRequest } from "@/utils/handleRequest";
 import { objectToFormData } from "@/utils/objectToFormData";
 import { PostType } from "@/components/Post";
 import { SpinLoading } from "@/components/SpinLoading";
-import { ImagePickerAsset } from "expo-image-picker";
+import { useFeedQueries } from "@/hooks/useFeedQueries";
 
 const styles = StyleSheet.create({
   container: {
@@ -67,7 +67,10 @@ export default function CreateScreen() {
   const [isCameraVisible, setIsCameraVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const lastFetchTime = useSelector((state: any) => state.feed.lastFetchTime);
-  const queryClient = useQueryClient();
+  const { addNewPost } = useFeedQueries({
+    actualTab: "recommendations",
+    lastFetchTime
+  });
 
   const { watch, setValue, handleSubmit } = useForm<CreateScreenFormData>();
   const { showToast } = useToast();
@@ -91,9 +94,20 @@ export default function CreateScreen() {
       uri?: string | null;
       name?: string | null;
       type?: string | null;
-    }[] = []
-    if (images) files = images.map((img) => ({ uri: img.uri, name: img.fileName, type: img.mimeType }));
-    const formData = objectToFormData({ title, content, images: files, links, tags });
+    }[] = [];
+    if (images)
+      files = images.map((img) => ({
+        uri: img.uri,
+        name: img.fileName,
+        type: img.mimeType
+      }));
+    const formData = objectToFormData({
+      title,
+      content,
+      images: files,
+      links,
+      tags
+    });
     const data = await handleRequest<PostType>({
       requestFn: async () =>
         api.post("/post", formData, {
@@ -105,13 +119,8 @@ export default function CreateScreen() {
       setIsLoading
     });
     if (!data) return;
-    addNewPostQuery({
-      actualTab: "recommendations",
-      data,
-      lastFetchTime,
-      queryClient
-    })
-    router.replace("/feed");
+    addNewPost(data);
+    router.push("/feed");
     setValue("title", undefined);
     (titleRef.current as any).clear();
     setValue("content", undefined);

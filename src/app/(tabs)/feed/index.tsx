@@ -11,7 +11,7 @@ import { IconName } from "@/components/Icon";
 import { api } from "@/constants/api";
 import { handleRequest } from "@/utils/handleRequest";
 import { useToast } from "@/hooks/useToast";
-import { removePostFromQuery } from "@/features/feed/queries/removePostFromQuery";
+import { useFeedQueries } from "@/hooks/useFeedQueries";
 
 const styles = StyleSheet.create({
   container: {
@@ -41,9 +41,9 @@ export default function FeedScreen() {
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-    lastFetchTime,
-    queryClient
+    lastFetchTime
   } = useFeed(actualTab);
+  const { removePost } = useFeedQueries({ actualTab, lastFetchTime });
 
   const posts = data?.pages?.flatMap((page) => page?.data || []);
   const { showToast } = useToast();
@@ -74,12 +74,7 @@ export default function FeedScreen() {
             showToast,
             setIsLoading: setIsDeleting
           });
-          removePostFromQuery({
-            queryClient,
-            actualTab,
-            lastFetchTime,
-            selectedPost
-          });
+          removePost(selectedPost);
         }
       }
     ],
