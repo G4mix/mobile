@@ -1,19 +1,20 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { setItem } from "@/constants/storage";
+import { Tab } from "@/components/ContentTabs";
 
-export interface FeedState {
-  tab: "recommended" | "following" | "highlights";
+interface FeedState {
+  tab: Tab["key"];
 }
 
 const feedSlice = createSlice({
   name: "feed",
   initialState: {
     newPosts: {
-      recommended: false,
       following: false,
+      recommendations: false,
       highlights: false
     },
-    lastFetchTime: null
+    lastFetchTime: null,
+    actualTab: "recommendations"
   },
   reducers: {
     setNewPostIndicator: (state, action: PayloadAction<FeedState>) => {
@@ -22,11 +23,10 @@ const feedSlice = createSlice({
     clearNewPostIndicator: (state, action: PayloadAction<FeedState>) => {
       state.newPosts[action.payload.tab] = false;
     },
-    setLastFetchTime: (state, action) => {
-      state.lastFetchTime = action.payload;
-      setItem("lastFetchTime", action.payload);
+    setActualTab: (state, action) => {
+      state.actualTab = action.payload;
     },
-    loadLastFetchTime: (state, action) => {
+    setLastFetchTime: (state, action) => {
       state.lastFetchTime = action.payload;
     }
   }
@@ -36,6 +36,6 @@ export const {
   setNewPostIndicator,
   clearNewPostIndicator,
   setLastFetchTime,
-  loadLastFetchTime
+  setActualTab
 } = feedSlice.actions;
 export const feedReducer = feedSlice.reducer;

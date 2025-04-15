@@ -11,7 +11,8 @@ module.exports = {
     "plugin:react/recommended",
     "plugin:react-native/all",
     "airbnb",
-    "prettier"
+    "prettier",
+    "plugin:@tanstack/eslint-plugin-query/recommended"
   ],
   parserOptions: {
     ecmaFeatures: {
@@ -20,7 +21,7 @@ module.exports = {
     ecmaVersion: "latest",
     sourceType: "module"
   },
-  plugins: ["react", "react-native", "@typescript-eslint", "prettier"],
+  plugins: ["react", "react-native", "@typescript-eslint", "prettier", "@tanstack/query"],
   rules: {
     "no-param-reassign": "off",
     "no-nested-ternary": "off",
@@ -44,6 +45,10 @@ module.exports = {
     "react/jsx-props-no-spreading": "off",
     "import/no-unresolved": "off",
     "global-require": "off",
-    "@typescript-eslint/no-require-imports": "off"
+    "@typescript-eslint/no-require-imports": "off",
+    "@tanstack/query/exhaustive-deps": "error",
+    "@tanstack/query/no-deprecated-options": "error",
+    "@tanstack/query/prefer-query-object-syntax": "error",
+    "@tanstack/query/stable-query-client": "error"
   }
 };

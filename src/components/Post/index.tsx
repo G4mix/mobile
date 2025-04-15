@@ -45,11 +45,10 @@ export type PostType = {
 };
 
 type PostProps = {
-  alreadyVisualized: boolean;
+  alreadyVisualized?: boolean;
   post?: PostType;
-  showOptions: () => void;
-  onInView: () => void;
-  scrollRef: RefObject<ScrollView>;
+  onInView?: () => void;
+  scrollRef?: RefObject<ScrollView>;
 };
 
 const styles = StyleSheet.create({
@@ -68,17 +67,16 @@ export function Post({
   alreadyVisualized,
   post,
   onInView,
-  scrollRef,
-  showOptions
+  scrollRef
 }: PostProps) {
   if (!post) return null;
   return (
     <View style={styles.postContainer}>
       <PostHeader
+        postId={post.id}
         author={post.author}
         createdAt={post.created_at}
         updatedAt={post.updated_at}
-        showOptions={showOptions}
       />
       <PostBody title={post.title} content={post.content} />
       {post.links.map((link) => (
@@ -90,7 +88,7 @@ export function Post({
         commentsCount={post.commentsCount}
         viewsCount={post.viewsCount}
       />
-      {!alreadyVisualized && (
+      {!alreadyVisualized && scrollRef && onInView && (
         <InView scrollRef={scrollRef} onInView={onInView} />
       )}
     </View>

@@ -1,11 +1,18 @@
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { router } from "expo-router";
 import { Icon } from "../Icon";
 import { Text } from "../Themed";
 import { Colors } from "@/constants/colors";
 import { UserState } from "@/features/auth/userSlice";
 import { formatDate } from "@/utils/formatDate";
 import { PostType } from ".";
+import { useFloatingOptions } from "@/hooks/useFloatingOptions";
+import { handleRequest } from "@/utils/handleRequest";
+import { api } from "@/constants/api";
+import { useToast } from "@/hooks/useToast";
+import { useFeedQueries } from "@/hooks/useFeedQueries";
 
 export const styles = StyleSheet.create({
   firstRow: {
@@ -40,20 +47,51 @@ export const styles = StyleSheet.create({
 });
 
 type PostHeaderProps = {
+  postId: string;
   author: PostType["author"];
   createdAt: string;
   updatedAt?: string;
-  showOptions: () => void;
 };
 
 export function PostHeader({
+  postId,
   author,
   createdAt,
-  updatedAt,
-  showOptions
+  updatedAt
 }: PostHeaderProps) {
   const userProfileId = useSelector(
     (state: { user: UserState }) => state.user.userProfile.id
+  );
+  const [isDeleting, setIsDeleting] = useState(false);
+  const { setIsVisible, setOptions, setOptionProps } = useFloatingOptions();
+  const { removePost } = useFeedQueries();
+  const { showToast } = useToast();
+
+  useEffect(
+    () =>
+      setOptions([
+        {
+          name: "Editar",
+          iconName: "check",
+          onPress: ({ selectedPost }: any) => {
+            router.push(`/create?id=${selectedPost}`);
+          }
+        },
+        {
+          name: "Deletar",
+          iconName: "x-mark",
+          onPress: async ({ selectedPost }: any) => {
+            if (isDeleting) return;
+            await handleRequest({
+              requestFn: async () => api.delete(`/post?postId=${selectedPost}`),
+              showToast,
+              setIsLoading: setIsDeleting
+            });
+            removePost(selectedPost);
+          }
+        }
+      ]),
+    []
   );
   return (
     <View style={styles.firstRow}>
@@ -70,7 +108,12 @@ export function PostHeader({
         <Text>{formatDate(createdAt, updatedAt)}</Text>
       </View>
       {userProfileId === author.id && (
-        <TouchableOpacity onPress={showOptions}>
+        <TouchableOpacity
+          onPress={() => {
+            setIsVisible(true);
+            setOptionProps({ selectedPost: postId });
+          }}
+        >
           <Icon
             size={24}
             name="ellipsis-horizontal"

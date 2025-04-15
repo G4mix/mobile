@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   // setNewPostIndicator,
@@ -8,8 +8,6 @@ import {
 } from "../features/feed/feedSlice";
 import { api } from "@/constants/api";
 // import { getItem } from "@/constants/storage";
-import { handleRequest } from "@/utils/handleRequest";
-import { useToast } from "./useToast";
 import { PostType } from "@/components/Post";
 
 type PostPageable = {
@@ -20,40 +18,34 @@ type PostPageable = {
   data: PostType[];
 };
 
-export const useFeed = (selectedTab: string) => {
+export const useFeed = () => {
   // const queryClient = useQueryClient();
   const dispatch = useDispatch();
   const lastFetchTime = useSelector((state: any) => state.feed.lastFetchTime);
-  const { showToast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
+  const actualTab = useSelector((state: any) => state.feed.actualTab);
 
   useEffect(() => {
-    const loadTimeFromStorage = async () => {
+    const loadTime = async () => {
       const now = new Date().toISOString();
       dispatch(setLastFetchTime(now));
     };
-    loadTimeFromStorage();
+    loadTime();
   }, [dispatch]);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
-      queryKey: ["posts", selectedTab, lastFetchTime],
+      queryKey: ["posts", actualTab, lastFetchTime],
       queryFn: async ({ pageParam }) =>
-        handleRequest<PostPageable>({
-          requestFn: async () =>
-            api.get("/post", {
-              params: {
-                tab: selectedTab,
-                page: pageParam,
-                since: lastFetchTime,
-                quantity: 10
-              }
-            }),
-          showToast,
-          setIsLoading
+        api.get<PostPageable>("/post", {
+          params: {
+            tab: actualTab,
+            page: pageParam,
+            since: lastFetchTime,
+            quantity: 10
+          }
         }),
       initialPageParam: 0,
-      getNextPageParam: (lastPage) => lastPage?.nextPage,
+      getNextPageParam: (lastPage) => lastPage?.data.nextPage,
       enabled: !!lastFetchTime
     });
 
@@ -73,10 +65,8 @@ export const useFeed = (selectedTab: string) => {
 
   return {
     data,
-    isLoading,
     fetchNextPage,
     hasNextPage,
-    isFetchingNextPage,
-    lastFetchTime
+    isFetchingNextPage
   };
 };

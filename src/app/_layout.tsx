@@ -11,12 +11,15 @@ import "react-native-reanimated";
 import { Provider } from "react-redux";
 import { useColorScheme } from "react-native";
 import { useFonts } from "expo-font";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ToastProvider } from "@/context/ToastContext";
 import { reduxStore } from "@/constants/reduxStore";
 import { useMiddleware } from "@/hooks/useMiddleware";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
+
+const queryClient = new QueryClient();
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
@@ -29,26 +32,32 @@ function RootLayoutNav() {
   useEffect(() => defineListeners(), []);
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <ToastProvider>
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="posts/[postId]"
-            options={{ presentation: "modal", headerShown: true, title: "" }}
-          />
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="auth/loading"
-            options={{ presentation: "modal", headerShown: false }}
-          />
-          <Stack.Screen
-            name="terms"
-            options={{ presentation: "modal", headerShown: true, title: "" }}
-          />
-        </Stack>
-      </ToastProvider>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <ToastProvider>
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="posts/[postId]"
+              options={{
+                presentation: "modal",
+                headerShown: true,
+                title: "Voltar"
+              }}
+            />
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="auth/loading"
+              options={{ presentation: "modal", headerShown: false }}
+            />
+            <Stack.Screen
+              name="terms"
+              options={{ presentation: "modal", headerShown: true, title: "" }}
+            />
+          </Stack>
+        </ToastProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
 

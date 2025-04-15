@@ -1,19 +1,16 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useSelector } from "react-redux";
 import { handleRequest } from "@/utils/handleRequest";
 import { useToast } from "./useToast";
 import { debounce } from "@/utils/debounce";
 import { api } from "@/constants/api";
-import { Tab } from "@/components/ContentTabs";
 import { useFeedQueries } from "./useFeedQueries";
 
-export const useViewPosts = (actualTab: Tab["key"]) => {
+export const useViewPosts = () => {
   const [isSavingPosts, setIsSavingPosts] = useState(false);
   const [visualizedPosts, setVisualizedPosts] = useState<string[]>([]);
-  const lastFetchTime = useSelector((state: any) => state.feed.lastFetchTime);
   const { showToast } = useToast();
   const alreadyVisualized = useRef<Set<string>>(new Set());
-  const { increaseViews } = useFeedQueries({ actualTab, lastFetchTime });
+  const { increaseViews } = useFeedQueries();
 
   const saveVisualizedPostsReq = async (posts: string[]) => {
     if (isSavingPosts) return;

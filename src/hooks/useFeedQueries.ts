@@ -1,14 +1,11 @@
 import { useQueryClient } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
 import { PostType } from "@/components/Post";
-import { Tab } from "@/components/ContentTabs";
 
-type FeedQueryArgs = {
-  actualTab: Tab["key"];
-  lastFetchTime: string;
-};
-
-export const useFeedQueries = ({ actualTab, lastFetchTime }: FeedQueryArgs) => {
+export const useFeedQueries = () => {
   const queryClient = useQueryClient();
+  const lastFetchTime = useSelector((state: any) => state.feed.lastFetchTime);
+  const actualTab = useSelector((state: any) => state.feed.actualTab);
 
   const addNewPost = (post: PostType) => {
     queryClient.setQueryData(
@@ -52,35 +49,36 @@ export const useFeedQueries = ({ actualTab, lastFetchTime }: FeedQueryArgs) => {
     );
   };
 
-  const removePost = (postId: string) => {
-    queryClient.setQueryData(
-      ["posts", actualTab, lastFetchTime],
-      (oldData: any) => {
-        if (!oldData) return oldData;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  const removePost = (_postId: string) => {
+    // queryClient.setQueryData(
+    //   ["posts", actualTab, lastFetchTime],
+    //   (oldData: any) => {
+    //     if (!oldData) return oldData;
 
-        const updatedPages = oldData.pages.map((page: any) => {
-          if (!page) return page;
+    //     const updatedPages = oldData.pages.map((page: any) => {
+    //       if (!page) return page;
 
-          const idsBefore = page.data.map((post: any) => post.id);
-          const filteredData = page.data.filter(
-            (post: any) => post.id !== postId
-          );
+    //       const idsBefore = page.data.map((post: any) => post.id);
+    //       const filteredData = page.data.filter(
+    //         (post: any) => post.id !== postId
+    //       );
 
-          const postWasInThisPage = idsBefore.length !== filteredData.length;
+    //       const postWasInThisPage = idsBefore.length !== filteredData.length;
 
-          return {
-            ...page,
-            data: filteredData,
-            total: postWasInThisPage ? page.total - 1 : page.total
-          };
-        });
+    //       return {
+    //         ...page,
+    //         data: filteredData,
+    //         total: postWasInThisPage ? page.total - 1 : page.total
+    //       };
+    //     });
 
-        return {
-          ...oldData,
-          pages: updatedPages
-        };
-      }
-    );
+    //     return {
+    //       ...oldData,
+    //       pages: updatedPages
+    //     };
+    //   }
+    // );
     queryClient.invalidateQueries(["posts", actualTab, lastFetchTime] as any);
   };
 

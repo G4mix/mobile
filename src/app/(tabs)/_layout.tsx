@@ -13,7 +13,6 @@ import {
   View,
   ViewStyle
 } from "react-native";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { Href } from "expo-router";
 import { Colors } from "@/constants/colors";
@@ -75,8 +74,6 @@ const styles = StyleSheet.create({
   }
 });
 
-const queryClient = new QueryClient();
-
 export default function TabLayout() {
   const tabs: {
     name: string;
@@ -120,24 +117,22 @@ export default function TabLayout() {
     }
   ];
   return (
-    <QueryClientProvider client={queryClient}>
-      <Tabs>
-        <TabSlot />
-        <TabList style={styles.tabList}>
-          {tabs.map(({ name, href, iconName, size, disabled }) => (
-            <TabTrigger
-              key={`tab-${href}`}
-              name={name}
-              href={href}
-              disabled={disabled}
-              style={[styles.tabTrigger, disabled ? { opacity: 0.5 } : {}]}
-              asChild
-            >
-              <TabBarIcon name={iconName} size={size} />
-            </TabTrigger>
-          ))}
-        </TabList>
-      </Tabs>
-    </QueryClientProvider>
+    <Tabs>
+      <TabSlot />
+      <TabList style={styles.tabList}>
+        {tabs.map(({ name, href, iconName, size, disabled }) => (
+          <TabTrigger
+            key={`tab-${href}`}
+            name={name}
+            href={href}
+            disabled={disabled}
+            style={[styles.tabTrigger, disabled ? { opacity: 0.5 } : {}]}
+            asChild
+          >
+            <TabBarIcon name={iconName} size={size} />
+          </TabTrigger>
+        ))}
+      </TabList>
+    </Tabs>
   );
 }

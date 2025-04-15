@@ -1,8 +1,10 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
+import { useDispatch, useSelector } from "react-redux";
 import { Text } from "@/components/Themed";
 import { Colors } from "@/constants/colors";
+import { setActualTab } from "@/features/feed/feedSlice";
 
 const styles = StyleSheet.create({
   actualTab: {
@@ -34,13 +36,10 @@ export type Tab = {
   disabled?: boolean;
 };
 
-export function ContentTabs({
-  actualTab,
-  setActualTab
-}: {
-  actualTab: Tab["key"];
-  setActualTab: Dispatch<SetStateAction<Tab["key"]>>;
-}) {
+export function ContentTabs() {
+  const actualTab = useSelector((state: any) => state.feed.actualTab);
+  const dispatch = useDispatch();
+
   const tabs: Tab[] = [
     {
       name: "Destaques",
@@ -59,7 +58,7 @@ export function ContentTabs({
   ];
 
   const handlePress = (key: Tab["key"]) => {
-    setActualTab(key);
+    dispatch(setActualTab(key));
   };
 
   return (
