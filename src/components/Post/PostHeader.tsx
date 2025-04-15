@@ -88,6 +88,7 @@ export function PostHeader({
               setIsLoading: setIsDeleting
             });
             removePost(selectedPost);
+            router.push("/feed");
           }
         }
       ]),
