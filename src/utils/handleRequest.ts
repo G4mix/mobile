@@ -1,7 +1,6 @@
 import { isAxiosError } from "axios";
 import { Dispatch, SetStateAction } from "react";
 import { ToastContextType } from "@/context/ToastContext";
-import { Alert } from "react-native";
 
 type RequestFunction<T> = () => Promise<T>;
 
@@ -21,13 +20,11 @@ export const handleRequest = async <T>({
   try {
     setIsLoading(true);
     const req = ((await requestFn()) as any).data;
-    console.log(req)
     if (successMessage)
       showToast({ message: successMessage, color: "success" });
     setIsLoading(false);
     return req;
-  } catch (error: any) {
-    console.log(error.message.toString());
+  } catch (error) {
     setIsLoading(false);
     if (ignoreErrors) return null;
     if (isAxiosError(error)) {

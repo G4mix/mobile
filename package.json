@@ -3,7 +3,8 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
-    "start": "expo start --dev-client --reset-cache",
+    "start": "expo start --dev-client",
+    "start:rc": "expo start --dev-client --reset-cache",
     "start:tunnel": "expo start --tunnel",
     "start:tunnel:rc": "expo start --tunnel --reset-cache",
     "prebuild": "expo prebuild",

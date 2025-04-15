@@ -1,17 +1,19 @@
-import React from "react";
-import { View, StyleSheet } from "react-native";
+import React, { RefObject } from "react";
+import { View, StyleSheet, ScrollView } from "react-native";
 import { Colors } from "@/constants/colors";
 import { PostHeader } from "./PostHeader";
 import { PostBody } from "./PostBody";
 import { PostActions } from "./PostActions";
 import { PostLink } from "./PostLink";
+import { InView } from "../InView";
 
 export type PostType = {
-  id: number;
+  id: string;
   title: string;
   content: string;
   likesCount: number;
   viewsCount: number;
+  commentsCount: number;
   author: {
     id: string;
     icon: string | null;
@@ -41,7 +43,10 @@ export type PostType = {
 };
 
 type PostProps = {
+  alreadyVisualized: boolean;
   post?: PostType;
+  onInView: () => void;
+  scrollRef: RefObject<ScrollView>;
 };
 
 const styles = StyleSheet.create({
@@ -56,7 +61,12 @@ const styles = StyleSheet.create({
   }
 });
 
-export function Post({ post }: PostProps) {
+export function Post({
+  alreadyVisualized,
+  post,
+  onInView,
+  scrollRef
+}: PostProps) {
   if (!post) return null;
   return (
     <View style={styles.postContainer}>
@@ -65,7 +75,15 @@ export function Post({ post }: PostProps) {
       {
         post.links.map((link) => <PostLink key={`link-${link.postId}-${link.id}`} url={link.url} />)
       }
-      <PostActions postId={post.id} />
+      <PostActions
+        postId={post.id}
+        likesCount={post.likesCount}
+        commentsCount={post.commentsCount}
+        viewsCount={post.viewsCount}
+      />
+      {!alreadyVisualized && (
+        <InView scrollRef={scrollRef} onInView={onInView} />
+      )}
     </View>
   );
 }

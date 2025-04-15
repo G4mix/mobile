@@ -23,18 +23,14 @@ export function InView({ onInView, scrollRef }: InViewProps) {
     const nodeHandle = findNodeHandle(viewRef.current);
     if (!nodeHandle) return;
 
-    UIManager.measureLayout(
-      nodeHandle,
-      findNodeHandle(scrollRef.current) as number,
-      () => {},
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-      (_x, y, _width, _height) => {
-        if (y >= 0 && y < windowHeight && !calledRef.current) {
-          calledRef.current = true;
-          onInView();
-        }
+    UIManager.measureInWindow(nodeHandle, (x, y, width, height) => {
+      const isVisible = y >= 0 && y + height <= windowHeight;
+
+      if (isVisible && !calledRef.current) {
+        onInView();
+        calledRef.current = true;
       }
-    );
+    });
   };
 
   useEffect(() => {

@@ -139,7 +139,7 @@ export default function CreateScreen() {
         return newData;
       }
     );
-    router.replace("/application/feed");
+    router.replace("/feed");
     setValue("title", undefined);
     (titleRef.current as any).clear();
     setValue("content", undefined);

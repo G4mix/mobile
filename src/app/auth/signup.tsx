@@ -25,6 +25,7 @@ import { setItem } from "@/constants/storage";
 import favIcon from "@/assets/images/favicon.png";
 import { Icon } from "@/components/Icon";
 import { SpinLoading } from "@/components/SpinLoading";
+import { timeout } from "@/utils/timeout";
 
 type FormData = {
   username: string;
@@ -148,8 +149,8 @@ export default function RegisterScreen() {
   const confirmPassword = watch("confirmPassword");
 
   const findByEmail = async ({ email }: { email: string }) => {
-    if (isLoadingUser) return;
-    // eslint-disable-next-line consistent-return
+    if (isLoadingUser) await timeout();
+
     return handleRequest<{
       accessToken: string;
       refreshToken: string;
@@ -183,7 +184,7 @@ export default function RegisterScreen() {
     await setItem("user", JSON.stringify(data.user));
     await setItem("accessToken", data.accessToken);
     await setItem("refreshToken", data.refreshToken);
-    router.replace("/application/feed");
+    router.replace("/feed");
   };
 
   const onSubmit = handleSubmit(register);

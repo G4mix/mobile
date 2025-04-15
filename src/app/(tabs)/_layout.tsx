@@ -84,36 +84,37 @@ export default function TabLayout() {
     iconName: IconName;
     size: number;
     disabled?: boolean;
+    hidden?: boolean;
   }[] = [
     {
       name: "feed",
-      href: "/application/feed",
+      href: "/feed",
       iconName: "home",
       size: 28
     },
     {
       name: "search",
-      href: "/application/search",
+      href: "/search",
       iconName: "magnifying-glass",
       size: 24,
       disabled: true
     },
     {
       name: "create",
-      href: "/application/create",
+      href: "/create",
       iconName: "plus-circle",
       size: 28
     },
     {
       name: "team",
-      href: "/application/team",
+      href: "/team",
       iconName: "user-group",
       size: 24,
       disabled: true
     },
     {
       name: "profile",
-      href: "/application/profile",
+      href: "/profile",
       iconName: "user-circle",
       size: 24
     }

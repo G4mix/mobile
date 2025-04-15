@@ -17,7 +17,7 @@ import * as ImagePicker from "expo-image-picker";
 import { UseFormSetValue } from "react-hook-form";
 import { Icon } from "../Icon";
 import { Colors } from "@/constants/colors";
-import { CreateScreenFormData } from "@/app/application/create";
+import { CreateScreenFormData } from "@/app/(application)/create";
 
 const styles = StyleSheet.create({
   camera: {

@@ -1,8 +1,14 @@
 import { View, TouchableOpacity, StyleSheet, Share } from "react-native";
+import { useRouter } from "expo-router";
+import { useRef, useState } from "react";
 import { Icon, IconName } from "../Icon";
 import { Text } from "../Themed";
 import { Colors } from "@/constants/colors";
 import { useToast } from "@/hooks/useToast";
+import { abbreviateNumber } from "@/utils/abbreviateNumber";
+import { handleRequest } from "@/utils/handleRequest";
+import { debounce } from "@/utils/debounce";
+import { api } from "@/constants/api";
 
 const styles = StyleSheet.create({
   actionContainer: {
@@ -18,11 +24,60 @@ const styles = StyleSheet.create({
 });
 
 type PostActionsProps = {
-  postId: number;
+  postId: string;
+  likesCount: number;
+  commentsCount: number;
+  viewsCount: number;
 };
 
-export function PostActions({ postId }: PostActionsProps) {
+export function PostActions({
+  postId,
+  likesCount,
+  commentsCount,
+  viewsCount
+}: PostActionsProps) {
   const { showToast } = useToast();
+  const [isLiked, setIsLiked] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
+  const likePostRequest = async () => {
+    if (isLoading) return;
+    handleRequest({
+      requestFn: async () =>
+        api.get(`/like/post?isLiked=${isLiked}&postId=${postId}`),
+      showToast,
+      setIsLoading,
+      ignoreErrors: true
+    });
+  };
+
+  const debouncedLikePost = useRef(debounce(likePostRequest, 700)).current;
+
+  const likePost = async () => {
+    setIsLiked((prevValue) => !prevValue);
+    debouncedLikePost();
+  };
+
+  const commentPost = async () => {
+    router.push(`/posts/${postId}`);
+  };
+
+  const sharePost = async () => {
+    try {
+      await Share.share({
+        title: "Olha só esse post do Gamix!",
+        message: "Venha conferir esse novo post do Gamix comigo!",
+        url: `https://g4mix.vercel.app/posts/${postId}`
+      });
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (err) {
+      showToast({
+        message: "Houve um erro ao tentar compartilhar o post!",
+        color: "error"
+      });
+    }
+  };
 
   const actions: {
     icon: IconName;
@@ -32,39 +87,25 @@ export function PostActions({ postId }: PostActionsProps) {
   }[] = [
     {
       icon: "hand-thumb-up",
-      color: Colors.light.russianViolet,
-      content: "12k",
-      handlePress: () => undefined
+      color: isLiked ? Colors.light.green : Colors.light.russianViolet,
+      content: abbreviateNumber(isLiked ? likesCount + 1 : likesCount),
+      handlePress: likePost
     },
     {
       icon: "chat-bubble-left-right",
       color: Colors.light.russianViolet,
-      content: "12k",
-      handlePress: () => undefined
+      content: abbreviateNumber(commentsCount),
+      handlePress: commentPost
     },
     {
       icon: "chart-bar",
       color: Colors.light.russianViolet,
-      content: "12k"
+      content: abbreviateNumber(viewsCount)
     },
     {
       icon: "share",
       color: Colors.dark.background,
-      handlePress: async () => {
-        try {
-          await Share.share({
-            title: "Olha só esse post do Gamix!",
-            message: "Venha conferir esse novo post do Gamix comigo!",
-            url: `https://g4mix.vercel.app/posts/${postId}`
-          });
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        } catch (err) {
-          showToast({
-            message: "Houve um erro ao tentar compartilhar o post!",
-            color: "error"
-          });
-        }
-      }
+      handlePress: sharePost
     }
   ];
 
