@@ -72,7 +72,7 @@ export function FloatingOptions({
                   key={`floating-option-${name}`}
                   onPress={() => {
                     onPress(optionProps);
-                    setIsVisible(false); // fecha ao clicar na opção
+                    setIsVisible(false);
                   }}
                   style={styles.option}
                 >

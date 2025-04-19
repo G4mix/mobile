@@ -121,12 +121,8 @@ export function CreateScreenCamera({
 
     if (result.canceled) return;
 
-    const convertedImages = await Promise.all(
-      result.assets.map(async (image) => image)
-    );
-
     const currentImages = images || [];
-    setValue("images", [...currentImages, ...convertedImages]);
+    setValue("images", [...currentImages, ...result.assets]);
     closeCamera();
   };
 

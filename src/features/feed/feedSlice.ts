@@ -13,7 +13,7 @@ const feedSlice = createSlice({
       recommendations: false,
       highlights: false
     },
-    lastFetchTime: null,
+    lastFetchTime: new Date().toISOString(),
     actualTab: "recommendations"
   },
   reducers: {

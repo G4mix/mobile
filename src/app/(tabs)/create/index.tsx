@@ -1,7 +1,6 @@
 import { StyleSheet } from "react-native";
 import { useForm } from "react-hook-form";
 import { useRef, useState } from "react";
-import { useSelector } from "react-redux";
 import { router } from "expo-router";
 import { ImagePickerAsset } from "expo-image-picker";
 import { View } from "@/components/Themed";
@@ -66,11 +65,7 @@ export default function CreateScreen() {
   const [isAddLinkVisible, setIsAddLinkVisible] = useState(false);
   const [isCameraVisible, setIsCameraVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const lastFetchTime = useSelector((state: any) => state.feed.lastFetchTime);
-  const { addNewPost } = useFeedQueries({
-    actualTab: "recommendations",
-    lastFetchTime
-  });
+  const { addNewPost } = useFeedQueries();
 
   const { watch, setValue, handleSubmit } = useForm<CreateScreenFormData>();
   const { showToast } = useToast();

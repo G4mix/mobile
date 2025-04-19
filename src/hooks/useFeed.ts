@@ -1,11 +1,5 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  // setNewPostIndicator,
-  setLastFetchTime
-  // loadLastFetchTime
-} from "../features/feed/feedSlice";
+import { useSelector } from "react-redux";
 import { api } from "@/constants/api";
 // import { getItem } from "@/constants/storage";
 import { PostType } from "@/components/Post";
@@ -20,32 +14,25 @@ type PostPageable = {
 
 export const useFeed = () => {
   // const queryClient = useQueryClient();
-  const dispatch = useDispatch();
   const lastFetchTime = useSelector((state: any) => state.feed.lastFetchTime);
   const actualTab = useSelector((state: any) => state.feed.actualTab);
-
-  useEffect(() => {
-    const loadTime = async () => {
-      const now = new Date().toISOString();
-      dispatch(setLastFetchTime(now));
-    };
-    loadTime();
-  }, [dispatch]);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: ["posts", actualTab, lastFetchTime],
       queryFn: async ({ pageParam }) =>
-        api.get<PostPageable>("/post", {
-          params: {
-            tab: actualTab,
-            page: pageParam,
-            since: lastFetchTime,
-            quantity: 10
-          }
-        }),
+        (
+          await api.get<PostPageable>("/post", {
+            params: {
+              tab: actualTab,
+              page: pageParam,
+              since: lastFetchTime,
+              quantity: 10
+            }
+          })
+        ).data,
       initialPageParam: 0,
-      getNextPageParam: (lastPage) => lastPage?.data.nextPage,
+      getNextPageParam: (lastPage) => lastPage?.nextPage,
       enabled: !!lastFetchTime
     });
 

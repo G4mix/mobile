@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
 export default function FeedScreen() {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useFeed();
 
-  const posts = data?.pages?.flatMap((page) => page?.data.data || []);
+  const posts = data?.pages?.flatMap((page) => page?.data || []) || [];
   const { alreadyVisualized, setVisualizedPosts } = useViewPosts();
 
   const scrollRef = useRef<ScrollView>(null);
@@ -39,30 +39,32 @@ export default function FeedScreen() {
       <ContentTabs />
       <ScrollView style={styles.scroll} ref={scrollRef}>
         <View style={styles.posts}>
-          <FloatingOptionsProvider>
-            {posts?.map((post, index) => (
-              <TouchableOpacity
-                onPress={() => router.push(`/posts/${post!.id}`)}
-                key={`post-${post?.id || index}`}
-              >
-                <Post
-                  post={post}
-                  onInView={() =>
-                    post &&
-                    !alreadyVisualized.current.has(post.id) &&
-                    setVisualizedPosts((oldPosts) => [...oldPosts, post.id])
-                  }
-                  scrollRef={scrollRef}
-                  alreadyVisualized={
-                    post ? alreadyVisualized.current.has(post.id) : false
-                  }
-                />
-              </TouchableOpacity>
-            ))}
-            {isFetchingNextPage || !hasNextPage ? null : (
-              <InView onInView={fetchNextPage} scrollRef={scrollRef} />
-            )}
-          </FloatingOptionsProvider>
+          {posts && (
+            <FloatingOptionsProvider>
+              {posts?.map((post, index) => (
+                <TouchableOpacity
+                  onPress={() => router.push(`/posts/${post!.id}`)}
+                  key={`post-${post?.id || index}`}
+                >
+                  <Post
+                    post={post}
+                    onInView={() =>
+                      post &&
+                      !alreadyVisualized.current.has(post.id) &&
+                      setVisualizedPosts((oldPosts) => [...oldPosts, post.id])
+                    }
+                    scrollRef={scrollRef}
+                    alreadyVisualized={
+                      post ? alreadyVisualized.current.has(post.id) : false
+                    }
+                  />
+                </TouchableOpacity>
+              ))}
+              {isFetchingNextPage || !hasNextPage ? null : (
+                <InView onInView={fetchNextPage} scrollRef={scrollRef} />
+              )}
+            </FloatingOptionsProvider>
+          )}
         </View>
       </ScrollView>
     </View>

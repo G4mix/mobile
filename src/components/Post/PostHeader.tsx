@@ -1,7 +1,7 @@
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
-import { router } from "expo-router";
+import { useState } from "react";
+import { router, usePathname } from "expo-router";
 import { Icon } from "../Icon";
 import { Text } from "../Themed";
 import { Colors } from "@/constants/colors";
@@ -64,36 +64,10 @@ export function PostHeader({
   );
   const [isDeleting, setIsDeleting] = useState(false);
   const { setIsVisible, setOptions, setOptionProps } = useFloatingOptions();
-  const { removePost } = useFeedQueries();
+  const { removePost, invalidateAllPosts } = useFeedQueries();
   const { showToast } = useToast();
+  const pathname = usePathname();
 
-  useEffect(
-    () =>
-      setOptions([
-        {
-          name: "Editar",
-          iconName: "check",
-          onPress: ({ selectedPost }: any) => {
-            router.push(`/create?id=${selectedPost}`);
-          }
-        },
-        {
-          name: "Deletar",
-          iconName: "x-mark",
-          onPress: async ({ selectedPost }: any) => {
-            if (isDeleting) return;
-            await handleRequest({
-              requestFn: async () => api.delete(`/post?postId=${selectedPost}`),
-              showToast,
-              setIsLoading: setIsDeleting
-            });
-            removePost(selectedPost);
-            router.push("/feed");
-          }
-        }
-      ]),
-    []
-  );
   return (
     <View style={styles.firstRow}>
       <View style={styles.leftSide}>
@@ -111,8 +85,35 @@ export function PostHeader({
       {userProfileId === author.id && (
         <TouchableOpacity
           onPress={() => {
-            setIsVisible(true);
             setOptionProps({ selectedPost: postId });
+            setOptions([
+              {
+                name: "Editar",
+                iconName: "check",
+                onPress: ({ selectedPost }: any) => {
+                  router.push(`/create?id=${selectedPost}`);
+                }
+              },
+              {
+                name: "Deletar",
+                iconName: "x-mark",
+                onPress: async ({ selectedPost }: any) => {
+                  if (isDeleting) return;
+                  setOptions([]);
+                  setOptionProps({});
+                  await handleRequest({
+                    requestFn: async () =>
+                      api.delete(`/post?postId=${selectedPost}`),
+                    showToast,
+                    setIsLoading: setIsDeleting
+                  });
+                  if (pathname.startsWith("/posts")) removePost(selectedPost);
+                  else invalidateAllPosts();
+                  router.push("/feed");
+                }
+              }
+            ]);
+            setIsVisible(true);
           }}
         >
           <Icon

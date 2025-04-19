@@ -34,6 +34,7 @@ export const useFeedQueries = () => {
     queryClient.setQueryData(
       ["posts", actualTab, lastFetchTime],
       (oldData: any) => {
+        if (!oldData || !oldData.pages) return oldData;
         const updatedPostsData = oldData.pages.map((page: any) => ({
           ...page,
           data: page.data.map((post: PostType) => {
@@ -49,42 +50,47 @@ export const useFeedQueries = () => {
     );
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  const removePost = (_postId: string) => {
-    // queryClient.setQueryData(
-    //   ["posts", actualTab, lastFetchTime],
-    //   (oldData: any) => {
-    //     if (!oldData) return oldData;
+  const removePost = (postId: string) => {
+    queryClient.setQueryData(
+      ["posts", actualTab, lastFetchTime],
+      (oldData: any) => {
+        if (!oldData) return oldData;
 
-    //     const updatedPages = oldData.pages.map((page: any) => {
-    //       if (!page) return page;
+        const updatedPages = oldData.pages.map((page: any) => {
+          if (!page) return page;
 
-    //       const idsBefore = page.data.map((post: any) => post.id);
-    //       const filteredData = page.data.filter(
-    //         (post: any) => post.id !== postId
-    //       );
+          const idsBefore = page.data.map((post: any) => post.id);
+          const filteredData = page.data.filter(
+            (post: any) => post.id !== postId
+          );
 
-    //       const postWasInThisPage = idsBefore.length !== filteredData.length;
+          const postWasInThisPage = idsBefore.length !== filteredData.length;
 
-    //       return {
-    //         ...page,
-    //         data: filteredData,
-    //         total: postWasInThisPage ? page.total - 1 : page.total
-    //       };
-    //     });
+          return {
+            ...page,
+            data: filteredData,
+            total: postWasInThisPage ? page.total - 1 : page.total
+          };
+        });
 
-    //     return {
-    //       ...oldData,
-    //       pages: updatedPages
-    //     };
-    //   }
-    // );
-    queryClient.invalidateQueries(["posts", actualTab, lastFetchTime] as any);
+        return {
+          ...oldData,
+          pages: updatedPages
+        };
+      }
+    );
+  };
+
+  const invalidateAllPosts = () => {
+    queryClient.invalidateQueries(["posts", actualTab, lastFetchTime] as any, {
+      cancelRefetch: true
+    });
   };
 
   return {
     addNewPost,
     increaseViews,
-    removePost
+    removePost,
+    invalidateAllPosts
   };
 };
