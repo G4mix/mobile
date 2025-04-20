@@ -114,7 +114,6 @@ export function CreateScreenCamera({
   const pickImageAsync = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
-      allowsEditing: true,
       allowsMultipleSelection: true,
       quality: 1
     });

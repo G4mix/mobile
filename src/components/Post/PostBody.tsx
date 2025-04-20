@@ -1,7 +1,8 @@
 import { StyleSheet } from "react-native";
 import { Text, View } from "../Themed";
 import { Colors } from "@/constants/colors";
-import { PostImage } from "./PostImage";
+import { PostImages } from "./PostImages";
+import { PostType } from ".";
 
 const styles = StyleSheet.create({
   postDescription: {
@@ -20,14 +21,15 @@ const styles = StyleSheet.create({
 type PostBodyProps = {
   title?: string;
   content?: string;
+  images: PostType["images"];
 };
 
-export function PostBody({ title, content }: PostBodyProps) {
+export function PostBody({ title, content, images }: PostBodyProps) {
   return (
     <View>
       <Text style={styles.postTitle}>{title}</Text>
       <Text style={styles.postDescription}>{content}</Text>
-      <PostImage />
+      <PostImages images={images} />
     </View>
   );
 }

@@ -78,7 +78,11 @@ export function Post({
         createdAt={post.created_at}
         updatedAt={post.updated_at}
       />
-      <PostBody title={post.title} content={post.content} />
+      <PostBody
+        title={post.title}
+        content={post.content}
+        images={post.images}
+      />
       {post.links.map((link) => (
         <PostLink key={`link-${link.postId}-${link.id}`} url={link.url} />
       ))}

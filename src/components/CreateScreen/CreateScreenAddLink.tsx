@@ -3,7 +3,7 @@ import { UseFormSetValue } from "react-hook-form";
 import { Colors } from "@/constants/colors";
 import { Input } from "../Input";
 import { View } from "../Themed";
-import { CreateScreenFormData } from "@/app/(application)/create";
+import { CreateScreenFormData } from "@/app/(tabs)/create";
 
 type CreateScreenAddLinkProps = {
   isAddLinkVisible: boolean;

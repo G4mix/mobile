@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 import { useForm } from "react-hook-form";
 import { useRef, useState } from "react";
 import { router } from "expo-router";
@@ -47,6 +47,10 @@ const styles = StyleSheet.create({
   postContentRoot: {
     display: "flex",
     flexDirection: "column"
+  },
+  scroll: {
+    flex: 1,
+    marginBottom: 60
   },
   textArea: {
     borderWidth: 0
@@ -156,58 +160,60 @@ export default function CreateScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      {isLoading && <SpinLoading />}
-      <CreateScreenHeader isLoading={isLoading} onSubmit={onSubmit} />
-      <CreateScreenAuthor />
-      <Input
-        placeholder="Qual é o título da sua ideia?"
-        color={Colors.light.tropicalIndigo}
-        borderWidth={2}
-        onChangeText={(value: string) => setValue("title", value)}
-        onSubmitEditing={() => contentRef.current?.focus()}
-        returnKeyType="next"
-        ref={titleRef}
-      />
-      <View style={styles.postContentRoot}>
-        <View style={styles.postContent}>
-          <TextArea
-            placeholder="O que você está desenvolvendo? Conte-nos mais!"
-            style={styles.textArea}
-            ref={contentRef}
-            onChangeText={(value: string) => setValue("content", value)}
-          />
-          {images?.map((img) => (
-            <CreateScreenImage
-              key={`post-image-${img.uri}`}
-              src={img.uri}
-              handleDeleteImage={handleDeleteImage}
+    <ScrollView style={styles.scroll}>
+      <View style={styles.container}>
+        {isLoading && <SpinLoading />}
+        <CreateScreenHeader isLoading={isLoading} onSubmit={onSubmit} />
+        <CreateScreenAuthor />
+        <Input
+          placeholder="Qual é o título da sua ideia?"
+          color={Colors.light.tropicalIndigo}
+          borderWidth={2}
+          onChangeText={(value: string) => setValue("title", value)}
+          onSubmitEditing={() => contentRef.current?.focus()}
+          returnKeyType="next"
+          ref={titleRef}
+        />
+        <View style={styles.postContentRoot}>
+          <View style={styles.postContent}>
+            <TextArea
+              placeholder="O que você está desenvolvendo? Conte-nos mais!"
+              style={styles.textArea}
+              ref={contentRef}
+              onChangeText={(value: string) => setValue("content", value)}
             />
-          ))}
-          {links?.map((link) => (
-            <CreateScreenPostLink
+            {images?.map((img) => (
+              <CreateScreenImage
+                key={`post-image-${img.uri}`}
+                src={img.uri}
+                handleDeleteImage={handleDeleteImage}
+              />
+            ))}
+            {links?.map((link) => (
+              <CreateScreenPostLink
+                setValue={setValue}
+                links={links}
+                link={link}
+                key={`post-link-${link}`}
+              />
+            ))}
+            <CreateScreenAddLink
+              isAddLinkVisible={isAddLinkVisible}
+              setIsAddLinkVisible={setIsAddLinkVisible}
               setValue={setValue}
               links={links}
-              link={link}
-              key={`post-link-${link}`}
             />
-          ))}
-          <CreateScreenAddLink
-            isAddLinkVisible={isAddLinkVisible}
-            setIsAddLinkVisible={setIsAddLinkVisible}
-            setValue={setValue}
-            links={links}
-          />
-          <CreateScreenCamera
-            isCameraVisible={isCameraVisible}
-            setIsCameraVisible={setIsCameraVisible}
-            setValue={setValue}
-            images={images}
-          />
+            <CreateScreenCamera
+              isCameraVisible={isCameraVisible}
+              setIsCameraVisible={setIsCameraVisible}
+              setValue={setValue}
+              images={images}
+            />
+          </View>
+          <CreateScreenContentActions postContentActions={postContentActions} />
         </View>
-        <CreateScreenContentActions postContentActions={postContentActions} />
+        <CreateScreenTags setValue={setValue} watch={watch} />
       </View>
-      <CreateScreenTags setValue={setValue} watch={watch} />
-    </View>
+    </ScrollView>
   );
 }
