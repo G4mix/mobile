@@ -38,7 +38,23 @@ function RootLayoutNav() {
           <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen
-              name="posts/[postId]"
+              name="posts/[postId]/index"
+              options={{
+                presentation: "modal",
+                headerShown: true,
+                title: "Voltar"
+              }}
+            />
+            <Stack.Screen
+              name="posts/[postId]/images/index"
+              options={{
+                presentation: "modal",
+                headerShown: true,
+                title: "Voltar"
+              }}
+            />
+            <Stack.Screen
+              name="posts/[postId]/images/[imageId]"
               options={{
                 presentation: "modal",
                 headerShown: true,

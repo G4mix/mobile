@@ -21,15 +21,17 @@ const styles = StyleSheet.create({
 type PostBodyProps = {
   title?: string;
   content?: string;
+  postId: string;
   images: PostType["images"];
 };
 
-export function PostBody({ title, content, images }: PostBodyProps) {
+export function PostBody({ postId, title, content, images }: PostBodyProps) {
+  if (!title && !content && (!images || images.length === 0)) return null;
   return (
     <View>
       <Text style={styles.postTitle}>{title}</Text>
       <Text style={styles.postDescription}>{content}</Text>
-      <PostImages images={images} />
+      <PostImages images={images} postId={postId} />
     </View>
   );
 }

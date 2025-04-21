@@ -43,7 +43,7 @@ export default function FeedScreen() {
             <FloatingOptionsProvider>
               {posts?.map((post, index) => (
                 <TouchableOpacity
-                  onPress={() => router.push(`/posts/${post!.id}`)}
+                  onPress={() => router.push(`/posts/${post!.id}/index`)}
                   key={`post-${post?.id || index}`}
                 >
                   <Post

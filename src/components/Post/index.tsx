@@ -82,6 +82,7 @@ export function Post({
         title={post.title}
         content={post.content}
         images={post.images}
+        postId={post.id}
       />
       {post.links.map((link) => (
         <PostLink key={`link-${link.postId}-${link.id}`} url={link.url} />
