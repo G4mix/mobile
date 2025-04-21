@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
 });
 
 export default function PostImageScreen() {
-  const { postId } = useLocalSearchParams<{ postId: string; }>();
+  const { postId } = useLocalSearchParams<{ postId: string }>();
 
   const {
     data: post,

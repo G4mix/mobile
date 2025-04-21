@@ -16,15 +16,30 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     width: "100%"
   },
+  half: {
+    height: 100,
+    resizeMode: "cover",
+    width: "50%"
+  },
   halfTall: {
     height: 200,
     resizeMode: "cover",
     width: "50%"
   },
-  half: {
-    height: 100,
-    resizeMode: "cover",
-    width: "50%"
+  overlay: {
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    bottom: 0,
+    justifyContent: "center",
+    left: 0,
+    position: "absolute",
+    right: 0,
+    top: 0
+  },
+  overlayText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold"
   },
   single: {
     height: 200,
@@ -35,21 +50,6 @@ const styles = StyleSheet.create({
     height: 100,
     resizeMode: "cover",
     width: "100%"
-  },
-  overlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  overlayText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold"
   }
 });
 
@@ -79,11 +79,16 @@ export function PostImages({ images, postId }: PostImagesProps) {
 
   return (
     <TouchableOpacity
-      onPress={() => router.push({ pathname: "/posts/[postId]/images", params: { postId } })}
+      onPress={() =>
+        router.push({ pathname: "/posts/[postId]/images", params: { postId } })
+      }
     >
       <View style={containerStyle}>
         {imagesToRender.map(({ src, alt, height, width, id }, index) => (
-          <View key={`post-image-${id}`} style={[{ position: "relative" }, getStyle(index)]}>
+          <View
+            key={`post-image-${id}`}
+            style={[{ position: "relative" }, getStyle(index)]}
+          >
             <Image
               source={{ uri: src }}
               width={width}

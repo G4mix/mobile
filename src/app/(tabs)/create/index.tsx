@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet, Dimensions } from "react-native";
 import { useForm } from "react-hook-form";
 import { useRef, useState } from "react";
 import { router } from "expo-router";
@@ -23,14 +23,14 @@ import { objectToFormData } from "@/utils/objectToFormData";
 import { PostType } from "@/components/Post";
 import { SpinLoading } from "@/components/SpinLoading";
 import { useFeedQueries } from "@/hooks/useFeedQueries";
-import { Dimensions } from "react-native";
+import { CreateScreenEvent } from "@/components/CreateScreen/CreateScreenEvent";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     gap: 18,
-    padding: 20,
-    minHeight: Dimensions.get("window").height - 60
+    minHeight: Dimensions.get("window").height - 60,
+    padding: 20
   },
   postContent: {
     alignItems: "center",
@@ -42,9 +42,9 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     display: "flex",
     flexDirection: "column",
-    minHeight: 230,
     gap: 16,
     justifyContent: "flex-start",
+    minHeight: 230,
     paddingBottom: 16
   },
   postContentRoot: {
@@ -66,11 +66,13 @@ export type CreateScreenFormData = {
   images?: ImagePickerAsset[];
   links?: string[];
   tags?: string[];
+  event?: Partial<PostType["event"]>;
 };
 
 export default function CreateScreen() {
   const [isAddLinkVisible, setIsAddLinkVisible] = useState(false);
   const [isCameraVisible, setIsCameraVisible] = useState(false);
+  const [isAddEventVisible, setIsAddEventVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { addNewPost } = useFeedQueries();
 
@@ -148,6 +150,13 @@ export default function CreateScreen() {
     },
     {
       name: "code-bracket"
+    },
+    {
+      name: "plus-circle",
+      handleClick: () => {
+        setIsAddEventVisible((prevValue) => !prevValue);
+        setValue("event", undefined);
+      }
     }
   ];
 
@@ -216,6 +225,10 @@ export default function CreateScreen() {
           <CreateScreenContentActions postContentActions={postContentActions} />
         </View>
         <CreateScreenTags setValue={setValue} watch={watch} />
+        <CreateScreenEvent
+          isAddEventVisible={isAddEventVisible}
+          setValue={setValue}
+        />
       </View>
     </ScrollView>
   );

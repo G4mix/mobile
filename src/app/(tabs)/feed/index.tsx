@@ -1,4 +1,10 @@
-import { StyleSheet, ScrollView, View, TouchableOpacity, Dimensions } from "react-native";
+import {
+  StyleSheet,
+  ScrollView,
+  View,
+  TouchableOpacity,
+  Dimensions
+} from "react-native";
 import { useRef } from "react";
 import { router } from "expo-router";
 import { ContentTabs } from "@/components/ContentTabs";

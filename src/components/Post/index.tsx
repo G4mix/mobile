@@ -42,6 +42,15 @@ export type PostType = {
     url: string;
   }[];
   tags: { id: string; name: string; postId: string }[];
+  event?: {
+    id: string;
+    subject: string;
+    description?: string;
+    location?: string;
+    startDate: string;
+    endDate: string;
+    frequency?: string;
+  };
 };
 
 type PostProps = {
