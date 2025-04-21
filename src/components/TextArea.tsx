@@ -26,7 +26,6 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     display: "flex",
     flexDirection: "row",
-    minHeight: 230,
     padding: 16,
     textAlign: "justify",
     textAlignVertical: "top",

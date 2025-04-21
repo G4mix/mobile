@@ -1,4 +1,4 @@
-import { StyleSheet, ScrollView, View, TouchableOpacity } from "react-native";
+import { StyleSheet, ScrollView, View, TouchableOpacity, Dimensions } from "react-native";
 import { useRef } from "react";
 import { router } from "expo-router";
 import { ContentTabs } from "@/components/ContentTabs";
@@ -12,7 +12,8 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     flex: 1,
-    flexDirection: "column"
+    flexDirection: "column",
+    minHeight: Dimensions.get("window").height - 60
   },
   posts: {
     display: "flex",

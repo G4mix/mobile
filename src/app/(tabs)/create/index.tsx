@@ -23,12 +23,14 @@ import { objectToFormData } from "@/utils/objectToFormData";
 import { PostType } from "@/components/Post";
 import { SpinLoading } from "@/components/SpinLoading";
 import { useFeedQueries } from "@/hooks/useFeedQueries";
+import { Dimensions } from "react-native";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     gap: 18,
-    padding: 20
+    padding: 20,
+    minHeight: Dimensions.get("window").height - 60
   },
   postContent: {
     alignItems: "center",
@@ -40,8 +42,9 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     display: "flex",
     flexDirection: "column",
+    minHeight: 230,
     gap: 16,
-    justifyContent: "center",
+    justifyContent: "flex-start",
     paddingBottom: 16
   },
   postContentRoot: {
