@@ -31,6 +31,7 @@ type InputProps = {
   onSubmitEditing?: (
     e: NativeSyntheticEvent<TextInputSubmitEditingEventData>
   ) => void;
+  value?: string;
 };
 
 export const styles = StyleSheet.create({
@@ -91,7 +92,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       onFocus,
       label,
       returnKeyType,
-      onSubmitEditing
+      onSubmitEditing,
+      value
     },
     ref
   ) => (
@@ -156,6 +158,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref as any}
           returnKeyType={returnKeyType}
           onSubmitEditing={onSubmitEditing}
+          value={value}
         />
       </View>
       {isValid === "invalid" && invalidPhrase && (

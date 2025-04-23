@@ -6,6 +6,7 @@ import { PostBody } from "./PostBody";
 import { PostActions } from "./PostActions";
 import { PostLink } from "./PostLink";
 import { InView } from "../InView";
+import { PostEvent } from "./PostEvent";
 
 export type PostType = {
   id: string;
@@ -49,7 +50,7 @@ export type PostType = {
     location?: string;
     startDate: string;
     endDate: string;
-    frequency?: string;
+    frequency?: "DAILY" | "MONTHLY" | "WEEKLY" | "YEARLY";
   };
 };
 
@@ -93,6 +94,7 @@ export function Post({
         images={post.images}
         postId={post.id}
       />
+      <PostEvent event={post.event} />
       {post.links.map((link) => (
         <PostLink key={`link-${link.postId}-${link.id}`} url={link.url} />
       ))}

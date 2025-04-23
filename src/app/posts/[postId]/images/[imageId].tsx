@@ -98,9 +98,6 @@ export default function PostImageScreen() {
           offset: width * index,
           index
         })}
-        onScrollToIndexFailed={(info) => {
-          console.warn("Erro ao navegar para o índice:", info);
-        }}
       />
       <View style={styles.paginationContainer}>
         {images.map((img, index: number) => (

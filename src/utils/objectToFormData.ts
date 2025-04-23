@@ -28,6 +28,8 @@ export const objectToFormData = (
         } else {
           formData.append(key, JSON.stringify(value));
         }
+      } else if (typeof value === "object") {
+        formData.append(key, JSON.stringify(value));
       } else {
         formData.append(key, value);
       }

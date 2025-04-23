@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   ViewStyle
 } from "react-native";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import { PostType } from ".";
 import { Text, View } from "../Themed";
 

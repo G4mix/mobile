@@ -24,6 +24,7 @@ import { PostType } from "@/components/Post";
 import { SpinLoading } from "@/components/SpinLoading";
 import { useFeedQueries } from "@/hooks/useFeedQueries";
 import { CreateScreenEvent } from "@/components/CreateScreen/CreateScreenEvent";
+import { getDate } from "@/utils/getDate";
 
 const styles = StyleSheet.create({
   container: {
@@ -84,12 +85,13 @@ export default function CreateScreen() {
   const createPost = async ({
     title,
     content,
+    event,
     images,
     links,
     tags
   }: CreateScreenFormData) => {
     if (isLoading) return;
-    if (!title && !content && !images && !links) {
+    if (!title && !content && !images && !links && !event) {
       showToast({ message: "Você precisa preencher ao menos um campo!" });
       setIsLoading(false);
       return;
@@ -110,7 +112,8 @@ export default function CreateScreen() {
       content,
       images: files,
       links,
-      tags
+      tags,
+      event
     });
     const data = await handleRequest<PostType>({
       requestFn: async () =>
@@ -132,6 +135,7 @@ export default function CreateScreen() {
     setValue("tags", []);
     setValue("images", []);
     setValue("links", []);
+    setValue("event", undefined);
   };
 
   const onSubmit = handleSubmit(createPost);
@@ -152,10 +156,14 @@ export default function CreateScreen() {
       name: "code-bracket"
     },
     {
-      name: "plus-circle",
+      name: "calendar",
       handleClick: () => {
         setIsAddEventVisible((prevValue) => !prevValue);
-        setValue("event", undefined);
+        const actualDate = getDate().toISOString();
+        setValue("event", {
+          startDate: actualDate,
+          endDate: actualDate
+        });
       }
     }
   ];
@@ -228,6 +236,7 @@ export default function CreateScreen() {
         <CreateScreenEvent
           isAddEventVisible={isAddEventVisible}
           setValue={setValue}
+          watch={watch}
         />
       </View>
     </ScrollView>
