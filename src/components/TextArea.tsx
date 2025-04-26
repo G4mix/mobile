@@ -16,6 +16,7 @@ type TextAreaProps = {
   onFocus?: (e?: NativeSyntheticEvent<TextInputFocusEventData>) => void;
   onBlur?: (e?: NativeSyntheticEvent<TextInputFocusEventData>) => void;
   style?: StyleProp<TextStyle>;
+  value?: string;
 };
 
 const styles = StyleSheet.create({
@@ -43,7 +44,7 @@ const styles = StyleSheet.create({
 
 export const TextArea = forwardRef<HTMLInputElement, TextAreaProps>(
   (
-    { placeholder, isValid = null, onChangeText, onBlur, onFocus, style = {} },
+    { placeholder, isValid = null, onChangeText, onBlur, onFocus, value, style = {} },
     ref
   ) => (
     <TextInput
@@ -54,6 +55,7 @@ export const TextArea = forwardRef<HTMLInputElement, TextAreaProps>(
         isValid === "valid" ? styles.valid : {},
         isValid === "invalid" ? styles.invalid : {}
       ]}
+      value={value}
       ref={ref as any}
       placeholderTextColor={Colors.light.tropicalIndigo}
       onChangeText={onChangeText}

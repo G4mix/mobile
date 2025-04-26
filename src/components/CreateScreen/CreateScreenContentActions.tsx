@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { StyleProp, StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
 import { View } from "../Themed";
 import { Icon, IconName } from "../Icon";
 import { Colors } from "@/constants/colors";
@@ -26,13 +26,15 @@ const styles = StyleSheet.create({
 
 type CreateScreenContentActionsProps = {
   postContentActions: { name: IconName; handleClick?: () => void }[];
+  style?: StyleProp<ViewStyle>;
 };
 
 export function CreateScreenContentActions({
-  postContentActions
+  postContentActions,
+  style={}
 }: CreateScreenContentActionsProps) {
   return (
-    <View style={styles.postContentActions}>
+    <View style={[styles.postContentActions, style]}>
       {postContentActions.map((postContentAction) =>
         postContentAction.handleClick ? (
           <TouchableOpacity
