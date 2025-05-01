@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  Dispatch,
-  SetStateAction,
-  useMemo,
-  useState
-} from "react";
+import React, { createContext, useMemo, useState } from "react";
 import { FloatingOptions } from "@/components/FloatingOptions";
 import { IconName } from "@/components/Icon";
 
@@ -15,9 +9,13 @@ type Option = {
 };
 
 export type FloatingOptionsContextType = {
-  setOptionProps: Dispatch<SetStateAction<object>>;
-  setIsVisible: Dispatch<SetStateAction<boolean>>;
-  setOptions: Dispatch<SetStateAction<Option[]>>;
+  showFloatingOptions: ({
+    options,
+    optionProps
+  }: {
+    options: Option[];
+    optionProps: object;
+  }) => void;
 };
 
 export const FloatingOptionsContext = createContext<
@@ -29,13 +27,32 @@ type FloatingOptionsProviderProps = { children: React.ReactNode };
 export function FloatingOptionsProvider({
   children
 }: FloatingOptionsProviderProps) {
-  const [optionProps, setOptionProps] = useState({});
   const [isVisible, setIsVisible] = useState(false);
-  const [options, setOptions] = useState<Option[]>([]);
+  const [floatingOptionsProps, setFloatingOptionsProps] = useState<{
+    options: Option[];
+    optionProps: object;
+  }>({
+    optionProps: {},
+    options: []
+  });
+
+  const showFloatingOptions = ({
+    options,
+    optionProps
+  }: {
+    options: Option[];
+    optionProps: object;
+  }) => {
+    setFloatingOptionsProps({
+      options,
+      optionProps
+    });
+    setIsVisible(true);
+  };
 
   const contextValue = useMemo(
-    () => ({ setOptionProps, setOptions, setIsVisible }),
-    [setOptionProps, setOptions, setIsVisible]
+    () => ({ showFloatingOptions }),
+    [showFloatingOptions]
   );
 
   return (
@@ -44,8 +61,8 @@ export function FloatingOptionsProvider({
       <FloatingOptions
         isVisible={isVisible}
         setIsVisible={setIsVisible}
-        options={options}
-        optionProps={optionProps}
+        options={floatingOptionsProps.options}
+        optionProps={floatingOptionsProps.optionProps}
       />
     </FloatingOptionsContext.Provider>
   );

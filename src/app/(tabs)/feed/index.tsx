@@ -13,6 +13,7 @@ import { useFeed } from "@/hooks/useFeed";
 import { InView } from "@/components/InView";
 import { useViewPosts } from "@/hooks/useViewPosts";
 import { FloatingOptionsProvider } from "@/context/FloatingOptionsContext";
+import { ConfirmationModalProvider } from "@/context/ConfirmationModalContext";
 
 const styles = StyleSheet.create({
   container: {
@@ -46,8 +47,8 @@ export default function FeedScreen() {
       <ContentTabs />
       <ScrollView style={styles.scroll} ref={scrollRef}>
         <View style={styles.posts}>
-          {posts && (
-            <FloatingOptionsProvider>
+          <FloatingOptionsProvider>
+            <ConfirmationModalProvider>
               {posts?.map((post, index) => (
                 <TouchableOpacity
                   onPress={() => router.push(`/posts/${post!.id}/index`)}
@@ -70,8 +71,8 @@ export default function FeedScreen() {
               {isFetchingNextPage || !hasNextPage ? null : (
                 <InView onInView={fetchNextPage} scrollRef={scrollRef} />
               )}
-            </FloatingOptionsProvider>
-          )}
+            </ConfirmationModalProvider>
+          </FloatingOptionsProvider>
         </View>
       </ScrollView>
     </View>

@@ -22,9 +22,11 @@ const usernameValidation = z.string().regex(/^[^{}]{3,255}$/, "INVALID_NAME");
 
 const emailValidation = z.string().email("INVALID_EMAIL");
 
-const postTitleValidation = z.string().regex(/^[^{}]{3,70}$/, "INVALID_TITLE")
+const postTitleValidation = z.string().regex(/^[^{}]{3,70}$/, "INVALID_TITLE");
 
-const postContentValidation = z.string().regex(/^[^{}]{3,700}$/, "INVALID_CONTENT")
+const postContentValidation = z
+  .string()
+  .regex(/^[^{}]{3,700}$/, "INVALID_CONTENT");
 
 export const isValidEmail = (value?: string) =>
   value && value.length !== 0
@@ -76,15 +78,15 @@ export const isValidPasswordUppercase = (value?: string) =>
     : null;
 
 export const isValidPostTitle = (value?: string) =>
-  value && value.length !== 0 
+  value && value.length !== 0
     ? postTitleValidation.safeParse(value).success
       ? "valid"
       : "invalid"
-    : null
+    : null;
 
 export const isValidPostContent = (value?: string) =>
-  value && value.length !== 0 
+  value && value.length !== 0
     ? postContentValidation.safeParse(value).success
       ? "valid"
       : "invalid"
-    : null
+    : null;

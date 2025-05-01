@@ -13,6 +13,7 @@ import { handleRequest } from "@/utils/handleRequest";
 import { api } from "@/constants/api";
 import { useToast } from "@/hooks/useToast";
 import { useFeedQueries } from "@/hooks/useFeedQueries";
+import { useConfirmationModal } from "@/hooks/useConfirmationModal";
 
 export const styles = StyleSheet.create({
   firstRow: {
@@ -63,7 +64,8 @@ export function PostHeader({
     (state: { user: UserState }) => state.user.userProfile.id
   );
   const [isDeleting, setIsDeleting] = useState(false);
-  const { setIsVisible, setOptions, setOptionProps } = useFloatingOptions();
+  const { showConfirmationModal } = useConfirmationModal();
+  const { showFloatingOptions } = useFloatingOptions();
   const { removePost, invalidateAllPosts } = useFeedQueries();
   const { showToast } = useToast();
   const pathname = usePathname();
@@ -84,37 +86,51 @@ export function PostHeader({
       </View>
       {userProfileId === author.id && (
         <TouchableOpacity
-          onPress={() => {
-            setOptionProps({ selectedPost: postId });
-            setOptions([
-              {
-                name: "Editar",
-                iconName: "check",
-                onPress: ({ selectedPost }: any) => {
-                  router.push(`/create?id=${selectedPost}`);
+          onPress={() =>
+            showFloatingOptions({
+              optionProps: { selectedPost: postId },
+              options: [
+                {
+                  name: "Editar",
+                  iconName: "check",
+                  onPress: ({ selectedPost }: any) => {
+                    router.push(`/create?id=${selectedPost}`);
+                  }
+                },
+                {
+                  name: "Deletar",
+                  iconName: "x-mark",
+                  onPress: async ({ selectedPost }: any) => {
+                    if (isDeleting) return;
+                    const handleConfirm = () => {
+                      handleRequest({
+                        requestFn: async () =>
+                          api.delete(`/post?postId=${selectedPost}`),
+                        showToast,
+                        setIsLoading: setIsDeleting
+                      });
+
+                      if (pathname.startsWith("/posts")) {
+                        removePost(selectedPost);
+                      } else {
+                        invalidateAllPosts();
+                      }
+
+                      router.push("/feed");
+                    };
+
+                    showConfirmationModal({
+                      actionName: "Excluir",
+                      title: "Você realmente deseja apagar a publicação?",
+                      content:
+                        "Esta ação não pode ser revertida, certifique-se que realmente deseja excluir a publicação.",
+                      handleConfirm
+                    });
+                  }
                 }
-              },
-              {
-                name: "Deletar",
-                iconName: "x-mark",
-                onPress: async ({ selectedPost }: any) => {
-                  if (isDeleting) return;
-                  setOptions([]);
-                  setOptionProps({});
-                  await handleRequest({
-                    requestFn: async () =>
-                      api.delete(`/post?postId=${selectedPost}`),
-                    showToast,
-                    setIsLoading: setIsDeleting
-                  });
-                  if (pathname.startsWith("/posts")) removePost(selectedPost);
-                  else invalidateAllPosts();
-                  router.push("/feed");
-                }
-              }
-            ]);
-            setIsVisible(true);
-          }}
+              ]
+            })
+          }
         >
           <Icon
             size={24}

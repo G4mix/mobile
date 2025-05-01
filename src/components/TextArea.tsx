@@ -44,7 +44,15 @@ const styles = StyleSheet.create({
 
 export const TextArea = forwardRef<HTMLInputElement, TextAreaProps>(
   (
-    { placeholder, isValid = null, onChangeText, onBlur, onFocus, value, style = {} },
+    {
+      placeholder,
+      isValid = null,
+      onChangeText,
+      onBlur,
+      onFocus,
+      value,
+      style = {}
+    },
     ref
   ) => (
     <TextInput

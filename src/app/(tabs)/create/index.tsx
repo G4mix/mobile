@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useRef, useState } from "react";
 import { router } from "expo-router";
 import { ImagePickerAsset } from "expo-image-picker";
-import { Text, View } from "@/components/Themed";
+import { View } from "@/components/Themed";
 import { Colors } from "@/constants/colors";
 import { Input } from "@/components/Input";
 import { useToast } from "@/hooks/useToast";
@@ -46,9 +46,9 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     gap: 8,
     justifyContent: "space-between",
-    position: "relative",
     minHeight: 230,
-    paddingBottom: 16
+    paddingBottom: 16,
+    position: "relative"
   },
   postContentRoot: {
     display: "flex",
@@ -194,25 +194,36 @@ export default function CreateScreen() {
           color={Colors.light.tropicalIndigo}
           borderWidth={2}
           isValid={isValidPostTitle(title) === "invalid" ? "invalid" : null}
-          onChangeText={(value: string) => setValue("title", value.slice(0, 70))}
+          onChangeText={(value: string) =>
+            setValue("title", value.slice(0, 70))
+          }
           value={title}
           onSubmitEditing={() => contentRef.current?.focus()}
           returnKeyType="next"
           ref={titleRef}
         />
         <View style={styles.postContentRoot}>
-          <View style={[
+          <View
+            style={[
               styles.postContent,
-              isValidPostContent(content) === "invalid" ? { borderColor: "red" } : {}
+              isValidPostContent(content) === "invalid"
+                ? { borderColor: "red" }
+                : {}
             ]}
           >
             <TextArea
               placeholder="O que você está desenvolvendo? Conte-nos mais!"
-              style={[styles.textArea, isValidPostContent(content) === "invalid" ? { color: "red" } : {}]}
+              style={[
+                styles.textArea,
+                isValidPostContent(content) === "invalid"
+                  ? { color: "red" }
+                  : {}
+              ]}
               ref={contentRef}
-              onChangeText={(value: string) => setValue("content", value.slice(0, 700))}
+              onChangeText={(value: string) =>
+                setValue("content", value.slice(0, 700))
+              }
             />
-            <Text style={{position: "absolute", right: 16, top: 16, color: Colors.light.majorelleBlue}}>{content?.length || 0}/700</Text>
             {images?.map((img) => (
               <CreateScreenImage
                 key={`post-image-${img.uri}`}
@@ -241,7 +252,14 @@ export default function CreateScreen() {
               images={images}
             />
           </View>
-          <CreateScreenContentActions postContentActions={postContentActions} style={isValidPostContent(content) === "invalid" ? { borderColor: "red" } : {}} />
+          <CreateScreenContentActions
+            postContentActions={postContentActions}
+            style={
+              isValidPostContent(content) === "invalid"
+                ? { borderColor: "red" }
+                : {}
+            }
+          />
         </View>
         <CreateScreenTags setValue={setValue} watch={watch} />
         <CreateScreenEvent

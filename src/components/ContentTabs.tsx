@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
   contentTabItem: {
     alignItems: "center",
     justifyContent: "center",
-    padding: 24
+    padding: 12
   },
   contentTabList: {
     alignItems: "center",
