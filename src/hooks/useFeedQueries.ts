@@ -30,6 +30,38 @@ export const useFeedQueries = () => {
     );
   };
 
+  const updatePost = (updatedPost: PostType) => {
+    queryClient.setQueryData(
+      ["posts", actualTab, lastFetchTime],
+      (oldData: any) => {
+        if (!oldData || !oldData.pages) return oldData;
+
+        const updatedPages = oldData.pages.map((page: any) => {
+          const postIndex = page.data.findIndex(
+            (p: PostType) => p.id === updatedPost.id
+          );
+
+          if (postIndex !== -1) {
+            const newData = [...page.data];
+            newData[postIndex] = updatedPost;
+
+            return {
+              ...page,
+              data: newData
+            };
+          }
+
+          return page;
+        });
+
+        return {
+          ...oldData,
+          pages: updatedPages
+        };
+      }
+    );
+  };
+
   const increaseViews = (updatedPostIds: string[]) => {
     queryClient.setQueryData(
       ["posts", actualTab, lastFetchTime],
@@ -89,6 +121,7 @@ export const useFeedQueries = () => {
 
   return {
     addNewPost,
+    updatePost,
     increaseViews,
     removePost,
     invalidateAllPosts

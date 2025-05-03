@@ -51,7 +51,7 @@ export default function FeedScreen() {
             <ConfirmationModalProvider>
               {posts?.map((post, index) => (
                 <TouchableOpacity
-                  onPress={() => router.push(`/posts/${post!.id}/index`)}
+                  onPress={() => router.push(`/posts/${post!.id}`)}
                   key={`post-${post?.id || index}`}
                 >
                   <Post

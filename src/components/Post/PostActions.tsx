@@ -59,7 +59,7 @@ export function PostActions({
   };
 
   const commentPost = async () => {
-    router.push(`/posts/${postId}/index`);
+    router.push(`/posts/${postId}`);
   };
 
   const sharePost = async () => {

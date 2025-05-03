@@ -14,6 +14,7 @@ import { api } from "@/constants/api";
 import { useToast } from "@/hooks/useToast";
 import { useFeedQueries } from "@/hooks/useFeedQueries";
 import { useConfirmationModal } from "@/hooks/useConfirmationModal";
+import { Option } from "@/context/FloatingOptionsContext";
 
 export const styles = StyleSheet.create({
   firstRow: {
@@ -70,6 +71,46 @@ export function PostHeader({
   const { showToast } = useToast();
   const pathname = usePathname();
 
+  const options: Option[] = [
+    {
+      name: "Editar",
+      iconName: "check",
+      onPress: ({ selectedPost }: any) => {
+        router.push(`/create?postId=${selectedPost}`);
+      }
+    },
+    {
+      name: "Deletar",
+      iconName: "x-mark",
+      onPress: async ({ selectedPost }: any) => {
+        if (isDeleting) return;
+        const handleConfirm = () => {
+          handleRequest({
+            requestFn: async () => api.delete(`/post?postId=${selectedPost}`),
+            showToast,
+            setIsLoading: setIsDeleting
+          });
+
+          if (pathname.startsWith("/posts")) {
+            removePost(selectedPost);
+          } else {
+            invalidateAllPosts();
+          }
+
+          router.push("/feed");
+        };
+
+        showConfirmationModal({
+          actionName: "Excluir",
+          title: "Você realmente deseja apagar a publicação?",
+          content:
+            "Esta ação não pode ser revertida, certifique-se que realmente deseja excluir a publicação.",
+          handleConfirm
+        });
+      }
+    }
+  ];
+
   return (
     <View style={styles.firstRow}>
       <View style={styles.leftSide}>
@@ -89,46 +130,7 @@ export function PostHeader({
           onPress={() =>
             showFloatingOptions({
               optionProps: { selectedPost: postId },
-              options: [
-                {
-                  name: "Editar",
-                  iconName: "check",
-                  onPress: ({ selectedPost }: any) => {
-                    router.push(`/create?id=${selectedPost}`);
-                  }
-                },
-                {
-                  name: "Deletar",
-                  iconName: "x-mark",
-                  onPress: async ({ selectedPost }: any) => {
-                    if (isDeleting) return;
-                    const handleConfirm = () => {
-                      handleRequest({
-                        requestFn: async () =>
-                          api.delete(`/post?postId=${selectedPost}`),
-                        showToast,
-                        setIsLoading: setIsDeleting
-                      });
-
-                      if (pathname.startsWith("/posts")) {
-                        removePost(selectedPost);
-                      } else {
-                        invalidateAllPosts();
-                      }
-
-                      router.push("/feed");
-                    };
-
-                    showConfirmationModal({
-                      actionName: "Excluir",
-                      title: "Você realmente deseja apagar a publicação?",
-                      content:
-                        "Esta ação não pode ser revertida, certifique-se que realmente deseja excluir a publicação.",
-                      handleConfirm
-                    });
-                  }
-                }
-              ]
+              options
             })
           }
         >

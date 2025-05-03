@@ -2,7 +2,7 @@ import React, { createContext, useMemo, useState } from "react";
 import { FloatingOptions } from "@/components/FloatingOptions";
 import { IconName } from "@/components/Icon";
 
-type Option = {
+export type Option = {
   name: string;
   iconName: IconName;
   onPress: (props: any) => void;

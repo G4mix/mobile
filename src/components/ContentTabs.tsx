@@ -1,5 +1,5 @@
 import React from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Dimensions, Pressable, StyleSheet, View } from "react-native";
 
 import { useDispatch, useSelector } from "react-redux";
 import { Text } from "@/components/Themed";
@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
   contentTabItem: {
     alignItems: "center",
     justifyContent: "center",
-    padding: 12
+    padding: Dimensions.get("screen").width >= 350 ? 24 : 12
   },
   contentTabList: {
     alignItems: "center",

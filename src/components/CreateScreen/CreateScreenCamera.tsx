@@ -79,7 +79,7 @@ type CreateScreenCameraProps = {
   isCameraVisible: boolean;
   setIsCameraVisible: Dispatch<SetStateAction<boolean>>;
   setValue: UseFormSetValue<CreateScreenFormData>;
-  images?: ImagePicker.ImagePickerAsset[];
+  images?: CreateScreenFormData["images"];
 };
 
 export function CreateScreenCamera({
@@ -121,14 +121,28 @@ export function CreateScreenCamera({
     if (result.canceled) return;
 
     const currentImages = images || [];
-    setValue("images", [...currentImages, ...result.assets]);
+    const files: CreateScreenFormData["images"] = result.assets.map((img) => ({
+      uri: img.uri,
+      name: img.fileName || `${new Date().toISOString()}`,
+      type: img.mimeType || "image/jpeg"
+    }));
+
+    setValue("images", [...currentImages, ...files]);
     closeCamera();
   };
 
   const handleTakePhoto = async () => {
-    const takedPhoto = await cameraRef.current?.takePictureAsync();
+    const takedPhoto =
+      (await cameraRef.current?.takePictureAsync()) as ImagePicker.ImagePickerAsset;
     const currentImages = images || [];
-    setValue("images", [...currentImages, takedPhoto]);
+    setValue("images", [
+      ...currentImages,
+      {
+        uri: takedPhoto.uri,
+        name: takedPhoto.fileName || `${new Date().toISOString()}`,
+        type: takedPhoto.mimeType || "image/jpeg"
+      }
+    ]);
     closeCamera();
   };
 

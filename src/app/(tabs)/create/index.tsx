@@ -1,8 +1,8 @@
 import { ScrollView, StyleSheet, Dimensions } from "react-native";
 import { useForm } from "react-hook-form";
-import { useRef, useState } from "react";
-import { router } from "expo-router";
-import { ImagePickerAsset } from "expo-image-picker";
+import { useEffect, useRef, useState } from "react";
+import { router, useLocalSearchParams } from "expo-router";
+import { useQuery } from "@tanstack/react-query";
 import { View } from "@/components/Themed";
 import { Colors } from "@/constants/colors";
 import { Input } from "@/components/Input";
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
 export type CreateScreenFormData = {
   title?: string;
   content?: string;
-  images?: ImagePickerAsset[];
+  images?: { uri: string; name: string; type: string }[];
   links?: string[];
   tags?: string[];
   event?: Partial<PostType["event"]>;
@@ -77,14 +77,54 @@ export default function CreateScreen() {
   const [isCameraVisible, setIsCameraVisible] = useState(false);
   const [isAddEventVisible, setIsAddEventVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { addNewPost } = useFeedQueries();
+  const { addNewPost, updatePost } = useFeedQueries();
+  const { postId } = useLocalSearchParams<{ postId: string }>();
 
   const { watch, setValue, handleSubmit } = useForm<CreateScreenFormData>();
   const { showToast } = useToast();
   const titleRef = useRef<HTMLInputElement>(null);
   const contentRef = useRef<HTMLInputElement>(null);
 
-  const createPost = async ({
+  const { data: post } = useQuery({
+    queryKey: ["post", postId],
+    queryFn: async () => {
+      const response = await api.get<PostType>(`/post/${postId}`);
+      return response.data;
+    },
+    enabled: !!postId
+  });
+
+  const getPost = () => {
+    if (!post) return;
+    setValue("title", post.title);
+    setValue("content", post.content);
+    setValue(
+      "images",
+      post.images.map((img) => {
+        const extension = img.src.split(".").pop()?.split("?")[0] || "jpg";
+        return {
+          uri: img.src,
+          name: img.id,
+          type: `image/${extension === "jpg" ? "jpeg" : extension}`
+        };
+      })
+    );
+    setValue(
+      "links",
+      post.links.map((l) => l.url)
+    );
+    setValue(
+      "tags",
+      post.tags.map((t) => t.name)
+    );
+    setValue("event", post.event);
+  };
+
+  useEffect(() => {
+    getPost();
+  }, [post]);
+
+  const createOrUpdatePost = async ({
     title,
     content,
     event,
@@ -98,37 +138,35 @@ export default function CreateScreen() {
       setIsLoading(false);
       return;
     }
-    let files: {
-      uri?: string | null;
-      name?: string | null;
-      type?: string | null;
-    }[] = [];
-    if (images)
-      files = images.map((img) => ({
-        uri: img.uri,
-        name: img.fileName,
-        type: img.mimeType
-      }));
+
     const formData = objectToFormData({
       title,
       content,
-      images: files,
+      images,
       links,
       tags,
       event
     });
     const data = await handleRequest<PostType>({
       requestFn: async () =>
-        api.post("/post", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data"
+        api[post && postId ? "patch" : "post"](
+          `/post${post && postId ? `?postId=${postId}` : ""}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data"
+            }
           }
-        }),
+        ),
       showToast,
       setIsLoading
     });
     if (!data) return;
-    addNewPost(data);
+    if (post && postId) {
+      updatePost(data);
+    } else {
+      addNewPost(data);
+    }
     router.push("/feed");
     setValue("title", undefined);
     (titleRef.current as any).clear();
@@ -140,7 +178,7 @@ export default function CreateScreen() {
     setValue("event", undefined);
   };
 
-  const onSubmit = handleSubmit(createPost);
+  const onSubmit = handleSubmit(createOrUpdatePost);
 
   const postContentActions: { name: IconName; handleClick?: () => void }[] = [
     {

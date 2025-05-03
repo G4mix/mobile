@@ -4,10 +4,10 @@ import { useQuery } from "@tanstack/react-query";
 import { FloatingOptionsProvider } from "@/context/FloatingOptionsContext";
 import { api } from "@/constants/api";
 import { Post, PostType } from "@/components/Post";
+import { ConfirmationModalProvider } from "@/context/ConfirmationModalContext";
 
 export default function PostScreen() {
   const { postId } = useLocalSearchParams();
-
   const {
     data: post,
     isLoading,
@@ -27,7 +27,9 @@ export default function PostScreen() {
   return (
     <View>
       <FloatingOptionsProvider>
-        <Post post={post} />
+        <ConfirmationModalProvider>
+          <Post post={post} />
+        </ConfirmationModalProvider>
       </FloatingOptionsProvider>
     </View>
   );
