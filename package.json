@@ -53,8 +53,6 @@
     "expo-system-ui": "~4.0.9",
     "expo-updates": "~0.27.4",
     "expo-web-browser": "~14.0.2",
-    "i": "^0.3.7",
-    "npm": "^11.3.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-hook-form": "^7.54.2",
@@ -95,7 +93,10 @@
   "expo": {
     "doctor": {
       "reactNativeDirectoryCheck": {
-        "listUnknownPackages": false
+        "exclude": [
+          "react-native-element-dropdown",
+          "expo-checkbox"
+        ]
       }
     }
   },
