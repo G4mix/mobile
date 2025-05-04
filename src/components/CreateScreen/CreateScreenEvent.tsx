@@ -10,6 +10,10 @@ import { Colors } from "@/constants/colors";
 import { ExternalInput } from "../ExternalInput";
 import { formatEventDate, formatEventTime } from "@/utils/formatDate";
 import { getDate } from "@/utils/getDate";
+import {
+  isValidEventDescription,
+  isValidEventSubject
+} from "@/constants/validations";
 
 const styles = StyleSheet.create({
   container: {
@@ -122,6 +126,9 @@ export function CreateScreenEvent({
           placeholder="Qual o assunto do seu evento?"
           label="Assunto do evento"
           onChangeText={(value) => setValue("event.subject", value)}
+          isValid={
+            isValidEventSubject(event?.subject) === "invalid" ? "invalid" : null
+          }
           onSubmitEditing={() => descriptionRef.current?.focus()}
           color={Colors.light.majorelleBlue}
           returnKeyType="next"
@@ -131,6 +138,11 @@ export function CreateScreenEvent({
           placeholder="Descreva um pouco do seu evento"
           label="Descrição"
           onChangeText={(value) => setValue("event.description", value)}
+          isValid={
+            isValidEventDescription(event?.description) === "invalid"
+              ? "invalid"
+              : null
+          }
           onSubmitEditing={() => locationRef.current?.focus()}
           ref={descriptionRef}
           color={Colors.light.majorelleBlue}

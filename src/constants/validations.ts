@@ -24,6 +24,14 @@ const emailValidation = z.string().email("INVALID_EMAIL");
 
 const postTitleValidation = z.string().regex(/^[^{}]{3,70}$/, "INVALID_TITLE");
 
+const eventSubjectValidation = z
+  .string()
+  .regex(/^[^{}]{3,70}$/, "INVALID_EVENT_SUBJECT");
+
+const eventDescriptionValidation = z
+  .string()
+  .regex(/^[^{}]{3,70}$/, "INVALID_EVENT_DESCRIPTION");
+
 const postContentValidation = z
   .string()
   .regex(/^[^{}]{3,700}$/, "INVALID_CONTENT");
@@ -87,6 +95,20 @@ export const isValidPostTitle = (value?: string) =>
 export const isValidPostContent = (value?: string) =>
   value && value.length !== 0
     ? postContentValidation.safeParse(value).success
+      ? "valid"
+      : "invalid"
+    : null;
+
+export const isValidEventSubject = (value?: string) =>
+  value && value.length !== 0
+    ? eventSubjectValidation.safeParse(value).success
+      ? "valid"
+      : "invalid"
+    : null;
+
+export const isValidEventDescription = (value?: string) =>
+  value && value.length !== 0
+    ? eventDescriptionValidation.safeParse(value).success
       ? "valid"
       : "invalid"
     : null;
