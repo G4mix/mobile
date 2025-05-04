@@ -1,6 +1,7 @@
 import { isAxiosError } from "axios";
 import { Dispatch, SetStateAction } from "react";
 import { ToastContextType } from "@/context/ToastContext";
+import { messages } from "@/constants/messages";
 
 type RequestFunction<T> = () => Promise<T>;
 
@@ -28,8 +29,10 @@ export const handleRequest = async <T>({
     setIsLoading(false);
     if (ignoreErrors) return null;
     if (isAxiosError(error)) {
+      const message = error.response?.data?.message;
       const errorMessage =
-        error.response?.data?.message || "Ocorreu um erro inesperado.";
+        messages[message as keyof typeof messages] ||
+        "Ocorreu um erro inesperado.";
       showToast({ message: errorMessage, color: "warn" });
     } else {
       showToast({
