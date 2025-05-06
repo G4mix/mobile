@@ -1,10 +1,19 @@
 import { StyleSheet } from "react-native";
 import { Button } from "../Button";
 import { Text, View } from "../Themed";
+import { CreateScreenFormData } from "@/app/(tabs)/create";
+import {
+  isValidEventDescription,
+  isValidEventSubject,
+  isValidPostContent,
+  isValidPostTitle
+} from "@/constants/validations";
 
 type CreateScreenHeaderProps = {
   isLoading: boolean;
   onSubmit: () => void;
+  data: CreateScreenFormData;
+  postId?: string;
 };
 
 const styles = StyleSheet.create({
@@ -28,16 +37,30 @@ const styles = StyleSheet.create({
 
 export function CreateScreenHeader({
   isLoading,
-  onSubmit
+  onSubmit,
+  data: { title, content, images, links, event },
+  postId
 }: CreateScreenHeaderProps) {
+  const isReadyToSubmit = !!(
+    isValidPostTitle(title) === "valid" ||
+    isValidPostContent(content) === "valid" ||
+    images ||
+    links ||
+    (event &&
+      isValidEventSubject(event.subject) === "valid" &&
+      isValidEventDescription(event.description) === "valid")
+  );
   return (
     <View style={styles.header}>
       <Text style={styles.title}>Nova Postagem</Text>
       <Button
         style={styles.publishButton}
         onPress={!isLoading ? onSubmit : undefined}
+        disabled={!isReadyToSubmit || isLoading}
       >
-        <Text style={{ color: "white" }}>Publicar</Text>
+        <Text style={{ color: "white" }}>
+          {postId ? "Atualizar" : "Publicar"}
+        </Text>
       </Button>
     </View>
   );

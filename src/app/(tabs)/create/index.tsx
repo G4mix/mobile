@@ -212,6 +212,7 @@ export default function CreateScreen() {
   const content = watch("content");
   const images = watch("images");
   const links = watch("links");
+  const event = watch("event");
 
   const handleDeleteImage = (src: string) => {
     const currentImages = images || [];
@@ -225,7 +226,18 @@ export default function CreateScreen() {
     <ScrollView style={styles.scroll}>
       <View style={styles.container}>
         {isLoading && <SpinLoading />}
-        <CreateScreenHeader isLoading={isLoading} onSubmit={onSubmit} />
+        <CreateScreenHeader
+          isLoading={isLoading}
+          onSubmit={onSubmit}
+          data={{
+            title,
+            content,
+            images,
+            links,
+            event
+          }}
+          postId={postId}
+        />
         <CreateScreenAuthor />
         <Input
           placeholder="Qual é o título da sua ideia?"
