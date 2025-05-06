@@ -24,6 +24,7 @@ type TagsProps = {
   onSubmitEditing?: (
     e: NativeSyntheticEvent<TextInputSubmitEditingEventData>
   ) => void;
+  disabled?: boolean;
 };
 
 export const styles = StyleSheet.create({
@@ -75,7 +76,8 @@ export const Tags = forwardRef<HTMLInputElement, TagsProps>(
       label,
       returnKeyType,
       showPlaceholder = true,
-      onSubmitEditing
+      onSubmitEditing,
+      disabled = false
     },
     ref
   ) => (
@@ -106,20 +108,22 @@ export const Tags = forwardRef<HTMLInputElement, TagsProps>(
           }}
         />
         {children}
-        <TextInput
-          placeholder={placeholder}
-          style={styles.input}
-          placeholderTextColor={
-            showPlaceholder ? Colors.light.tropicalIndigo : "transparent"
-          }
-          onChangeText={onChangeText}
-          onFocus={onFocus}
-          onBlur={onBlur}
-          submitBehavior="submit"
-          ref={ref as any}
-          returnKeyType={returnKeyType}
-          onSubmitEditing={onSubmitEditing}
-        />
+        {!disabled && (
+          <TextInput
+            placeholder={placeholder}
+            style={styles.input}
+            placeholderTextColor={
+              showPlaceholder ? Colors.light.tropicalIndigo : "transparent"
+            }
+            onChangeText={!disabled ? onChangeText : undefined}
+            onFocus={!disabled ? onFocus : undefined}
+            onBlur={!disabled ? onBlur : undefined}
+            submitBehavior="submit"
+            ref={ref as any}
+            returnKeyType={returnKeyType}
+            onSubmitEditing={!disabled ? onSubmitEditing : undefined}
+          />
+        )}
       </View>
     </View>
   )

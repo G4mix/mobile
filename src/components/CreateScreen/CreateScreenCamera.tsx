@@ -11,6 +11,7 @@ import { UseFormSetValue } from "react-hook-form";
 import { Icon } from "../Icon";
 import { Colors } from "@/constants/colors";
 import { CreateScreenFormData } from "@/app/(tabs)/create";
+import { useToast } from "@/hooks/useToast";
 
 const styles = StyleSheet.create({
   camera: {
@@ -91,6 +92,7 @@ export function CreateScreenCamera({
   const [facing, setFacing] = useState<CameraType>("back");
   const [flash, setFlash] = useState<FlashMode>("off");
   const [permission, requestPermission] = useCameraPermissions();
+  const { showToast } = useToast();
   const cameraRef = useRef<any>(null);
 
   if (!isCameraVisible) return null;
@@ -112,6 +114,11 @@ export function CreateScreenCamera({
   };
 
   const pickImageAsync = async () => {
+    if (images && images.length >= 8) {
+      setIsCameraVisible(false);
+      showToast({ message: "O máximo de imagens é 8.", color: "warn" });
+      return;
+    }
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
       allowsMultipleSelection: true,
@@ -132,6 +139,11 @@ export function CreateScreenCamera({
   };
 
   const handleTakePhoto = async () => {
+    if (images && images.length >= 8) {
+      setIsCameraVisible(false);
+      showToast({ message: "O máximo de imagens é 8.", color: "warn" });
+      return;
+    }
     const takedPhoto =
       (await cameraRef.current?.takePictureAsync()) as ImagePicker.ImagePickerAsset;
     const currentImages = images || [];

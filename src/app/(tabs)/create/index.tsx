@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { useEffect, useRef, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
 import { View } from "@/components/Themed";
 import { Colors } from "@/constants/colors";
 import { Input } from "@/components/Input";
@@ -26,6 +27,7 @@ import { useFeedQueries } from "@/hooks/useFeedQueries";
 import { CreateScreenEvent } from "@/components/CreateScreen/CreateScreenEvent";
 import { getDate } from "@/utils/getDate";
 import { isValidPostContent, isValidPostTitle } from "@/constants/validations";
+import { RootState } from "@/constants/reduxStore";
 
 const styles = StyleSheet.create({
   container: {
@@ -79,6 +81,7 @@ export default function CreateScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const { addNewPost, updatePost } = useFeedQueries();
   const { postId } = useLocalSearchParams<{ postId: string }>();
+  const user = useSelector((state: RootState) => state.user);
 
   const { watch, setValue, handleSubmit } = useForm<CreateScreenFormData>();
   const { showToast } = useToast();
@@ -180,17 +183,31 @@ export default function CreateScreen() {
 
   const onSubmit = handleSubmit(createOrUpdatePost);
 
+  const title = watch("title");
+  const content = watch("content");
+  const images = watch("images");
+  const links = watch("links");
+  const event = watch("event");
+
   const postContentActions: { name: IconName; handleClick?: () => void }[] = [
     {
       name: "camera",
-      handleClick: () => setIsCameraVisible(true)
+      handleClick:
+        images && images.length >= 8
+          ? () =>
+              showToast({ message: "O máximo de imagens é 5.", color: "warn" })
+          : () => setIsCameraVisible(true)
     },
     {
       name: "chart-bar"
     },
     {
       name: "link",
-      handleClick: () => setIsAddLinkVisible((prevValue) => !prevValue)
+      handleClick:
+        links && links.length >= 5
+          ? () =>
+              showToast({ message: "O máximo de links é 5.", color: "warn" })
+          : () => setIsAddLinkVisible((prevValue) => !prevValue)
     },
     {
       name: "code-bracket"
@@ -208,12 +225,6 @@ export default function CreateScreen() {
     }
   ];
 
-  const title = watch("title");
-  const content = watch("content");
-  const images = watch("images");
-  const links = watch("links");
-  const event = watch("event");
-
   const handleDeleteImage = (src: string) => {
     const currentImages = images || [];
     setValue(
@@ -221,6 +232,11 @@ export default function CreateScreen() {
       currentImages.filter((currentImage) => currentImage.uri !== src)
     );
   };
+
+  if (post && post.author.id !== user.userProfile.id) {
+    router.push("/feed");
+    return null;
+  }
 
   return (
     <ScrollView style={styles.scroll}>
@@ -236,7 +252,7 @@ export default function CreateScreen() {
             links,
             event
           }}
-          postId={postId}
+          post={post}
         />
         <CreateScreenAuthor />
         <Input

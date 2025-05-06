@@ -4,6 +4,7 @@ import { UseFormSetValue, UseFormWatch } from "react-hook-form";
 import { Tag } from "../Tag";
 import { Tags } from "../Tags";
 import { CreateScreenFormData } from "@/app/(tabs)/create";
+import { useToast } from "@/hooks/useToast";
 
 const styles = StyleSheet.create({
   recommendedTagsRoot: {
@@ -34,8 +35,49 @@ export function CreateScreenTags({ setValue, watch }: CreateScreenTagsProps) {
     { name: "Arte 3D", visible: true },
     { name: "Script", visible: true }
   ]);
+  const { showToast } = useToast();
   const tagsRef = useRef<HTMLInputElement>(null);
   const tags = watch("tags");
+
+  const handleAddTag = (e: any) => {
+    if (tags && tags.length >= 10) {
+      showToast({ message: "O máximo de links é 10.", color: "warn" });
+      return;
+    }
+    const currentTags = tags || [];
+    const text = e.nativeEvent.text.trim();
+    if (text === "" || currentTags.includes(text)) return;
+    if (tagsRef.current) (tagsRef.current as any).clear();
+    setValue("tags", [...currentTags, text]);
+  };
+
+  const handlePressSelectedTag = (tag: string) => {
+    setValue(
+      "tags",
+      tags!.filter((t) => t !== tag)
+    );
+    setRecommendedTags((rTags) =>
+      rTags.map((rt) => (rt.name === tag ? { ...rt, visible: true } : rt))
+    );
+  };
+
+  const handlePressRecommendedTag = (recommendedTag: {
+    name: string;
+    visible: boolean;
+  }) => {
+    if (tags && tags.length >= 10) {
+      showToast({ message: "O máximo de links é 10.", color: "warn" });
+      return;
+    }
+    const currentTags = tags || [];
+    if (currentTags.includes(recommendedTag.name)) return;
+    setRecommendedTags((rTags) =>
+      rTags.map((rt) =>
+        rt.name === recommendedTag.name ? { ...rt, visible: false } : rt
+      )
+    );
+    setValue("tags", [...currentTags, recommendedTag.name]);
+  };
 
   return (
     <View style={styles.tagsRoot}>
@@ -44,13 +86,8 @@ export function CreateScreenTags({ setValue, watch }: CreateScreenTagsProps) {
         placeholder="Adicione tags"
         ref={tagsRef}
         showPlaceholder={tags?.length === 0}
-        onSubmitEditing={(e) => {
-          const currentTags = tags || [];
-          const text = e.nativeEvent.text.trim();
-          if (text === "" || currentTags.includes(text)) return;
-          if (tagsRef.current) (tagsRef.current as any).clear();
-          setValue("tags", [...currentTags, text]);
-        }}
+        disabled={tags && tags.length >= 10}
+        onSubmitEditing={handleAddTag}
         returnKeyType="none"
       >
         {tags &&
@@ -58,17 +95,7 @@ export function CreateScreenTags({ setValue, watch }: CreateScreenTagsProps) {
             <Tag
               key={`tag-${tag}`}
               name={tag}
-              onPress={() => {
-                setValue(
-                  "tags",
-                  tags.filter((t) => t !== tag)
-                );
-                setRecommendedTags((rTags) =>
-                  rTags.map((rt) =>
-                    rt.name === tag ? { ...rt, visible: true } : rt
-                  )
-                );
-              }}
+              onPress={() => handlePressSelectedTag(tag)}
             />
           ))}
       </Tags>
@@ -79,18 +106,8 @@ export function CreateScreenTags({ setValue, watch }: CreateScreenTagsProps) {
               <Tag
                 key={`recommended-tag-${recommendedTag.name}`}
                 name={recommendedTag.name}
-                onPress={() => {
-                  const currentTags = tags || [];
-                  if (currentTags.includes(recommendedTag.name)) return;
-                  setRecommendedTags((rTags) =>
-                    rTags.map((rt) =>
-                      rt.name === recommendedTag.name
-                        ? { ...rt, visible: false }
-                        : rt
-                    )
-                  );
-                  setValue("tags", [...currentTags, recommendedTag.name]);
-                }}
+                disabled={tags && tags.length >= 10}
+                onPress={() => handlePressRecommendedTag(recommendedTag)}
               />
             )
         )}

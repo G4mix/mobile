@@ -8,12 +8,13 @@ import {
   isValidPostContent,
   isValidPostTitle
 } from "@/constants/validations";
+import { PostType } from "../Post";
 
 type CreateScreenHeaderProps = {
   isLoading: boolean;
   onSubmit: () => void;
   data: CreateScreenFormData;
-  postId?: string;
+  post?: PostType;
 };
 
 const styles = StyleSheet.create({
@@ -39,17 +40,18 @@ export function CreateScreenHeader({
   isLoading,
   onSubmit,
   data: { title, content, images, links, event },
-  postId
+  post
 }: CreateScreenHeaderProps) {
   const isReadyToSubmit = !!(
     isValidPostTitle(title) === "valid" ||
     isValidPostContent(content) === "valid" ||
-    images ||
-    links ||
+    (images && images.length > 0) ||
+    (links && links.length > 0) ||
     (event &&
       isValidEventSubject(event.subject) === "valid" &&
       isValidEventDescription(event.description) === "valid")
   );
+
   return (
     <View style={styles.header}>
       <Text style={styles.title}>Nova Postagem</Text>
@@ -59,7 +61,7 @@ export function CreateScreenHeader({
         disabled={!isReadyToSubmit || isLoading}
       >
         <Text style={{ color: "white" }}>
-          {postId ? "Atualizar" : "Publicar"}
+          {post ? "Atualizar" : "Publicar"}
         </Text>
       </Button>
     </View>
