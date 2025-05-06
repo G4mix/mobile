@@ -4,7 +4,7 @@
     "slug": "Gamix",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/favicon.png",
+    "icon": "./src/assets/images/favicon.png",
     "scheme": "com.gamix",
     "platforms": [
       "ios",
@@ -13,7 +13,7 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/images/splash-icon.png",
+      "image": "./src/assets/images/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -32,7 +32,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/favicon.png",
+        "foregroundImage": "./src/assets/images/favicon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.gamix"
@@ -40,10 +40,39 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./src/assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-image-picker",
+      [
+        "expo-font", {
+          "fonts": ["./src/assets/heroicons/heroicons.ttf"]
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Permitir ao $(PRODUCT_NAME) o acesso a câmera?",
+          "microphonePermission": "Permitir ao $(PRODUCT_NAME) o acesso ao microfone?",
+          "recordAudioAndroid": true
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Permitir ao $(PRODUCT_NAME) o acesso aos arquivos de mídia?",
+          "savePhotosPermission": "Permitir ao $(PRODUCT_NAME) salvar fotos?",
+          "isAccessMediaLocationEnabled": true
+        }
+      ],
+      [
+        "expo-calendar",
+        {
+          "calendarPermission": "Permitir ao $(PRODUCT_NAME) acessar o seu calendário?",
+          "remindersPermission": "Permitir ao $(PRODUCT_NAME) acessar os lembretes?"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
