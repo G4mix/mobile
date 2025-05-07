@@ -9,6 +9,7 @@ import { ConfirmationModalProvider } from "@/context/ConfirmationModalContext";
 import { Comment } from "@/components/CommentsScreen/Comment";
 import { useComments } from "@/hooks/useComments";
 import { InView } from "@/components/InView";
+import { CommentInput } from "@/components/CommentsScreen/CommentInput";
 
 export default function PostScreen() {
   const { postId } = useLocalSearchParams();
@@ -34,7 +35,7 @@ export default function PostScreen() {
   if (isLoading) return <Text>Carregando...</Text>;
 
   return (
-    <View>
+    <View style={{ flex: 1, position: "relative" }}>
       <FloatingOptionsProvider>
         <ConfirmationModalProvider>
           <Post post={post} />
@@ -48,6 +49,7 @@ export default function PostScreen() {
           <InView onInView={fetchNextPage} scrollRef={scrollRef} />
         )}
       </View>
+      <CommentInput />
     </View>
   );
 }
