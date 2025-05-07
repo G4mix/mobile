@@ -1,11 +1,14 @@
 import { router, useLocalSearchParams } from "expo-router";
-import { View, Text } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import { useQuery } from "@tanstack/react-query";
+import { useRef } from "react";
 import { FloatingOptionsProvider } from "@/context/FloatingOptionsContext";
 import { api } from "@/constants/api";
 import { Post, PostType } from "@/components/Post";
 import { ConfirmationModalProvider } from "@/context/ConfirmationModalContext";
 import { Comment } from "@/components/CommentsScreen/Comment";
+import { useComments } from "@/hooks/useComments";
+import { InView } from "@/components/InView";
 
 export default function PostScreen() {
   const { postId } = useLocalSearchParams();
@@ -22,9 +25,14 @@ export default function PostScreen() {
     enabled: !!postId
   });
 
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useComments();
+  const comments = data?.pages?.flatMap((page) => page?.data || []) || [];
+  const scrollRef = useRef<ScrollView>(null);
+
   if (isError) router.push("/feed");
   if (isLoading) return <Text>Carregando...</Text>;
-  const comment = null;
+
   return (
     <View>
       <FloatingOptionsProvider>
@@ -32,7 +40,14 @@ export default function PostScreen() {
           <Post post={post} />
         </ConfirmationModalProvider>
       </FloatingOptionsProvider>
-      <View>{comment && <Comment comment={comment} />}</View>
+      <View>
+        {comments.map((comment) => (
+          <Comment key={`comment-${comment.id}`} comment={comment} />
+        ))}
+        {isFetchingNextPage || !hasNextPage ? null : (
+          <InView onInView={fetchNextPage} scrollRef={scrollRef} />
+        )}
+      </View>
     </View>
   );
 }
