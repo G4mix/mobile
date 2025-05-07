@@ -5,6 +5,7 @@ import { FloatingOptionsProvider } from "@/context/FloatingOptionsContext";
 import { api } from "@/constants/api";
 import { Post, PostType } from "@/components/Post";
 import { ConfirmationModalProvider } from "@/context/ConfirmationModalContext";
+import { Comment } from "@/components/CommentsScreen/Comment";
 
 export default function PostScreen() {
   const { postId } = useLocalSearchParams();
@@ -23,7 +24,7 @@ export default function PostScreen() {
 
   if (isError) router.push("/feed");
   if (isLoading) return <Text>Carregando...</Text>;
-
+  const comment = null;
   return (
     <View>
       <FloatingOptionsProvider>
@@ -31,6 +32,7 @@ export default function PostScreen() {
           <Post post={post} />
         </ConfirmationModalProvider>
       </FloatingOptionsProvider>
+      <View>{comment && <Comment comment={comment} />}</View>
     </View>
   );
 }
