@@ -30,7 +30,6 @@ export default function PostScreen() {
     useComments();
   const comments = data?.pages?.flatMap((page) => page?.data || []) || [];
   const scrollRef = useRef<ScrollView>(null);
-
   if (isError) router.push("/feed");
   if (isLoading) return <Text>Carregando...</Text>;
 
@@ -49,7 +48,7 @@ export default function PostScreen() {
           <InView onInView={fetchNextPage} scrollRef={scrollRef} />
         )}
       </View>
-      <CommentInput />
+      <CommentInput commentsCount={post?.commentsCount || 0} />
     </View>
   );
 }

@@ -13,7 +13,7 @@ import { api } from "@/constants/api";
 const styles = StyleSheet.create({
   actionContainer: {
     flexDirection: "row",
-    justifyContent: "space-between"
+    gap: 10
   },
   actionOption: {
     alignItems: "center",
@@ -58,7 +58,7 @@ export function CommentActions({
     debouncedLikeComment();
   };
   const commentReply = async () => {
-    router.push(`/posts/${postId}/${commentId}`);
+    router.push(`/posts/${postId}/comments/${commentId}`);
   };
 
   const actions: {
@@ -72,11 +72,6 @@ export function CommentActions({
       color: isLiked ? Colors.light.majorelleBlue : Colors.light.russianViolet,
       content: abbreviateNumber(isLiked ? likesCount + 1 : likesCount),
       handlePress: likeComment
-    },
-    {
-      icon: "chat-bubble-left-right",
-      color: Colors.light.russianViolet,
-      handlePress: commentReply
     }
   ];
 
@@ -102,6 +97,9 @@ export function CommentActions({
           )}
         </TouchableOpacity>
       ))}
+      <TouchableOpacity onPress={commentReply}>
+        <Text style={{ color: Colors.light.russianViolet }}>Responder</Text>
+      </TouchableOpacity>
     </View>
   );
 }

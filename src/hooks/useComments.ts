@@ -13,14 +13,16 @@ type CommentPageable = {
 };
 
 export const useComments = () => {
-  const { postId, commentId } = useLocalSearchParams();
+  const { postId, commentId } = useLocalSearchParams<{
+    postId?: string;
+    commentId?: string;
+  }>();
   const lastFetchTime = useSelector(
     (state: any) => state.comments.lastFetchTime
   );
-
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
-      queryKey: ["comments", lastFetchTime, postId, commentId],
+      queryKey: ["comments", { lastFetchTime, postId, commentId }],
       queryFn: async ({ pageParam }) =>
         (
           await api.get<CommentPageable>("/comment", {

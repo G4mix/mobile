@@ -1,5 +1,6 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
+import { router } from "expo-router";
 import { Colors } from "@/constants/colors";
 import { CommentActions } from "./CommentActions";
 import { CommentHeader } from "./CommentHeader";
@@ -34,8 +35,15 @@ const styles = StyleSheet.create({
 
 export function Comment({ comment }: CommentProps) {
   if (!comment) return null;
+  const commentReply = async () => {
+    router.push(`/posts/${comment.postId}/comments/${comment.id}`);
+  };
+
   return (
-    <View style={styles.commentContainer}>
+    <TouchableOpacity
+      style={[styles.commentContainer, { paddingLeft: 32 }]}
+      onPress={commentReply}
+    >
       <CommentHeader author={comment.author} createdAt={comment.created_at} />
       <CommentBody content={comment.content} />
       <CommentActions
@@ -43,6 +51,6 @@ export function Comment({ comment }: CommentProps) {
         likesCount={comment.likesCount}
         postId={comment.postId}
       />
-    </View>
+    </TouchableOpacity>
   );
 }

@@ -39,7 +39,6 @@ export default function FeedScreen() {
 
   const posts = data?.pages?.flatMap((page) => page?.data || []) || [];
   const { alreadyVisualized, setVisualizedPosts } = useViewPosts();
-
   const scrollRef = useRef<ScrollView>(null);
 
   return (

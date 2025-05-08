@@ -3,23 +3,19 @@ import { useState } from "react";
 import { Icon } from "../Icon";
 import { Text } from "../Themed";
 import { Colors } from "@/constants/colors";
-import { CommentsModal } from "./CommentsModal";
+import { CommentsModal, styles as commentsModalStyles } from "./CommentsModal";
 
 export const styles = StyleSheet.create({
+  ...commentsModalStyles,
   container: {
     alignItems: "center",
     flexDirection: "row",
     gap: 10
   },
   inputRoot: {
-    alignItems: "center",
-    borderColor: Colors.light.tropicalIndigo,
-    borderTopWidth: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 24,
-    paddingVertical: 16,
-    width: "100%"
+    ...commentsModalStyles.inputRoot,
+    backgroundColor: "transparent",
+    borderTopWidth: 1
   },
   root: {
     bottom: 0,
@@ -28,7 +24,7 @@ export const styles = StyleSheet.create({
   }
 });
 
-export function CommentInput() {
+export function CommentInput({ commentsCount }: { commentsCount: number }) {
   const [isVisible, setIsVisible] = useState(false);
 
   const handleCommentModal = () => {
@@ -50,7 +46,11 @@ export function CommentInput() {
           color={Colors.light.russianViolet}
         />
       </TouchableOpacity>
-      <CommentsModal isVisible={isVisible} setIsVisible={setIsVisible} />
+      <CommentsModal
+        isVisible={isVisible}
+        setIsVisible={setIsVisible}
+        commentsCount={commentsCount}
+      />
     </View>
   );
 }

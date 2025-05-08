@@ -19,7 +19,7 @@ export const useFeed = () => {
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
-      queryKey: ["posts", actualTab, lastFetchTime],
+      queryKey: ["posts", { actualTab, lastFetchTime }],
       queryFn: async ({ pageParam }) =>
         (
           await api.get<PostPageable>("/post", {
@@ -41,7 +41,7 @@ export const useFeed = () => {
 
   //   socket.onmessage = (event) => {
   //     const post = JSON.parse(event.data);
-  //     queryClient.setQueryData(["posts", post.tab], (oldData: any) => ({
+  //     queryClient.setQueryData(["posts", { actualTab: post.tab, lastFetchTime }], (oldData: any) => ({
   //       pages: [[post, ...oldData.pages.flat()]]
   //     }));
   //     dispatch(setNewPostIndicator({ tab: post.tab }));

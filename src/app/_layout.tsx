@@ -46,7 +46,7 @@ function RootLayoutNav() {
               }}
             />
             <Stack.Screen
-              name="posts/[postId]/[commentId]/index"
+              name="posts/[postId]/comments/[commentId]"
               options={{
                 presentation: "modal",
                 headerShown: true,
