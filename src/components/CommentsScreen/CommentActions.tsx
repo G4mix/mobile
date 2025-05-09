@@ -1,5 +1,4 @@
 import { View, TouchableOpacity, StyleSheet } from "react-native";
-import { router } from "expo-router";
 import { useRef, useState } from "react";
 import { Icon, IconName } from "../Icon";
 import { Text } from "../Themed";
@@ -24,13 +23,13 @@ const styles = StyleSheet.create({
 });
 
 type CommentActionsProps = {
-  postId: string;
+  commentReply: () => void;
   commentId: string;
   likesCount: number;
 };
 
 export function CommentActions({
-  postId,
+  commentReply,
   commentId,
   likesCount
 }: CommentActionsProps) {
@@ -56,9 +55,6 @@ export function CommentActions({
   const likeComment = async () => {
     setIsLiked((prevValue) => !prevValue);
     debouncedLikeComment();
-  };
-  const commentReply = async () => {
-    router.push(`/posts/${postId}/comments/${commentId}`);
   };
 
   const actions: {

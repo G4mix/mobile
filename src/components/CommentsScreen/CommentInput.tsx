@@ -1,9 +1,10 @@
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { Icon } from "../Icon";
 import { Text } from "../Themed";
 import { Colors } from "@/constants/colors";
 import { CommentsModal, styles as commentsModalStyles } from "./CommentsModal";
+import { CommentType } from "./Comment";
 
 export const styles = StyleSheet.create({
   ...commentsModalStyles,
@@ -14,7 +15,6 @@ export const styles = StyleSheet.create({
   },
   inputRoot: {
     ...commentsModalStyles.inputRoot,
-    backgroundColor: "transparent",
     borderTopWidth: 1
   },
   root: {
@@ -24,16 +24,29 @@ export const styles = StyleSheet.create({
   }
 });
 
-export function CommentInput({ commentsCount }: { commentsCount: number }) {
-  const [isVisible, setIsVisible] = useState(false);
-
-  const handleCommentModal = () => {
-    setIsVisible(true);
+type CommentInputProps = {
+  commentsCount: number;
+  isVisible: boolean;
+  setIsVisible: Dispatch<SetStateAction<boolean>>;
+  replying: {
+    parentComment: string;
+    toMark: string;
+    author?: CommentType["author"];
   };
+};
 
+export function CommentInput({
+  commentsCount,
+  isVisible,
+  setIsVisible,
+  replying
+}: CommentInputProps) {
   return (
     <View style={styles.root}>
-      <TouchableOpacity style={styles.inputRoot} onPress={handleCommentModal}>
+      <TouchableOpacity
+        style={styles.inputRoot}
+        onPress={() => setIsVisible(true)}
+      >
         <View style={styles.container}>
           <Icon name="face-smile" size={24} />
           <Text style={{ color: Colors.light.russianViolet, fontSize: 16 }}>
@@ -50,6 +63,7 @@ export function CommentInput({ commentsCount }: { commentsCount: number }) {
         isVisible={isVisible}
         setIsVisible={setIsVisible}
         commentsCount={commentsCount}
+        replying={replying}
       />
     </View>
   );

@@ -72,12 +72,18 @@ type CommentsModalProps = {
   isVisible: boolean;
   setIsVisible: (value: boolean) => void;
   commentsCount: number;
+  replying: {
+    parentComment: string;
+    toMark: string;
+    author?: CommentType["author"];
+  };
 };
 
 export function CommentsModal({
   isVisible,
   setIsVisible,
-  commentsCount
+  commentsCount,
+  replying
 }: CommentsModalProps) {
   const textAreaRef = useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -98,7 +104,18 @@ export function CommentsModal({
 
   useEffect(() => {
     textAreaRef.current?.focus();
-  }, []);
+  }, [isVisible]);
+
+  useEffect(() => {
+    if (replying.parentComment !== replying.toMark && replying.author) {
+      setValue(
+        "content",
+        `(@${replying.author.user.username})[${replying.author.id}] `
+      );
+    } else {
+      setValue("content", "");
+    }
+  }, [replying.toMark]);
 
   const addNewComment = (comment: CommentType) => {
     queryClient.setQueryData(
@@ -138,7 +155,9 @@ export function CommentsModal({
     if (content.length < 3) return;
     const queryParams = new URLSearchParams();
     if (postId) queryParams.append("postId", postId);
-    if (commentId) queryParams.append("commentId", commentId);
+    if (commentId || replying.parentComment !== "") {
+      queryParams.append("commentId", commentId || replying.parentComment);
+    }
     const queryString = queryParams.toString();
     const url = `/comment${queryString ? `?${queryString}` : ""}`;
     const data = await handleRequest<CommentType>({
