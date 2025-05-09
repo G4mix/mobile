@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { Colors } from "@/constants/colors";
 import { CommentActions } from "./CommentActions";
 import { CommentHeader } from "./CommentHeader";
@@ -27,7 +27,7 @@ type CommentProps = {
     author?: CommentType["author"];
   };
   commentReply: () => void;
-  isReply?: boolean;
+  commentType: "post" | "comment" | "reply";
 };
 
 const styles = StyleSheet.create({
@@ -55,15 +55,27 @@ export function Comment({
   comment,
   replying,
   commentReply,
-  isReply = false
+  commentType
 }: CommentProps) {
+  const { commentId } = useLocalSearchParams<{ commentId: string; }>();
+  
   if (!comment) return null;
   return (
     <TouchableOpacity
-      style={[styles.commentContainer, { paddingLeft: isReply ? 48 : 32 }]}
-      onPress={() =>
-        router.push(`/posts/${comment.postId}/comments/${comment.id}`)
-      }
+      style={[
+        styles.commentContainer,
+        {
+          paddingLeft:
+            commentType === "post" ? 16 : commentType === "comment" ? 32 : 48
+        }
+      ]}
+      onPress={() => {
+        if (commentId) {
+          commentReply()
+        } else {
+          router.push(`/posts/${comment.postId}/comments/${comment.id}`)
+        }
+      }}
     >
       {replying.toMark === comment.id && <View style={styles.leftBar} />}
       <CommentHeader author={comment.author} createdAt={comment.created_at} />

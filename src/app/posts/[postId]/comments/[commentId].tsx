@@ -1,25 +1,111 @@
 import { View, ScrollView } from "react-native";
-import { useRef } from "react";
-import { Comment } from "@/components/CommentsScreen/Comment";
+import { useRef, useState } from "react";
+import { router, useLocalSearchParams } from "expo-router";
+import { useQuery } from "@tanstack/react-query";
+import { Comment, CommentType } from "@/components/CommentsScreen/Comment";
 import { useComments } from "@/hooks/useComments";
 import { InView } from "@/components/InView";
+import { CommentInput } from "@/components/CommentsScreen/CommentInput";
+import { Text } from "@/components/Themed";
+import { PostType } from "@/components/Post";
+import { api } from "@/constants/api";
+import { Alert } from "react-native";
 
 export default function RepliesScreen() {
+  const { postId, commentId } = useLocalSearchParams<{
+    postId: string;
+    commentId: string;
+  }>();
+
+  const {
+    data: comment
+  } = useQuery({
+    queryKey: ["comment", commentId],
+    queryFn: async () => {
+      const response = await api.get<CommentType>(`/comment/${commentId}`);
+      return response.data;
+    },
+    enabled: !!commentId
+  });
+
+  const {
+    data: post,
+    isLoading,
+    isError
+  } = useQuery({
+    queryKey: ["post", postId],
+    queryFn: async () => {
+      const response = await api.get<PostType>(`/post/${postId}`);
+      return response.data;
+    },
+    enabled: !!postId
+  });
+
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useComments();
-  const comments = data?.pages?.flatMap((page) => page?.data || []) || [];
-  const scrollRef = useRef<ScrollView>(null);
 
+  const replies = data?.pages?.flatMap((page) => page?.data || []) || [];
+  const scrollRef = useRef<ScrollView>(null);
+  const [replying, setReplying] = useState<{
+    parentComment: string;
+    toMark: string;
+    author?: CommentType["author"];
+  }>({
+    parentComment: "",
+    toMark: "",
+    author: undefined
+  });
+  const [isVisible, setIsVisible] = useState(false);
+
+  const commentReply = async (
+    commentId: string,
+    toMark: string,
+    author: CommentType["author"]
+  ) => {
+    setReplying({ parentComment: commentId, toMark, author });
+    setIsVisible(true);
+  };
+
+  if (isError) router.push("/feed");
+  if (isLoading) return <Text>Carregando...</Text>;
   return (
-    <View>
-      <View>
-        {comments.map((comment) => (
-          <Comment key={`comment-${comment.id}`} comment={comment} />
+    <View style={{ flex: 1, position: "relative" }}>
+      <ScrollView style={{ flex: 1, position: "relative" }}>
+        {
+          comment && (
+            <Comment
+              key={`reply-${comment.id}`}
+              comment={comment}
+              replying={replying}
+              commentReply={() => commentReply(commentId, comment.id, comment.author)}
+              commentType="post"
+            />
+          )
+        }
+        {replies.map((reply) => (
+          <View key={`comment-${reply.id}`}>
+            <Comment
+              key={`reply-${reply.id}`}
+              comment={reply}
+              replying={replying}
+              commentReply={() =>
+                commentReply(commentId, reply.id, reply.author)
+              }
+              commentType="comment"
+            />
+          </View>
         ))}
         {isFetchingNextPage || !hasNextPage ? null : (
           <InView onInView={fetchNextPage} scrollRef={scrollRef} />
         )}
-      </View>
+      </ScrollView>
+      <CommentInput
+        commentsCount={post?.commentsCount || 0}
+        isVisible={isVisible}
+        setIsVisible={setIsVisible}
+        replying={replying}
+        setReplying={setReplying}
+      />
     </View>
   );
 }

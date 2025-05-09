@@ -71,6 +71,7 @@ export default function PostScreen() {
                 commentReply={() =>
                   commentReply(comment.id, comment.id, comment.author)
                 }
+                commentType="comment"
               />
               {comment.replies.map((reply) => (
                 <Comment
@@ -80,7 +81,7 @@ export default function PostScreen() {
                   commentReply={() =>
                     commentReply(comment.id, reply.id, reply.author)
                   }
-                  isReply
+                  commentType="reply"
                 />
               ))}
             </View>
@@ -95,6 +96,7 @@ export default function PostScreen() {
         isVisible={isVisible}
         setIsVisible={setIsVisible}
         replying={replying}
+        setReplying={setReplying}
       />
     </View>
   );

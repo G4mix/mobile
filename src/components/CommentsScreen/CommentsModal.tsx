@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import {
   Modal,
   StyleSheet,
@@ -77,13 +77,19 @@ type CommentsModalProps = {
     toMark: string;
     author?: CommentType["author"];
   };
+  setReplying: Dispatch<SetStateAction<{
+    parentComment: string;
+    toMark: string;
+    author?: CommentType["author"];
+  }>>;
 };
 
 export function CommentsModal({
   isVisible,
   setIsVisible,
   commentsCount,
-  replying
+  replying,
+  setReplying
 }: CommentsModalProps) {
   const textAreaRef = useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -123,22 +129,31 @@ export function CommentsModal({
       (oldData: any) => {
         if (!oldData || !oldData.pages[0]) return oldData;
 
-        const newData = {
+        const firstPage = oldData.pages[0];
+
+        const updatedData = comment.parentCommentId
+          ? firstPage.data.map((c: CommentType) =>
+              c.id === comment.parentCommentId
+                ? { ...c, replies: [comment, ...(c.replies || [])] }
+                : c
+            )
+          : [comment, ...firstPage.data];
+
+        return {
           ...oldData,
           pages: [
             {
-              ...oldData.pages[0],
-              data: [comment, ...oldData.pages[0].data],
-              total: oldData.pages[0].total + 1
+              ...firstPage,
+              data: updatedData,
+              total: comment.parentCommentId ? firstPage.total : firstPage.total + 1,
             },
-            ...oldData.pages.slice(1)
-          ]
+            ...oldData.pages.slice(1),
+          ],
         };
-
-        return newData;
       }
     );
   };
+
 
   const updateSinglePost = () => {
     queryClient.setQueryData<PostType>(["post", postId], (oldData) => {
@@ -169,6 +184,11 @@ export function CommentsModal({
     addNewComment(data);
     setIsVisible(false);
     setValue("content", "");
+    setReplying({
+      parentComment: "",
+      toMark: "",
+      author: undefined
+    })
     updatePost({ id: postId, commentsCount: commentsCount + 1 });
     updateSinglePost();
   };

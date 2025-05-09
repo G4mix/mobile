@@ -33,13 +33,19 @@ type CommentInputProps = {
     toMark: string;
     author?: CommentType["author"];
   };
+  setReplying: Dispatch<SetStateAction<{
+    parentComment: string;
+    toMark: string;
+    author?: CommentType["author"];
+  }>>;
 };
 
 export function CommentInput({
   commentsCount,
   isVisible,
   setIsVisible,
-  replying
+  replying,
+  setReplying
 }: CommentInputProps) {
   return (
     <View style={styles.root}>
@@ -64,6 +70,7 @@ export function CommentInput({
         setIsVisible={setIsVisible}
         commentsCount={commentsCount}
         replying={replying}
+        setReplying={setReplying}
       />
     </View>
   );
