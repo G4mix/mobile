@@ -28,7 +28,7 @@ export const useComments = () => {
           await api.get<CommentPageable>("/comment", {
             params: {
               postId,
-              commentId: null,
+              commentId,
               page: pageParam,
               since: lastFetchTime,
               quantity: 10

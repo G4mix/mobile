@@ -9,7 +9,6 @@ import { CommentInput } from "@/components/CommentsScreen/CommentInput";
 import { Text } from "@/components/Themed";
 import { PostType } from "@/components/Post";
 import { api } from "@/constants/api";
-import { Alert } from "react-native";
 
 export default function RepliesScreen() {
   const { postId, commentId } = useLocalSearchParams<{
@@ -17,9 +16,7 @@ export default function RepliesScreen() {
     commentId: string;
   }>();
 
-  const {
-    data: comment
-  } = useQuery({
+  const { data: comment } = useQuery({
     queryKey: ["comment", commentId],
     queryFn: async () => {
       const response = await api.get<CommentType>(`/comment/${commentId}`);
@@ -58,11 +55,11 @@ export default function RepliesScreen() {
   const [isVisible, setIsVisible] = useState(false);
 
   const commentReply = async (
-    commentId: string,
+    parentComment: string,
     toMark: string,
     author: CommentType["author"]
   ) => {
-    setReplying({ parentComment: commentId, toMark, author });
+    setReplying({ parentComment, toMark, author });
     setIsVisible(true);
   };
 
@@ -70,18 +67,18 @@ export default function RepliesScreen() {
   if (isLoading) return <Text>Carregando...</Text>;
   return (
     <View style={{ flex: 1, position: "relative" }}>
-      <ScrollView style={{ flex: 1, position: "relative" }}>
-        {
-          comment && (
-            <Comment
-              key={`reply-${comment.id}`}
-              comment={comment}
-              replying={replying}
-              commentReply={() => commentReply(commentId, comment.id, comment.author)}
-              commentType="post"
-            />
-          )
-        }
+      <ScrollView style={{ flex: 1, position: "relative", marginBottom: 56 }}>
+        {comment && (
+          <Comment
+            key={`reply-${comment.id}`}
+            comment={comment}
+            replying={replying}
+            commentReply={() =>
+              commentReply(commentId, comment.id, comment.author)
+            }
+            commentType="post"
+          />
+        )}
         {replies.map((reply) => (
           <View key={`comment-${reply.id}`}>
             <Comment

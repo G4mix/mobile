@@ -33,11 +33,13 @@ type CommentInputProps = {
     toMark: string;
     author?: CommentType["author"];
   };
-  setReplying: Dispatch<SetStateAction<{
-    parentComment: string;
-    toMark: string;
-    author?: CommentType["author"];
-  }>>;
+  setReplying: Dispatch<
+    SetStateAction<{
+      parentComment: string;
+      toMark: string;
+      author?: CommentType["author"];
+    }>
+  >;
 };
 
 export function CommentInput({

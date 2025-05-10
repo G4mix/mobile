@@ -1,4 +1,10 @@
-import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState
+} from "react";
 import {
   Modal,
   StyleSheet,
@@ -6,16 +12,18 @@ import {
   View,
   KeyboardAvoidingView,
   Platform,
-  TouchableOpacity
+  TouchableOpacity,
+  TextInput
 } from "react-native";
+import { MentionInput } from "react-native-controlled-mentions";
 import { useForm } from "react-hook-form";
 import { useLocalSearchParams } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 import { useQueryClient } from "@tanstack/react-query";
 import { EmojiPopup } from "react-native-emoji-popup";
+import { Provider as PaperProvider } from "react-native-paper";
 import { Icon } from "../Icon";
 import { Colors } from "@/constants/colors";
-import { TextArea } from "../TextArea";
 import { handleRequest } from "@/utils/handleRequest";
 import { CommentType } from "./Comment";
 import { api } from "@/constants/api";
@@ -25,6 +33,7 @@ import { Text } from "../Themed";
 import { setLastFetchTime } from "@/features/comments/commentsSlice";
 import { useFeedQueries } from "@/hooks/useFeedQueries";
 import { PostType } from "../Post";
+import { RenderSuggestions } from "../RenderSugestions";
 
 export const styles = StyleSheet.create({
   container: {
@@ -37,11 +46,14 @@ export const styles = StyleSheet.create({
     backgroundColor: Colors.light.background,
     borderColor: Colors.light.tropicalIndigo,
     borderTopWidth: 0,
+    bottom: 0,
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 24,
     paddingVertical: 16,
-    width: "100%"
+    position: "absolute",
+    width: "100%",
+    zIndex: 9999
   },
   modalContainer: {
     backgroundColor: "rgba(0, 0, 0, 0.3)",
@@ -77,11 +89,13 @@ type CommentsModalProps = {
     toMark: string;
     author?: CommentType["author"];
   };
-  setReplying: Dispatch<SetStateAction<{
-    parentComment: string;
-    toMark: string;
-    author?: CommentType["author"];
-  }>>;
+  setReplying: Dispatch<
+    SetStateAction<{
+      parentComment: string;
+      toMark: string;
+      author?: CommentType["author"];
+    }>
+  >;
 };
 
 export function CommentsModal({
@@ -91,7 +105,7 @@ export function CommentsModal({
   replying,
   setReplying
 }: CommentsModalProps) {
-  const textAreaRef = useRef<HTMLInputElement>(null);
+  const textAreaRef = useRef<TextInput>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { updatePost } = useFeedQueries();
   const queryClient = useQueryClient();
@@ -145,15 +159,16 @@ export function CommentsModal({
             {
               ...firstPage,
               data: updatedData,
-              total: comment.parentCommentId ? firstPage.total : firstPage.total + 1,
+              total: comment.parentCommentId
+                ? firstPage.total
+                : firstPage.total + 1
             },
-            ...oldData.pages.slice(1),
-          ],
+            ...oldData.pages.slice(1)
+          ]
         };
       }
     );
   };
-
 
   const updateSinglePost = () => {
     queryClient.setQueryData<PostType>(["post", postId], (oldData) => {
@@ -188,7 +203,7 @@ export function CommentsModal({
       parentComment: "",
       toMark: "",
       author: undefined
-    })
+    });
     updatePost({ id: postId, commentsCount: commentsCount + 1 });
     updateSinglePost();
   };
@@ -214,48 +229,57 @@ export function CommentsModal({
           style={styles.modalContainer}
         >
           <TouchableWithoutFeedback>
-            <View style={styles.inputRoot}>
-              <View style={styles.container}>
-                <EmojiPopup
-                  contentContainerStyle={{
-                    paddingTop: 24,
-                    alignItems: "center",
-                    gap: 24
-                  }}
-                  closeButton={CloseButton}
-                  onEmojiSelected={(emoji) =>
-                    setValue("content", `${content}${emoji}`)
-                  }
-                >
-                  <Icon name="face-smile" size={24} />
-                </EmojiPopup>
-                <TextArea
-                  placeholder="Digite seu comentário"
-                  style={{
-                    color: Colors.dark.background,
-                    fontSize: 16,
-                    borderWidth: 0,
-                    padding: 0,
-                    width: "100%",
-                    maxWidth: 300
-                  }}
-                  onChangeText={(value: string) =>
-                    setValue("content", value.slice(0, 200))
-                  }
-                  onSubmitEditing={!isLoading ? onSubmit : undefined}
-                  ref={textAreaRef}
-                  value={content}
-                  returnKeyType="done"
-                />
+            <PaperProvider settings={{ rippleEffectEnabled: false }}>
+              <View style={styles.inputRoot}>
+                <View style={styles.container}>
+                  <EmojiPopup
+                    contentContainerStyle={{
+                      paddingTop: 24,
+                      alignItems: "center",
+                      gap: 24
+                    }}
+                    closeButton={CloseButton}
+                    onEmojiSelected={(emoji) =>
+                      setValue("content", `${content}${emoji}`)
+                    }
+                  >
+                    <Icon name="face-smile" size={24} />
+                  </EmojiPopup>
+                  <MentionInput
+                    value={content}
+                    onChange={(value) =>
+                      setValue("content", value.slice(0, 200))
+                    }
+                    style={{
+                      color: Colors.dark.background,
+                      fontSize: 16,
+                      borderWidth: 0,
+                      padding: 0,
+                      width: "100%",
+                      maxWidth: 300
+                    }}
+                    placeholder="Digite seu comentário"
+                    onSubmitEditing={!isLoading ? onSubmit : undefined}
+                    inputRef={textAreaRef}
+                    returnKeyType="done"
+                    partTypes={[
+                      {
+                        trigger: "@",
+                        renderSuggestions: RenderSuggestions,
+                        textStyle: { fontWeight: "bold", color: "blue" }
+                      }
+                    ]}
+                  />
+                </View>
+                <TouchableOpacity onPress={!isLoading ? onSubmit : undefined}>
+                  <Icon
+                    name="paper-airplane"
+                    size={24}
+                    color={Colors.light.russianViolet}
+                  />
+                </TouchableOpacity>
               </View>
-              <TouchableOpacity onPress={!isLoading ? onSubmit : undefined}>
-                <Icon
-                  name="paper-airplane"
-                  size={24}
-                  color={Colors.light.russianViolet}
-                />
-              </TouchableOpacity>
-            </View>
+            </PaperProvider>
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>

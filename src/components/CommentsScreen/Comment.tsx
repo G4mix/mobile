@@ -57,9 +57,10 @@ export function Comment({
   commentReply,
   commentType
 }: CommentProps) {
-  const { commentId } = useLocalSearchParams<{ commentId: string; }>();
-  
+  const { commentId } = useLocalSearchParams<{ commentId: string }>();
+
   if (!comment) return null;
+
   return (
     <TouchableOpacity
       style={[
@@ -70,10 +71,10 @@ export function Comment({
         }
       ]}
       onPress={() => {
-        if (commentId) {
-          commentReply()
+        if (commentId || commentType === "reply") {
+          commentReply();
         } else {
-          router.push(`/posts/${comment.postId}/comments/${comment.id}`)
+          router.push(`/posts/${comment.postId}/comments/${comment.id}`);
         }
       }}
     >
