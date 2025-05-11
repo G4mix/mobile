@@ -17,7 +17,7 @@ import {
 } from "react-native";
 import { MentionInput } from "react-native-controlled-mentions";
 import { useForm } from "react-hook-form";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 import { useQueryClient } from "@tanstack/react-query";
 import { EmojiPopup } from "react-native-emoji-popup";
@@ -34,6 +34,8 @@ import { setLastFetchTime } from "@/features/comments/commentsSlice";
 import { useFeedQueries } from "@/hooks/useFeedQueries";
 import { PostType } from "../Post";
 import { RenderSuggestions } from "../RenderSugestions";
+import { timeout } from "@/utils/timeout";
+import { InView } from "../InView";
 
 export const styles = StyleSheet.create({
   container: {
@@ -52,8 +54,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 16,
     position: "absolute",
-    width: "100%",
-    zIndex: 9999
+    width: "100%"
   },
   modalContainer: {
     backgroundColor: "rgba(0, 0, 0, 0.3)",
@@ -105,7 +106,6 @@ export function CommentsModal({
   replying,
   setReplying
 }: CommentsModalProps) {
-  const textAreaRef = useRef<TextInput>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { updatePost } = useFeedQueries();
   const queryClient = useQueryClient();
@@ -121,16 +121,12 @@ export function CommentsModal({
     defaultValues: { content: "" }
   });
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    textAreaRef.current?.focus();
-  }, [isVisible]);
-
+  const inputRef = useRef<TextInput>(null);
   useEffect(() => {
     if (replying.parentComment !== replying.toMark && replying.author) {
       setValue(
         "content",
-        `(@${replying.author.user.username})[${replying.author.id}] `
+        `@[${replying.author.user.username}](${replying.author.id}) `
       );
     } else {
       setValue("content", "");
@@ -145,13 +141,10 @@ export function CommentsModal({
 
         const firstPage = oldData.pages[0];
 
-        const updatedData = comment.parentCommentId
-          ? firstPage.data.map((c: CommentType) =>
-              c.id === comment.parentCommentId
-                ? { ...c, replies: [comment, ...(c.replies || [])] }
-                : c
-            )
-          : [comment, ...firstPage.data];
+        const updatedData =
+          comment.parentCommentId && !commentId
+            ? [...firstPage.data]
+            : [comment, ...firstPage.data];
 
         return {
           ...oldData,
@@ -206,6 +199,10 @@ export function CommentsModal({
     });
     updatePost({ id: postId, commentsCount: commentsCount + 1 });
     updateSinglePost();
+    if (data.parentCommentId && !commentId) {
+      await timeout(500);
+      router.push(`/posts/${data.postId}/comments/${data.parentCommentId}`);
+    }
   };
 
   const content = watch("content");
@@ -220,7 +217,7 @@ export function CommentsModal({
     <Modal
       visible={isVisible}
       transparent
-      animationType="slide"
+      animationType="none"
       onRequestClose={() => setIsVisible(false)}
     >
       <TouchableWithoutFeedback onPress={() => setIsVisible(false)}>
@@ -230,6 +227,15 @@ export function CommentsModal({
         >
           <TouchableWithoutFeedback>
             <PaperProvider settings={{ rippleEffectEnabled: false }}>
+              {isVisible && (
+                <InView
+                  onInView={
+                    inputRef && inputRef.current
+                      ? () => inputRef.current?.focus()
+                      : () => undefined
+                  }
+                />
+              )}
               <View style={styles.inputRoot}>
                 <View style={styles.container}>
                   <EmojiPopup
@@ -259,19 +265,38 @@ export function CommentsModal({
                       maxWidth: 300
                     }}
                     placeholder="Digite seu comentário"
-                    onSubmitEditing={!isLoading ? onSubmit : undefined}
-                    inputRef={textAreaRef}
+                    onSubmitEditing={
+                      !isLoading && content.length > 3 ? onSubmit : undefined
+                    }
                     returnKeyType="done"
+                    inputRef={inputRef}
                     partTypes={[
                       {
                         trigger: "@",
-                        renderSuggestions: RenderSuggestions,
-                        textStyle: { fontWeight: "bold", color: "blue" }
+                        isInsertSpaceAfterMention: true,
+                        renderSuggestions: ({ keyword, onSuggestionPress }) => (
+                          <RenderSuggestions
+                            keyword={keyword}
+                            onSuggestionPress={(suggestion) => {
+                              onSuggestionPress(suggestion);
+                              inputRef.current?.focus();
+                            }}
+                          />
+                        ),
+                        textStyle: {
+                          fontWeight: "bold",
+                          color: Colors.light.majorelleBlue
+                        }
                       }
                     ]}
                   />
                 </View>
-                <TouchableOpacity onPress={!isLoading ? onSubmit : undefined}>
+                <TouchableOpacity
+                  onPress={
+                    !isLoading && content.length > 3 ? onSubmit : undefined
+                  }
+                  style={content.length > 3 ? { opacity: 1 } : { opacity: 0.7 }}
+                >
                   <Icon
                     name="paper-airplane"
                     size={24}

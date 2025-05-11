@@ -65,6 +65,7 @@ export function CommentInput({
           name="paper-airplane"
           size={24}
           color={Colors.light.russianViolet}
+          style={{ opacity: 0.7 }}
         />
       </TouchableOpacity>
       <CommentsModal

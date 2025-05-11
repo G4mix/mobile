@@ -1,5 +1,5 @@
 import { View, ScrollView } from "react-native";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { Comment, CommentType } from "@/components/CommentsScreen/Comment";
@@ -42,7 +42,6 @@ export default function RepliesScreen() {
     useComments();
 
   const replies = data?.pages?.flatMap((page) => page?.data || []) || [];
-  const scrollRef = useRef<ScrollView>(null);
   const [replying, setReplying] = useState<{
     parentComment: string;
     toMark: string;
@@ -93,7 +92,7 @@ export default function RepliesScreen() {
           </View>
         ))}
         {isFetchingNextPage || !hasNextPage ? null : (
-          <InView onInView={fetchNextPage} scrollRef={scrollRef} />
+          <InView onInView={fetchNextPage} />
         )}
       </ScrollView>
       <CommentInput

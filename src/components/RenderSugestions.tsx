@@ -1,25 +1,22 @@
-import { Pressable } from "react-native";
+import { ScrollView, Image, Pressable } from "react-native";
 import { MentionSuggestionsProps } from "react-native-controlled-mentions";
-import { FC } from "react";
 import { Portal } from "react-native-paper";
 import { Text, View } from "./Themed";
 import { Colors } from "@/constants/colors";
+import { useUsers } from "@/hooks/useUsers";
+import { InView } from "./InView";
+import { Icon } from "./Icon";
+import { styles } from "./Post/PostHeader";
 
-const suggestions = [
-  { id: "1", name: "David Tabaka" },
-  { id: "2", name: "Mary" },
-  { id: "3", name: "Tony" },
-  { id: "4", name: "Mike" },
-  { id: "5", name: "Grey" }
-];
-
-export const RenderSuggestions: FC<MentionSuggestionsProps> = ({
+export function RenderSuggestions({
   keyword,
   onSuggestionPress
-}) => {
-  if (keyword == null) {
-    return null;
-  }
+}: MentionSuggestionsProps) {
+  const { data, fetchNextPage, isFetchingNextPage, hasNextPage } = useUsers({
+    search: keyword || ""
+  });
+  const users = data?.pages?.flatMap((page) => page?.data || []) || [];
+  if (typeof keyword !== "string" || !data) return null;
 
   return (
     <Portal>
@@ -32,20 +29,47 @@ export const RenderSuggestions: FC<MentionSuggestionsProps> = ({
           borderColor: Colors.light.russianViolet
         }}
       >
-        {suggestions
-          .filter((one) =>
-            one.name.toLocaleLowerCase().includes(keyword.toLocaleLowerCase())
-          )
-          .map((one) => (
+        <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
+          {users.map((user) => (
             <Pressable
-              key={one.id}
-              onPress={() => onSuggestionPress(one)}
-              style={{ padding: 12 }}
+              key={user.id}
+              focusable={false}
+              onPress={() =>
+                onSuggestionPress({ id: user.id, name: user.username })
+              }
+              style={{
+                padding: 12,
+                flexDirection: "row",
+                gap: 4,
+                borderBottomWidth: 1,
+                borderColor: Colors.light.periwinkle
+              }}
             >
-              <Text>{one.name}</Text>
+              {user.userProfile.icon ? (
+                <Image
+                  source={{ uri: user.userProfile.icon }}
+                  style={styles.imageProfile}
+                />
+              ) : (
+                <Icon
+                  size={18}
+                  name="user-circle"
+                  color={Colors.dark.background}
+                />
+              )}
+              <View style={{ flexDirection: "column", gap: 4 }}>
+                <Text style={{ fontWeight: "bold" }}>
+                  {user.userProfile.displayName || user.username}
+                </Text>
+                {user.userProfile.displayName && <Text>{user.username}</Text>}
+              </View>
             </Pressable>
           ))}
+          {isFetchingNextPage || !hasNextPage ? null : (
+            <InView onInView={fetchNextPage} />
+          )}
+        </ScrollView>
       </View>
     </Portal>
   );
-};
+}

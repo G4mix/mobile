@@ -1,24 +1,22 @@
-import { RefObject, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import {
   View,
   useWindowDimensions,
-  ScrollView,
   findNodeHandle,
   UIManager
 } from "react-native";
 
 type InViewProps = {
   onInView: () => void;
-  scrollRef: RefObject<ScrollView>;
 };
 
-export function InView({ onInView, scrollRef }: InViewProps) {
+export function InView({ onInView }: InViewProps) {
   const viewRef = useRef<View>(null);
   const calledRef = useRef(false);
   const { height: windowHeight } = useWindowDimensions();
 
   const checkIfInView = () => {
-    if (!viewRef.current || !scrollRef.current) return;
+    if (!viewRef.current) return;
 
     const nodeHandle = findNodeHandle(viewRef.current);
     if (!nodeHandle) return;

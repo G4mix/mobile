@@ -1,7 +1,7 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { View, Text, ScrollView } from "react-native";
 import { useQuery } from "@tanstack/react-query";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { FloatingOptionsProvider } from "@/context/FloatingOptionsContext";
 import { api } from "@/constants/api";
 import { Post, PostType } from "@/components/Post";
@@ -40,7 +40,6 @@ export default function PostScreen() {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useComments();
   const comments = data?.pages?.flatMap((page) => page?.data || []) || [];
-  const scrollRef = useRef<ScrollView>(null);
 
   const commentReply = async (
     commentId: string,
@@ -76,7 +75,7 @@ export default function PostScreen() {
             </View>
           ))}
           {isFetchingNextPage || !hasNextPage ? null : (
-            <InView onInView={fetchNextPage} scrollRef={scrollRef} />
+            <InView onInView={fetchNextPage} />
           )}
         </View>
       </ScrollView>

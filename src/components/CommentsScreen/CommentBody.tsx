@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
-import { Text, View } from "../Themed";
+import { View } from "../Themed";
 import { Colors } from "@/constants/colors";
+import { RenderText } from "../RenderText";
 
 const styles = StyleSheet.create({
   postDescription: {
@@ -18,7 +19,7 @@ type PostBodyProps = {
 export function CommentBody({ content }: PostBodyProps) {
   return (
     <View>
-      <Text style={styles.postDescription}>{content}</Text>
+      <RenderText style={styles.postDescription} content={content} />
     </View>
   );
 }

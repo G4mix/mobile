@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   Dimensions
 } from "react-native";
-import { useRef } from "react";
 import { router } from "expo-router";
 import { ContentTabs } from "@/components/ContentTabs";
 import { Post } from "@/components/Post";
@@ -39,12 +38,11 @@ export default function FeedScreen() {
 
   const posts = data?.pages?.flatMap((page) => page?.data || []) || [];
   const { alreadyVisualized, setVisualizedPosts } = useViewPosts();
-  const scrollRef = useRef<ScrollView>(null);
 
   return (
     <View style={styles.container}>
       <ContentTabs />
-      <ScrollView style={styles.scroll} ref={scrollRef}>
+      <ScrollView style={styles.scroll}>
         <View style={styles.posts}>
           <FloatingOptionsProvider>
             <ConfirmationModalProvider>
@@ -60,7 +58,6 @@ export default function FeedScreen() {
                       !alreadyVisualized.current.has(post.id) &&
                       setVisualizedPosts((oldPosts) => [...oldPosts, post.id])
                     }
-                    scrollRef={scrollRef}
                     alreadyVisualized={
                       post ? alreadyVisualized.current.has(post.id) : false
                     }
@@ -68,7 +65,7 @@ export default function FeedScreen() {
                 </TouchableOpacity>
               ))}
               {isFetchingNextPage || !hasNextPage ? null : (
-                <InView onInView={fetchNextPage} scrollRef={scrollRef} />
+                <InView onInView={fetchNextPage} />
               )}
             </ConfirmationModalProvider>
           </FloatingOptionsProvider>
