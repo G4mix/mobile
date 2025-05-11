@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "expo-router";
 import { StyleProp, TextStyle } from "react-native";
-import { Text } from "./Themed";
+import { Text, View } from "./Themed";
 import { Colors } from "@/constants/colors";
 
 interface RenderTextProps {
@@ -15,7 +15,6 @@ export function RenderText({ content, style }: RenderTextProps) {
   const parts = [];
   let lastIndex = 0;
   let match = mentionRegex.exec(content);
-
   while (match !== null) {
     const [fullMatch, name, id] = match;
     const startIndex = match.index;
@@ -33,9 +32,10 @@ export function RenderText({ content, style }: RenderTextProps) {
         key={`mention-${id}-${startIndex}`}
         href={`/profile/${id}`}
         style={[style, { color: Colors.light.majorelleBlue }]}
-        asChild
       >
-        <Text>@{name}</Text>
+        <Text style={[style, { color: Colors.light.majorelleBlue }]}>
+          @{name}
+        </Text>
       </Link>
     );
 
@@ -51,5 +51,5 @@ export function RenderText({ content, style }: RenderTextProps) {
     );
   }
 
-  return <Text style={style}>{parts}</Text>;
+  return <View style={{ flexDirection: "row" }}>{parts}</View>;
 }

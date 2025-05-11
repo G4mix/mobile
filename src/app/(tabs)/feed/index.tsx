@@ -13,6 +13,8 @@ import { InView } from "@/components/InView";
 import { useViewPosts } from "@/hooks/useViewPosts";
 import { FloatingOptionsProvider } from "@/context/FloatingOptionsContext";
 import { ConfirmationModalProvider } from "@/context/ConfirmationModalContext";
+import { PostLoading } from "@/components/Post/PostLoading";
+import { Colors } from "@/constants/colors";
 
 const styles = StyleSheet.create({
   container: {
@@ -28,6 +30,7 @@ const styles = StyleSheet.create({
     width: "100%"
   },
   scroll: {
+    backgroundColor: Colors.light.background,
     marginBottom: 60,
     width: "100%"
   }
@@ -64,6 +67,10 @@ export default function FeedScreen() {
                   />
                 </TouchableOpacity>
               ))}
+              {isFetchingNextPage &&
+                [1, 2, 3].map((post) => (
+                  <PostLoading key={`post-loading-${post}`} />
+                ))}
               {isFetchingNextPage || !hasNextPage ? null : (
                 <InView onInView={fetchNextPage} />
               )}

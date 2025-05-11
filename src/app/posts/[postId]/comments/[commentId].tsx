@@ -1,14 +1,14 @@
 import { View, ScrollView } from "react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { Comment, CommentType } from "@/components/CommentsScreen/Comment";
 import { useComments } from "@/hooks/useComments";
 import { InView } from "@/components/InView";
 import { CommentInput } from "@/components/CommentsScreen/CommentInput";
-import { Text } from "@/components/Themed";
 import { PostType } from "@/components/Post";
 import { api } from "@/constants/api";
+import { CommentLoading } from "@/components/CommentsScreen/CommentLoading";
 
 export default function RepliesScreen() {
   const { postId, commentId } = useLocalSearchParams<{
@@ -63,10 +63,13 @@ export default function RepliesScreen() {
   };
 
   if (isError) router.push("/feed");
-  if (isLoading) return <Text>Carregando...</Text>;
+
+  useEffect(() => setIsVisible(true), []);
+
   return (
     <View style={{ flex: 1, position: "relative" }}>
       <ScrollView style={{ flex: 1, position: "relative", marginBottom: 56 }}>
+        {isLoading && <CommentLoading commentType="post" />}
         {comment && (
           <Comment
             key={`reply-${comment.id}`}
@@ -91,6 +94,13 @@ export default function RepliesScreen() {
             />
           </View>
         ))}
+        {isFetchingNextPage &&
+          [0, 1, 2].map((c) => (
+            <CommentLoading
+              key={`comment-loading-${c}`}
+              commentType="comment"
+            />
+          ))}
         {isFetchingNextPage || !hasNextPage ? null : (
           <InView onInView={fetchNextPage} />
         )}

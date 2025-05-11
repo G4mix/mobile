@@ -228,13 +228,7 @@ export function CommentsModal({
           <TouchableWithoutFeedback>
             <PaperProvider settings={{ rippleEffectEnabled: false }}>
               {isVisible && (
-                <InView
-                  onInView={
-                    inputRef && inputRef.current
-                      ? () => inputRef.current?.focus()
-                      : () => undefined
-                  }
-                />
+                <InView onInView={() => inputRef.current?.focus()} />
               )}
               <View style={styles.inputRoot}>
                 <View style={styles.container}>
