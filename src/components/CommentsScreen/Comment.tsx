@@ -7,11 +7,13 @@ import { CommentHeader } from "./CommentHeader";
 import { CommentBody } from "./CommentBody";
 import { PostType } from "../Post";
 import { View } from "../Themed";
+import { CommentReplies } from "./CommentReplies";
 
 export type CommentType = {
   id: string;
   content: string;
   likesCount: number;
+  repliesCount: number;
   created_at: string;
   parentCommentId?: string;
   postId: string;
@@ -57,7 +59,6 @@ export function Comment({
   commentType
 }: CommentProps) {
   const { commentId } = useLocalSearchParams<{ commentId: string }>();
-
   if (!comment) return null;
 
   return (
@@ -84,6 +85,9 @@ export function Comment({
         likesCount={comment.likesCount}
         commentReply={commentReply}
       />
+      {!commentId && comment.repliesCount > 0 && (
+        <CommentReplies comment={comment} />
+      )}
     </TouchableOpacity>
   );
 }

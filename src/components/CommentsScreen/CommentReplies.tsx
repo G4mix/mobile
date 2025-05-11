@@ -1,0 +1,19 @@
+import { TouchableOpacity } from "react-native";
+import { router } from "expo-router";
+import { Text } from "../Themed";
+import { CommentType } from "./Comment";
+
+export function CommentReplies({ comment }: { comment: CommentType }) {
+  return (
+    <TouchableOpacity
+      onPress={() =>
+        router.push(`/posts/${comment.postId}/comments/${comment.id}`)
+      }
+      style={{ width: "100%", paddingVertical: 4 }}
+    >
+      <Text>
+        {comment.repliesCount} repl{comment.repliesCount === 1 ? "y" : "ies"}
+      </Text>
+    </TouchableOpacity>
+  );
+}
