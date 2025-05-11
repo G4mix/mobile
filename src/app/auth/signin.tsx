@@ -92,7 +92,7 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
-      {isLoading && <SpinLoading />}
+      {isLoading && <SpinLoading message="Conectando-se..." />}
       <Image source={favIcon} style={{ maxWidth: 120, maxHeight: 120 }} />
       <Text style={styles.title}>Entrar</Text>
       <View style={styles.connectionMethodsContainer}>

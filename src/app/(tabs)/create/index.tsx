@@ -28,6 +28,8 @@ import { CreateScreenEvent } from "@/components/CreateScreen/CreateScreenEvent";
 import { getDate } from "@/utils/getDate";
 import { isValidPostContent, isValidPostTitle } from "@/constants/validations";
 import { RootState } from "@/constants/reduxStore";
+import { SuccessModal } from "@/components/SuccessModal";
+import { timeout } from "@/utils/timeout";
 
 const styles = StyleSheet.create({
   container: {
@@ -78,6 +80,7 @@ export default function CreateScreen() {
   const [isAddLinkVisible, setIsAddLinkVisible] = useState(false);
   const [isCameraVisible, setIsCameraVisible] = useState(false);
   const [isAddEventVisible, setIsAddEventVisible] = useState(false);
+  const [isSuccessVisible, setIsSuccessVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { addNewPost, updatePost } = useFeedQueries();
   const { postId } = useLocalSearchParams<{ postId: string }>();
@@ -170,7 +173,6 @@ export default function CreateScreen() {
     } else {
       addNewPost(data);
     }
-    router.push("/feed");
     setValue("title", undefined);
     (titleRef.current as any).clear();
     setValue("content", undefined);
@@ -179,6 +181,9 @@ export default function CreateScreen() {
     setValue("images", []);
     setValue("links", []);
     setValue("event", undefined);
+    setIsSuccessVisible(true);
+    await timeout(1000);
+    router.push("/feed");
   };
 
   const onSubmit = handleSubmit(createOrUpdatePost);
@@ -241,7 +246,10 @@ export default function CreateScreen() {
   return (
     <ScrollView style={styles.scroll}>
       <View style={styles.container}>
-        {isLoading && <SpinLoading />}
+        {isLoading && (
+          <SpinLoading message={postId ? "Atualizando..." : "Publicando..."} />
+        )}
+        {isSuccessVisible && <SuccessModal message="Publicado!" />}
         <CreateScreenHeader
           isLoading={isLoading}
           onSubmit={onSubmit}
