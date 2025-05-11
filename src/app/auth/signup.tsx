@@ -187,6 +187,7 @@ export default function RegisterScreen() {
     await setItem("refreshToken", data.refreshToken);
     setIsSuccessVisible(true);
     await timeout(1000);
+    setIsSuccessVisible(false);
     router.push("/feed");
   };
 

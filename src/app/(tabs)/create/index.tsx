@@ -183,6 +183,7 @@ export default function CreateScreen() {
     setValue("event", undefined);
     setIsSuccessVisible(true);
     await timeout(1000);
+    setIsSuccessVisible(false);
     router.push("/feed");
   };
 
