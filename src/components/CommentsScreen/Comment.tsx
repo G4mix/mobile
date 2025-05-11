@@ -16,7 +16,6 @@ export type CommentType = {
   parentCommentId?: string;
   postId: string;
   author: PostType["author"];
-  replies: Omit<CommentType[], "replies">;
 };
 
 type CommentProps = {
@@ -27,7 +26,7 @@ type CommentProps = {
     author?: CommentType["author"];
   };
   commentReply: () => void;
-  commentType: "post" | "comment" | "reply";
+  commentType: "post" | "comment";
 };
 
 const styles = StyleSheet.create({
@@ -66,12 +65,11 @@ export function Comment({
       style={[
         styles.commentContainer,
         {
-          paddingLeft:
-            commentType === "post" ? 16 : commentType === "comment" ? 32 : 48
+          paddingLeft: commentType === "post" ? 16 : 32
         }
       ]}
       onPress={() => {
-        if (commentId || commentType === "reply") {
+        if (commentId) {
           commentReply();
         } else {
           router.push(`/posts/${comment.postId}/comments/${comment.id}`);

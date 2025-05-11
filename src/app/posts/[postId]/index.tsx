@@ -73,17 +73,6 @@ export default function PostScreen() {
                 }
                 commentType="comment"
               />
-              {comment.replies.map((reply) => (
-                <Comment
-                  key={`reply-${reply.id}`}
-                  comment={reply}
-                  replying={replying}
-                  commentReply={() =>
-                    commentReply(comment.id, reply.id, reply.author)
-                  }
-                  commentType="reply"
-                />
-              ))}
             </View>
           ))}
           {isFetchingNextPage || !hasNextPage ? null : (
