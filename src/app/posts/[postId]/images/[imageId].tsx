@@ -12,6 +12,9 @@ import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 import { api } from "@/constants/api";
 import { PostType } from "@/components/Post";
+import { Loading } from "@/components/Loading";
+import { Colors } from "@/constants/colors";
+import { Icon } from "@/components/Icon";
 
 const { width } = Dimensions.get("window");
 
@@ -64,7 +67,6 @@ export default function PostImageScreen() {
 
   if (isError)
     return <Text style={{ color: "#fff" }}>Erro ao carregar...</Text>;
-  if (isLoading) return <Text style={{ color: "#fff" }}>Carregando...</Text>;
 
   const images: PostType["images"] = post?.images || [];
   const initialImageIndex = images.findIndex((img) => img.id === imageId);
@@ -77,6 +79,20 @@ export default function PostImageScreen() {
 
   return (
     <View style={styles.container}>
+      {(isLoading || !post) && (
+        <Loading
+          width="100%"
+          height={Dimensions.get("screen").height}
+          borderRadius={8}
+          style={{
+            position: "relative",
+            justifyContent: "center",
+            alignItems: "center"
+          }}
+        >
+          <Icon name="photo" size={64} color={Colors.light.background} />
+        </Loading>
+      )}
       <FlatList
         data={images}
         keyExtractor={(item) => `post-image-${item.id}`}

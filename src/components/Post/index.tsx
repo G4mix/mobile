@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { Colors } from "@/constants/colors";
 import { PostHeader } from "./PostHeader";
@@ -7,6 +7,7 @@ import { PostActions } from "./PostActions";
 import { PostLink } from "./PostLink";
 import { InView } from "../InView";
 import { PostEvent } from "./PostEvent";
+import { PostLoading } from "./PostLoading";
 
 export type PostType = {
   id: string;
@@ -73,6 +74,9 @@ const styles = StyleSheet.create({
 });
 
 export function Post({ alreadyVisualized, post, onInView }: PostProps) {
+  const [isDeleting, setIsDeleting] = useState(false);
+  if (isDeleting) return <PostLoading />;
+
   if (!post) return null;
   return (
     <View style={styles.postContainer}>
@@ -81,6 +85,8 @@ export function Post({ alreadyVisualized, post, onInView }: PostProps) {
         author={post.author}
         createdAt={post.created_at}
         updatedAt={post.updated_at}
+        isDeleting={isDeleting}
+        setIsDeleting={setIsDeleting}
       />
       <PostBody
         title={post.title}

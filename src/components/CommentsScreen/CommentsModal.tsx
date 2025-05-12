@@ -33,7 +33,7 @@ import { Text } from "../Themed";
 import { setLastFetchTime } from "@/features/comments/commentsSlice";
 import { useFeedQueries } from "@/hooks/useFeedQueries";
 import { PostType } from "../Post";
-import { RenderSuggestions } from "../RenderSugestions";
+import { RenderUserSuggestions } from "../RenderUserSugestions";
 import { timeout } from "@/utils/timeout";
 import { InView } from "../InView";
 
@@ -269,7 +269,7 @@ export function CommentsModal({
                         trigger: "@",
                         isInsertSpaceAfterMention: true,
                         renderSuggestions: ({ keyword, onSuggestionPress }) => (
-                          <RenderSuggestions
+                          <RenderUserSuggestions
                             keyword={keyword}
                             onSuggestionPress={(suggestion) => {
                               onSuggestionPress(suggestion);

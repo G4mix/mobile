@@ -3,6 +3,7 @@ import { Image, StyleSheet } from "react-native";
 import { Text, View } from "@/components/Themed";
 import { ExternalLink } from "@/components/ExternalLink";
 import { Colors } from "@/constants/colors";
+import { PostLinkLoading } from "./PostLinkLoading";
 
 const styles = StyleSheet.create({
   link: {
@@ -76,11 +77,11 @@ export function PostLink({ url = "", handleError, children }: PostLinkProps) {
     fetchData();
   }, []);
 
-  if (!data || !data.icon.url) return <Text>Carregando...</Text>;
+  if (!data || !data.icon.url) return <PostLinkLoading />;
 
   return (
     <ExternalLink
-      style={{ width: "100%", padding: 16 }}
+      style={{ width: "100%", paddingHorizontal: 16 }}
       href={url}
       aria-label={`Link para o site: ${data.title}`}
       target="_blank"

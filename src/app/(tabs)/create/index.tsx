@@ -250,7 +250,9 @@ export default function CreateScreen() {
         {isLoading && (
           <SpinLoading message={postId ? "Atualizando..." : "Publicando..."} />
         )}
-        {isSuccessVisible && <SuccessModal message="Publicado!" />}
+        {isSuccessVisible && (
+          <SuccessModal message={postId ? "Atualizado!" : "Publicado!"} />
+        )}
         <CreateScreenHeader
           isLoading={isLoading}
           onSubmit={onSubmit}

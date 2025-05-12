@@ -1,14 +1,15 @@
 import { ScrollView, Image, Pressable } from "react-native";
 import { MentionSuggestionsProps } from "react-native-controlled-mentions";
 import { Portal } from "react-native-paper";
-import { Text, View } from "./Themed";
+import { Text, View } from "../Themed";
 import { Colors } from "@/constants/colors";
 import { useUsers } from "@/hooks/useUsers";
-import { InView } from "./InView";
-import { Icon } from "./Icon";
-import { styles } from "./Post/PostHeader";
+import { InView } from "../InView";
+import { Icon } from "../Icon";
+import { styles } from "../Post/PostHeader";
+import { RenderUserSugestionsLoading } from "./RenderUserSugestionsLoading";
 
-export function RenderSuggestions({
+export function RenderUserSuggestions({
   keyword,
   onSuggestionPress
 }: MentionSuggestionsProps) {
@@ -16,7 +17,7 @@ export function RenderSuggestions({
     search: keyword || ""
   });
   const users = data?.pages?.flatMap((page) => page?.data || []) || [];
-  if (typeof keyword !== "string" || !data) return null;
+  if (typeof keyword !== "string") return null;
 
   return (
     <Portal>
@@ -65,6 +66,13 @@ export function RenderSuggestions({
               </View>
             </Pressable>
           ))}
+          {isFetchingNextPage ||
+            (!data &&
+              [0, 1, 2].map((value) => (
+                <RenderUserSugestionsLoading
+                  key={`user-suggestion-loading-${value}`}
+                />
+              )))}
           {isFetchingNextPage || !hasNextPage ? null : (
             <InView onInView={fetchNextPage} />
           )}

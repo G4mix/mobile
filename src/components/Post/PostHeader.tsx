@@ -1,6 +1,6 @@
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useSelector } from "react-redux";
-import { useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { router, usePathname } from "expo-router";
 import { Icon } from "../Icon";
 import { Text } from "../Themed";
@@ -53,18 +53,21 @@ type PostHeaderProps = {
   author: PostType["author"];
   createdAt: string;
   updatedAt?: string;
+  isDeleting: boolean;
+  setIsDeleting: Dispatch<SetStateAction<boolean>>;
 };
 
 export function PostHeader({
   postId,
   author,
   createdAt,
-  updatedAt
+  updatedAt,
+  isDeleting,
+  setIsDeleting
 }: PostHeaderProps) {
   const userProfileId = useSelector(
     (state: { user: UserState }) => state.user.userProfile.id
   );
-  const [isDeleting, setIsDeleting] = useState(false);
   const { showConfirmationModal } = useConfirmationModal();
   const { showFloatingOptions } = useFloatingOptions();
   const { removePost, invalidateAllPosts } = useFeedQueries();
