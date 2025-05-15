@@ -57,7 +57,10 @@
     "react-dom": "18.3.1",
     "react-hook-form": "^7.54.2",
     "react-native": "0.76.9",
+    "react-native-controlled-mentions": "^2.2.5",
     "react-native-element-dropdown": "^2.12.4",
+    "react-native-emoji-popup": "^0.3.0",
+    "react-native-paper": "^5.14.1",
     "react-native-reanimated": "~3.16.1",
     "react-native-safe-area-context": "^4.12.0",
     "react-native-screens": "~4.4.0",
@@ -96,7 +99,8 @@
         "exclude": [
           "react-native-element-dropdown",
           "expo-checkbox",
-          "@rneui/themed"
+          "@rneui/themed",
+          "react-native-controlled-mentions"
         ]
       }
     }

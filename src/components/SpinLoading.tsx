@@ -41,7 +41,11 @@ const styles = StyleSheet.create({
   }
 });
 
-export function SpinLoading() {
+export function SpinLoading({
+  message = "Carregando..."
+}: {
+  message?: string;
+}) {
   const fadeAnimations = useRef(
     Array.from({ length: CIRCLE_COUNT }, () => new Animated.Value(0))
   ).current;
@@ -106,7 +110,7 @@ export function SpinLoading() {
             );
           })}
         </View>
-        <Text style={styles.title}>Carregando...</Text>
+        <Text style={styles.title}>{message}</Text>
       </View>
     </Modal>
   );

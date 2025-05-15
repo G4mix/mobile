@@ -9,7 +9,7 @@ export const useFeedQueries = () => {
 
   const addNewPost = (post: PostType) => {
     queryClient.setQueryData(
-      ["posts", actualTab, lastFetchTime],
+      ["posts", { actualTab, lastFetchTime }],
       (oldData: any) => {
         if (!oldData || !oldData.pages[0]) return oldData;
 
@@ -30,9 +30,9 @@ export const useFeedQueries = () => {
     );
   };
 
-  const updatePost = (updatedPost: PostType) => {
+  const updatePost = (updatedPost: Partial<PostType>) => {
     queryClient.setQueryData(
-      ["posts", actualTab, lastFetchTime],
+      ["posts", { actualTab, lastFetchTime }],
       (oldData: any) => {
         if (!oldData || !oldData.pages) return oldData;
 
@@ -43,7 +43,7 @@ export const useFeedQueries = () => {
 
           if (postIndex !== -1) {
             const newData = [...page.data];
-            newData[postIndex] = updatedPost;
+            newData[postIndex] = { ...newData[postIndex], ...updatedPost };
 
             return {
               ...page,
@@ -64,7 +64,7 @@ export const useFeedQueries = () => {
 
   const increaseViews = (updatedPostIds: string[]) => {
     queryClient.setQueryData(
-      ["posts", actualTab, lastFetchTime],
+      ["posts", { actualTab, lastFetchTime }],
       (oldData: any) => {
         if (!oldData || !oldData.pages) return oldData;
         const updatedPostsData = oldData.pages.map((page: any) => ({
@@ -84,7 +84,7 @@ export const useFeedQueries = () => {
 
   const removePost = (postId: string) => {
     queryClient.setQueryData(
-      ["posts", actualTab, lastFetchTime],
+      ["posts", { actualTab, lastFetchTime }],
       (oldData: any) => {
         if (!oldData) return oldData;
 
@@ -114,9 +114,12 @@ export const useFeedQueries = () => {
   };
 
   const invalidateAllPosts = () => {
-    queryClient.invalidateQueries(["posts", actualTab, lastFetchTime] as any, {
-      cancelRefetch: true
-    });
+    queryClient.invalidateQueries(
+      ["posts", { actualTab, lastFetchTime }] as any,
+      {
+        cancelRefetch: true
+      }
+    );
   };
 
   return {

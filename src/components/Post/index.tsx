@@ -1,5 +1,5 @@
-import React, { RefObject } from "react";
-import { View, StyleSheet, ScrollView } from "react-native";
+import React, { useState } from "react";
+import { View, StyleSheet } from "react-native";
 import { Colors } from "@/constants/colors";
 import { PostHeader } from "./PostHeader";
 import { PostBody } from "./PostBody";
@@ -7,6 +7,7 @@ import { PostActions } from "./PostActions";
 import { PostLink } from "./PostLink";
 import { InView } from "../InView";
 import { PostEvent } from "./PostEvent";
+import { PostLoading } from "./PostLoading";
 
 export type PostType = {
   id: string;
@@ -58,7 +59,6 @@ type PostProps = {
   alreadyVisualized?: boolean;
   post?: PostType;
   onInView?: () => void;
-  scrollRef?: RefObject<ScrollView>;
 };
 
 const styles = StyleSheet.create({
@@ -73,12 +73,10 @@ const styles = StyleSheet.create({
   }
 });
 
-export function Post({
-  alreadyVisualized,
-  post,
-  onInView,
-  scrollRef
-}: PostProps) {
+export function Post({ alreadyVisualized, post, onInView }: PostProps) {
+  const [isDeleting, setIsDeleting] = useState(false);
+  if (isDeleting) return <PostLoading />;
+
   if (!post) return null;
   return (
     <View style={styles.postContainer}>
@@ -87,6 +85,8 @@ export function Post({
         author={post.author}
         createdAt={post.created_at}
         updatedAt={post.updated_at}
+        isDeleting={isDeleting}
+        setIsDeleting={setIsDeleting}
       />
       <PostBody
         title={post.title}
@@ -104,9 +104,7 @@ export function Post({
         commentsCount={post.commentsCount}
         viewsCount={post.viewsCount}
       />
-      {!alreadyVisualized && scrollRef && onInView && (
-        <InView scrollRef={scrollRef} onInView={onInView} />
-      )}
+      {!alreadyVisualized && onInView && <InView onInView={onInView} />}
     </View>
   );
 }

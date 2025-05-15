@@ -15,8 +15,10 @@ import {
 } from "react-native";
 
 import { Href } from "expo-router";
+import { useSelector } from "react-redux";
 import { Colors } from "@/constants/colors";
 import { Icon, IconName } from "@/components/Icon";
+import { RootState } from "@/constants/reduxStore";
 
 interface TabBarIconProps extends React.PropsWithChildren, TabTriggerSlotProps {
   name: IconName;
@@ -75,6 +77,7 @@ const styles = StyleSheet.create({
 });
 
 export default function TabLayout() {
+  const user = useSelector((state: RootState) => state.user);
   const tabs: {
     name: string;
     href: Href;
@@ -111,7 +114,7 @@ export default function TabLayout() {
     },
     {
       name: "profile",
-      href: "/profile",
+      href: `/profile/${user.id}`,
       iconName: "user-circle",
       size: 24
     }

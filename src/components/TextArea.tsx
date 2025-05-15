@@ -1,9 +1,11 @@
 import {
   NativeSyntheticEvent,
+  ReturnKeyTypeOptions,
   StyleProp,
   StyleSheet,
   TextInput,
   TextInputFocusEventData,
+  TextInputSubmitEditingEventData,
   TextStyle
 } from "react-native";
 import { forwardRef } from "react";
@@ -15,6 +17,10 @@ type TextAreaProps = {
   onChangeText?: (value: string) => void;
   onFocus?: (e?: NativeSyntheticEvent<TextInputFocusEventData>) => void;
   onBlur?: (e?: NativeSyntheticEvent<TextInputFocusEventData>) => void;
+  onSubmitEditing?: (
+    e: NativeSyntheticEvent<TextInputSubmitEditingEventData>
+  ) => void;
+  returnKeyType?: ReturnKeyTypeOptions;
   style?: StyleProp<TextStyle>;
   value?: string;
 };
@@ -51,6 +57,8 @@ export const TextArea = forwardRef<HTMLInputElement, TextAreaProps>(
       onBlur,
       onFocus,
       value,
+      onSubmitEditing,
+      returnKeyType = "default",
       style = {}
     },
     ref
@@ -69,6 +77,8 @@ export const TextArea = forwardRef<HTMLInputElement, TextAreaProps>(
       onChangeText={onChangeText}
       onFocus={onFocus}
       onBlur={onBlur}
+      returnKeyType={returnKeyType}
+      onSubmitEditing={onSubmitEditing}
       multiline
     />
   )

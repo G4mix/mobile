@@ -26,6 +26,7 @@ import favIcon from "@/assets/images/favicon.png";
 import { Icon } from "@/components/Icon";
 import { SpinLoading } from "@/components/SpinLoading";
 import { timeout } from "@/utils/timeout";
+import { SuccessModal } from "@/components/SuccessModal";
 
 type FormData = {
   username: string;
@@ -90,6 +91,8 @@ const styles = StyleSheet.create({
 });
 
 export default function RegisterScreen() {
+  const [isSuccessVisible, setIsSuccessVisible] = useState(false);
+
   const [isUsernameValid, setIsUsernameValid] = useState<
     "valid" | "invalid" | null
   >(null);
@@ -182,7 +185,10 @@ export default function RegisterScreen() {
     await setItem("user", JSON.stringify(data.user));
     await setItem("accessToken", data.accessToken);
     await setItem("refreshToken", data.refreshToken);
-    router.replace("/feed");
+    setIsSuccessVisible(true);
+    await timeout(1000);
+    setIsSuccessVisible(false);
+    router.push("/feed");
   };
 
   const onSubmit = handleSubmit(register);
@@ -265,7 +271,8 @@ export default function RegisterScreen() {
 
   return (
     <View style={styles.container}>
-      {isLoading && <SpinLoading />}
+      {isLoading && <SpinLoading message="Registrando-se..." />}
+      {isSuccessVisible && <SuccessModal message="Conta criada!" />}
       <Image source={favIcon} style={{ maxWidth: 120, maxHeight: 120 }} />
       <Text style={styles.title}>Criar uma conta</Text>
       <Input

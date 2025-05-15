@@ -1,6 +1,6 @@
 import createIconSetFromIcoMoon from "@expo/vector-icons/createIconSetFromIcoMoon";
 import React from "react";
-import { StyleProp, ViewStyle } from "react-native";
+import { StyleProp, TextStyle } from "react-native";
 import icoMoonConfig from "@/assets/heroicons/selection.json";
 
 export type IconName =
@@ -42,5 +42,5 @@ export const Icon = createIconSetFromIcoMoon(
   name: IconName;
   size?: number;
   color?: string;
-  style?: StyleProp<ViewStyle>;
+  style?: StyleProp<TextStyle>;
 }>;

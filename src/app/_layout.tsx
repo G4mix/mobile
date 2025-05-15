@@ -46,6 +46,14 @@ function RootLayoutNav() {
               }}
             />
             <Stack.Screen
+              name="posts/[postId]/comments/[commentId]"
+              options={{
+                presentation: "modal",
+                headerShown: true,
+                title: "Voltar"
+              }}
+            />
+            <Stack.Screen
               name="posts/[postId]/images/index"
               options={{
                 presentation: "modal",

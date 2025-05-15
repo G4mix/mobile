@@ -1,12 +1,11 @@
 import {
   GestureResponderEvent,
-  Pressable,
   StyleProp,
   StyleSheet,
+  TouchableOpacity,
   ViewStyle
 } from "react-native";
 import { ReactNode } from "react";
-import { Text } from "@/components/Themed";
 import { Colors } from "@/constants/colors";
 
 type ButtonProps = {
@@ -38,11 +37,11 @@ export function Button({
   style: buttonStyles
 }: ButtonProps) {
   return (
-    <Pressable
+    <TouchableOpacity
       style={[styles.root, disabled ? styles.disabled : {}, buttonStyles]}
       onPress={onPress}
     >
-      <Text style={{ color: Colors.dark.text }}>{children}</Text>
-    </Pressable>
+      {children}
+    </TouchableOpacity>
   );
 }
