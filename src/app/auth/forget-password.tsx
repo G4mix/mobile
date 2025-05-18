@@ -1,6 +1,6 @@
 import { Image, StyleSheet } from "react-native";
 import { Link } from "expo-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Text, View } from "@/components/Themed";
 import { Colors } from "@/constants/colors";
 import favIcon from "@/assets/images/favicon.png";
@@ -26,6 +26,8 @@ const styles = StyleSheet.create({
 
 export default function ForgetPasswordScreen() {
   const [actualStep, setActualStep] = useState(0);
+  const [token, setToken] = useState("");
+  const [email, setEmail] = useState("");
   const steps = [SendRecoverEmail, InsertCode, ChangePassword];
   const incrementStep = () => {
     setActualStep((prevValue) => (prevValue === 2 ? prevValue : prevValue + 1));
@@ -36,13 +38,18 @@ export default function ForgetPasswordScreen() {
 
   const ActualStep = steps[actualStep];
 
-  useEffect(() => () => setActualStep(0), []);
-
   return (
     <View style={styles.container}>
       <Image source={favIcon} style={{ maxWidth: 120, maxHeight: 120 }} />
       <Text style={styles.title}>Recupere sua conta</Text>
-      <ActualStep incrementStep={incrementStep} resetSteps={resetSteps} />
+      <ActualStep
+        incrementStep={incrementStep}
+        resetSteps={resetSteps}
+        setEmail={setEmail}
+        email={email}
+        setToken={setToken}
+        token={token}
+      />
       <Link href="/auth/signin">
         <Text style={{ color: Colors.light.russianViolet }}>
           Lembrou sua senha?

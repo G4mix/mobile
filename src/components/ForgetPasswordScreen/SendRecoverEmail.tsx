@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Text, View } from "../Themed";
 import { Input } from "../Input";
@@ -24,13 +24,17 @@ const styles = StyleSheet.create({
 
 type SendRecoverEmailProps = {
   incrementStep: () => void;
+  setEmail: Dispatch<SetStateAction<string>>;
 };
 
 type FormData = {
   email: string;
 };
 
-export function SendRecoverEmail({ incrementStep }: SendRecoverEmailProps) {
+export function SendRecoverEmail({
+  incrementStep,
+  setEmail
+}: SendRecoverEmailProps) {
   const [isEmailValid, setIsEmailValid] = useState<"valid" | "invalid" | null>(
     null
   );
@@ -45,7 +49,7 @@ export function SendRecoverEmail({ incrementStep }: SendRecoverEmailProps) {
 
   const changePassword = async ({ email }: FormData) => {
     if (isLoading) return;
-    const data = await handleRequest({
+    const data = await handleRequest<{ email: string }>({
       requestFn: async () =>
         api.post("/auth/send-recover-email", { email }, {
           skipAuth: true
@@ -55,6 +59,7 @@ export function SendRecoverEmail({ incrementStep }: SendRecoverEmailProps) {
       successMessage: "E-mail de recuperação enviado com sucesso!"
     });
     if (!data) return;
+    setEmail(data.email);
     setValue("email", "");
     incrementStep();
   };

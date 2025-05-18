@@ -34,7 +34,11 @@ type FormData = {
   password: string;
 };
 
-export function ChangePassword() {
+type ChangePasswordProps = {
+  token: string;
+};
+
+export function ChangePassword({ token }: ChangePasswordProps) {
   const [isSuccessVisible, setIsSuccessVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { showToast } = useToast();
@@ -64,6 +68,9 @@ export function ChangePassword() {
     }>({
       requestFn: async () =>
         api.post("/auth/change-password", { password: pwd }, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
           skipAuth: true
         } as any),
       showToast,

@@ -1,6 +1,6 @@
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Text, View } from "../Themed";
 import { Input } from "../Input";
 import { Button } from "../Button";
@@ -28,13 +28,20 @@ const styles = StyleSheet.create({
 type InsertCodeProps = {
   incrementStep: () => void;
   resetSteps: () => void;
+  email: string;
+  setToken: Dispatch<SetStateAction<string>>;
 };
 
 type FormData = {
   code: string;
 };
 
-export function InsertCode({ incrementStep, resetSteps }: InsertCodeProps) {
+export function InsertCode({
+  incrementStep,
+  resetSteps,
+  email,
+  setToken
+}: InsertCodeProps) {
   const [isLoading, setIsLoading] = useState(false);
   const { showToast } = useToast();
 
@@ -46,9 +53,9 @@ export function InsertCode({ incrementStep, resetSteps }: InsertCodeProps) {
 
   const changePassword = async ({ code }: FormData) => {
     if (isLoading) return;
-    const data = await handleRequest({
+    const data = await handleRequest<{ accessToken: string }>({
       requestFn: async () =>
-        api.post("/auth/verify-email-code", { code }, {
+        api.post("/auth/verify-email-code", { code, email }, {
           skipAuth: true
         } as any),
       showToast,
@@ -56,6 +63,7 @@ export function InsertCode({ incrementStep, resetSteps }: InsertCodeProps) {
       successMessage: "Código válido!"
     });
     if (!data) return;
+    setToken(data.accessToken);
     setValue("code", "");
     incrementStep();
   };
