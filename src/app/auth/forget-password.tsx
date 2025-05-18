@@ -1,13 +1,12 @@
-import { Image, StyleSheet, View } from "react-native";
-
-import { useState } from "react";
+import { Image, StyleSheet } from "react-native";
 import { Link } from "expo-router";
-import { Text } from "@/components/Themed";
-import { Button } from "@/components/Button";
-import { Input } from "@/components/Input";
-import { isValidEmail } from "@/constants/validations";
+import { useEffect, useState } from "react";
+import { Text, View } from "@/components/Themed";
 import { Colors } from "@/constants/colors";
 import favIcon from "@/assets/images/favicon.png";
+import { SendRecoverEmail } from "@/components/ForgetPasswordScreen/SendRecoverEmail";
+import { InsertCode } from "@/components/ForgetPasswordScreen/InsertCode";
+import { ChangePassword } from "@/components/ForgetPasswordScreen/ChangePassword";
 
 const styles = StyleSheet.create({
   container: {
@@ -26,29 +25,24 @@ const styles = StyleSheet.create({
 });
 
 export default function ForgetPasswordScreen() {
-  const [isEmailValid, setIsEmailValid] = useState<"valid" | "invalid" | null>(
-    null
-  );
-
-  const validateEmail = (value: string) => {
-    setIsEmailValid(isValidEmail(value));
+  const [actualStep, setActualStep] = useState(0);
+  const steps = [SendRecoverEmail, InsertCode, ChangePassword];
+  const incrementStep = () => {
+    setActualStep((prevValue) => (prevValue === 2 ? prevValue : prevValue + 1));
   };
+  const resetSteps = () => {
+    setActualStep(0);
+  };
+
+  const ActualStep = steps[actualStep];
+
+  useEffect(() => () => setActualStep(0), []);
 
   return (
     <View style={styles.container}>
       <Image source={favIcon} style={{ maxWidth: 120, maxHeight: 120 }} />
       <Text style={styles.title}>Recupere sua conta</Text>
-      <Input
-        icon="envelope"
-        label="E-mail"
-        isPasswordInput={false}
-        placeholder="Digite seu e-mail aqui"
-        onChangeText={validateEmail}
-        isValid={isEmailValid}
-      />
-      <Button>
-        <Text>Enviar e-mail de recuperação</Text>
-      </Button>
+      <ActualStep incrementStep={incrementStep} resetSteps={resetSteps} />
       <Link href="/auth/signin">
         <Text style={{ color: Colors.light.russianViolet }}>
           Lembrou sua senha?
