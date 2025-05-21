@@ -1,15 +1,11 @@
 import { StyleSheet } from "react-native";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Text, View } from "../Themed";
 import { Input } from "../Input";
 import { Colors } from "@/constants/colors";
 import { Button } from "../Button";
 import { isValidEmail } from "@/constants/validations";
-import { api } from "@/constants/api";
-import { handleRequest } from "@/utils/handleRequest";
-import { useToast } from "@/hooks/useToast";
-import { SpinLoading } from "../SpinLoading";
 
 const styles = StyleSheet.create({
   root: {
@@ -22,24 +18,18 @@ const styles = StyleSheet.create({
   }
 });
 
-type SendRecoverEmailProps = {
-  incrementStep: () => void;
-  setEmail: Dispatch<SetStateAction<string>>;
-};
-
 type FormData = {
   email: string;
 };
 
-export function SendRecoverEmail({
-  incrementStep,
-  setEmail
-}: SendRecoverEmailProps) {
+type SendRecoverEmailProps = {
+  changePassword: (data: { email: string }, increment: boolean) => void;
+};
+
+export function SendRecoverEmail({ changePassword }: SendRecoverEmailProps) {
   const [isEmailValid, setIsEmailValid] = useState<"valid" | "invalid" | null>(
     null
   );
-  const [isLoading, setIsLoading] = useState(false);
-  const { showToast } = useToast();
 
   const { watch, setValue, handleSubmit } = useForm<FormData>({
     defaultValues: {
@@ -47,23 +37,10 @@ export function SendRecoverEmail({
     }
   });
 
-  const changePassword = async ({ email }: FormData) => {
-    if (isLoading) return;
-    const data = await handleRequest<{ email: string }>({
-      requestFn: async () =>
-        api.post("/auth/send-recover-email", { email }, {
-          skipAuth: true
-        } as any),
-      showToast,
-      setIsLoading,
-      successMessage: "E-mail de recuperação enviado com sucesso!"
-    });
-    if (!data) return;
-    setEmail(data.email);
+  const onSubmit = handleSubmit((data) => {
+    changePassword(data, true);
     setValue("email", "");
-    incrementStep();
-  };
-  const onSubmit = handleSubmit(changePassword);
+  });
 
   const email = watch("email");
 
@@ -74,7 +51,6 @@ export function SendRecoverEmail({
 
   return (
     <View style={styles.root}>
-      {isLoading && <SpinLoading message="Enviando e-mail de recuperação..." />}
       <Input
         icon="envelope"
         label="E-mail"

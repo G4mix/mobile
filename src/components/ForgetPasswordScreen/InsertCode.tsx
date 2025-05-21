@@ -25,22 +25,24 @@ const styles = StyleSheet.create({
   }
 });
 
+type FormData = {
+  code: string;
+};
+
 type InsertCodeProps = {
   incrementStep: () => void;
   resetSteps: () => void;
   email: string;
   setToken: Dispatch<SetStateAction<string>>;
-};
-
-type FormData = {
-  code: string;
+  changePassword: (data: { email: string }, increment: boolean) => void;
 };
 
 export function InsertCode({
   incrementStep,
   resetSteps,
   email,
-  setToken
+  setToken,
+  changePassword
 }: InsertCodeProps) {
   const [isLoading, setIsLoading] = useState(false);
   const { showToast } = useToast();
@@ -51,7 +53,7 @@ export function InsertCode({
     }
   });
 
-  const changePassword = async ({ code }: FormData) => {
+  const verifyCode = async ({ code }: FormData) => {
     if (isLoading) return;
     const data = await handleRequest<{ accessToken: string }>({
       requestFn: async () =>
@@ -67,21 +69,29 @@ export function InsertCode({
     setValue("code", "");
     incrementStep();
   };
-  const onSubmit = handleSubmit(changePassword);
+  const onSubmit = handleSubmit(verifyCode);
 
   const code = watch("code");
 
   return (
     <View style={styles.root}>
       {isLoading && <SpinLoading message="Validando código..." />}
-      <Input
-        icon="lock-closed"
-        label="Código de verificação"
-        placeholder="Digite seu código de verificação aqui"
-        onChangeText={(value) => setValue("code", value.slice(0, 6))}
-        onSubmitEditing={code.length === 6 ? onSubmit : undefined}
-        returnKeyType="done"
-      />
+      <View style={{ gap: 4 }}>
+        <Input
+          icon="lock-closed"
+          label="Código de verificação"
+          placeholder="Digite seu código de verificação aqui"
+          onChangeText={(value) => setValue("code", value.slice(0, 6))}
+          value={code}
+          onSubmitEditing={code.length === 6 ? onSubmit : undefined}
+          returnKeyType="done"
+        />
+        <TouchableOpacity onPress={() => changePassword({ email }, false)}>
+          <Text style={{ color: Colors.light.tropicalIndigo }}>
+            Reenviar código
+          </Text>
+        </TouchableOpacity>
+      </View>
       <View style={styles.container}>
         <Button
           onPress={code.length === 6 ? onSubmit : undefined}
