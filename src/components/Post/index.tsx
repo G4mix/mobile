@@ -18,6 +18,8 @@ export type PostType = {
   commentsCount: number;
   created_at: string;
   updated_at?: string;
+  isLiked: boolean;
+  isViewed: boolean;
   author: {
     id: string;
     icon: string | null;
@@ -76,7 +78,6 @@ const styles = StyleSheet.create({
 export function Post({ alreadyVisualized, post, onInView }: PostProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   if (isDeleting) return <PostLoading />;
-
   if (!post) return null;
   return (
     <View style={styles.postContainer}>
@@ -103,6 +104,8 @@ export function Post({ alreadyVisualized, post, onInView }: PostProps) {
         likesCount={post.likesCount}
         commentsCount={post.commentsCount}
         viewsCount={post.viewsCount}
+        liked={post.isLiked}
+        viewed={post.isViewed}
       />
       {!alreadyVisualized && onInView && <InView onInView={onInView} />}
     </View>

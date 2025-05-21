@@ -2,14 +2,14 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import { PostType } from "@/components/Post";
 
-export const useFeedQueries = () => {
+export const useFeedQueries = ({ authorId }: { authorId?: string } = {}) => {
   const queryClient = useQueryClient();
   const lastFetchTime = useSelector((state: any) => state.feed.lastFetchTime);
   const actualTab = useSelector((state: any) => state.feed.actualTab);
 
   const addNewPost = (post: PostType) => {
     queryClient.setQueryData(
-      ["posts", { actualTab, lastFetchTime }],
+      ["posts", { actualTab, lastFetchTime, authorId }],
       (oldData: any) => {
         if (!oldData || !oldData.pages[0]) return oldData;
 
@@ -32,7 +32,7 @@ export const useFeedQueries = () => {
 
   const updatePost = (updatedPost: Partial<PostType>) => {
     queryClient.setQueryData(
-      ["posts", { actualTab, lastFetchTime }],
+      ["posts", { actualTab, lastFetchTime, authorId }],
       (oldData: any) => {
         if (!oldData || !oldData.pages) return oldData;
 
@@ -64,7 +64,7 @@ export const useFeedQueries = () => {
 
   const increaseViews = (updatedPostIds: string[]) => {
     queryClient.setQueryData(
-      ["posts", { actualTab, lastFetchTime }],
+      ["posts", { actualTab, lastFetchTime, authorId }],
       (oldData: any) => {
         if (!oldData || !oldData.pages) return oldData;
         const updatedPostsData = oldData.pages.map((page: any) => ({
@@ -72,7 +72,13 @@ export const useFeedQueries = () => {
           data: page.data.map((post: PostType) => {
             const updatedPost = updatedPostIds.find((p) => p === post.id);
             if (updatedPost) {
-              return { ...post, viewCount: post.viewsCount + 1 };
+              return {
+                ...post,
+                viewsCount: post.isViewed
+                  ? post.viewsCount
+                  : post.viewsCount + 1,
+                isViewed: true
+              };
             }
             return post;
           })
@@ -84,7 +90,7 @@ export const useFeedQueries = () => {
 
   const removePost = (postId: string) => {
     queryClient.setQueryData(
-      ["posts", { actualTab, lastFetchTime }],
+      ["posts", { actualTab, lastFetchTime, authorId }],
       (oldData: any) => {
         if (!oldData) return oldData;
 
@@ -115,7 +121,7 @@ export const useFeedQueries = () => {
 
   const invalidateAllPosts = () => {
     queryClient.invalidateQueries(
-      ["posts", { actualTab, lastFetchTime }] as any,
+      ["posts", { actualTab, lastFetchTime, authorId }] as any,
       {
         cancelRefetch: true
       }

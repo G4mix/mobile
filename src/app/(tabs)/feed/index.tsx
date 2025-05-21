@@ -40,7 +40,12 @@ export default function FeedScreen() {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useFeed();
 
   const posts = data?.pages?.flatMap((page) => page?.data || []) || [];
-  const { alreadyVisualized, setVisualizedPosts } = useViewPosts();
+
+  const initialViewedPostIds = posts.filter((p) => p.isViewed).map((p) => p.id);
+
+  const { alreadyVisualized, addVisualizedPost } = useViewPosts({
+    initialViewedPostIds
+  });
 
   return (
     <View style={styles.container}>
@@ -56,11 +61,9 @@ export default function FeedScreen() {
                 >
                   <Post
                     post={post}
-                    onInView={() =>
-                      post &&
-                      !alreadyVisualized.current.has(post.id) &&
-                      setVisualizedPosts((oldPosts) => [...oldPosts, post.id])
-                    }
+                    onInView={() => {
+                      if (post) addVisualizedPost(post.id);
+                    }}
                     alreadyVisualized={
                       post ? alreadyVisualized.current.has(post.id) : false
                     }
