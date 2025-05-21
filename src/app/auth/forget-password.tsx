@@ -1,13 +1,16 @@
-import { Image, StyleSheet, View } from "react-native";
-
-import { useState } from "react";
+import { Image, StyleSheet } from "react-native";
 import { Link } from "expo-router";
-import { Text } from "@/components/Themed";
-import { Button } from "@/components/Button";
-import { Input } from "@/components/Input";
-import { isValidEmail } from "@/constants/validations";
+import { useState } from "react";
+import { Text, View } from "@/components/Themed";
 import { Colors } from "@/constants/colors";
 import favIcon from "@/assets/images/favicon.png";
+import { SendRecoverEmail } from "@/components/ForgetPasswordScreen/SendRecoverEmail";
+import { InsertCode } from "@/components/ForgetPasswordScreen/InsertCode";
+import { ChangePassword } from "@/components/ForgetPasswordScreen/ChangePassword";
+import { api } from "@/constants/api";
+import { handleRequest } from "@/utils/handleRequest";
+import { useToast } from "@/hooks/useToast";
+import { SpinLoading } from "@/components/SpinLoading";
 
 const styles = StyleSheet.create({
   container: {
@@ -26,29 +29,60 @@ const styles = StyleSheet.create({
 });
 
 export default function ForgetPasswordScreen() {
-  const [isEmailValid, setIsEmailValid] = useState<"valid" | "invalid" | null>(
-    null
-  );
+  const [actualStep, setActualStep] = useState(0);
+  const [token, setToken] = useState("");
+  const [email, setEmail] = useState("");
+  const steps = [SendRecoverEmail, InsertCode, ChangePassword];
+  const ActualStep = steps[actualStep];
+  const [isLoading, setIsLoading] = useState(false);
+  const { showToast } = useToast();
 
-  const validateEmail = (value: string) => {
-    setIsEmailValid(isValidEmail(value));
+  const incrementStep = () => {
+    setActualStep((prevValue) => (prevValue === 2 ? prevValue : prevValue + 1));
+  };
+
+  const resetSteps = () => {
+    setActualStep(0);
+  };
+
+  const changePassword = async (
+    {
+      email: e
+    }: {
+      email: string;
+    },
+    increment: boolean
+  ) => {
+    if (isLoading) return;
+    const data = await handleRequest<{ email: string }>({
+      requestFn: async () =>
+        api.post("/auth/send-recover-email", { email: e }, {
+          skipAuth: true
+        } as any),
+      showToast,
+      setIsLoading,
+      successMessage: "E-mail de recuperação enviado com sucesso!"
+    });
+    if (!data) return;
+    if (increment) {
+      setEmail(data.email);
+      incrementStep();
+    }
   };
 
   return (
     <View style={styles.container}>
+      {isLoading && <SpinLoading message="Enviando e-mail de recuperação..." />}
       <Image source={favIcon} style={{ maxWidth: 120, maxHeight: 120 }} />
       <Text style={styles.title}>Recupere sua conta</Text>
-      <Input
-        icon="envelope"
-        label="E-mail"
-        isPasswordInput={false}
-        placeholder="Digite seu e-mail aqui"
-        onChangeText={validateEmail}
-        isValid={isEmailValid}
+      <ActualStep
+        incrementStep={incrementStep}
+        resetSteps={resetSteps}
+        email={email}
+        setToken={setToken}
+        token={token}
+        changePassword={changePassword}
       />
-      <Button>
-        <Text>Enviar e-mail de recuperação</Text>
-      </Button>
       <Link href="/auth/signin">
         <Text style={{ color: Colors.light.russianViolet }}>
           Lembrou sua senha?

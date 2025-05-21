@@ -4,7 +4,7 @@ import { useLocalSearchParams } from "expo-router";
 import { api } from "@/constants/api";
 import { CommentType } from "@/components/CommentsScreen/Comment";
 
-type CommentPageable = {
+export type CommentPageable = {
   page: number;
   nextPage: number | null;
   pages: number;

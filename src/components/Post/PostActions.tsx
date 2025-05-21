@@ -9,6 +9,7 @@ import { abbreviateNumber } from "@/utils/abbreviateNumber";
 import { handleRequest } from "@/utils/handleRequest";
 import { debounce } from "@/utils/debounce";
 import { api } from "@/constants/api";
+import { useFeedQueries } from "@/hooks/useFeedQueries";
 
 const styles = StyleSheet.create({
   actionContainer: {
@@ -28,34 +29,62 @@ type PostActionsProps = {
   likesCount: number;
   commentsCount: number;
   viewsCount: number;
+  liked: boolean;
+  viewed: boolean;
 };
 
 export function PostActions({
   postId,
   likesCount,
   commentsCount,
-  viewsCount
+  viewsCount,
+  liked,
+  viewed
 }: PostActionsProps) {
   const { showToast } = useToast();
-  const [isLiked, setIsLiked] = useState(false);
+  const [isLiked, setIsLiked] = useState(liked);
+  const [currentLikesCount, setCurrentLikesCount] = useState(likesCount);
   const [isLoading, setIsLoading] = useState(false);
+  const { updatePost } = useFeedQueries();
 
-  const likePostRequest = async () => {
+  const likePostRequest = async (
+    newIsLiked: boolean,
+    newLikesCount: number
+  ) => {
     if (isLoading) return;
-    handleRequest({
+    const data = await handleRequest({
       requestFn: async () =>
-        api.get(`/like/post?isLiked=${isLiked}&postId=${postId}`),
+        api.get(`/like/post?isLiked=${newIsLiked}&postId=${postId}`),
       showToast,
       setIsLoading,
       ignoreErrors: true
     });
+    if (!data) return;
+    updatePost({
+      id: postId,
+      isLiked: newIsLiked,
+      likesCount: newLikesCount
+    });
   };
 
-  const debouncedLikePost = useRef(debounce(likePostRequest, 700)).current;
+  const debouncedLikePost = useRef(
+    debounce(
+      (newIsLiked: boolean, newLikesCount: number) =>
+        likePostRequest(newIsLiked, newLikesCount),
+      700
+    )
+  ).current;
 
   const likePost = async () => {
-    setIsLiked((prevValue) => !prevValue);
-    debouncedLikePost();
+    setIsLiked((prevValue) => {
+      const newValue = !prevValue;
+      setCurrentLikesCount((prevCount) => {
+        const newLikesCount = !prevValue ? prevCount + 1 : prevCount - 1;
+        debouncedLikePost(newValue, newLikesCount);
+        return newLikesCount;
+      });
+      return newValue;
+    });
   };
 
   const commentPost = async () => {
@@ -87,7 +116,7 @@ export function PostActions({
     {
       icon: "hand-thumb-up",
       color: isLiked ? Colors.light.majorelleBlue : Colors.light.russianViolet,
-      content: abbreviateNumber(isLiked ? likesCount + 1 : likesCount),
+      content: abbreviateNumber(currentLikesCount),
       handlePress: likePost
     },
     {
@@ -98,7 +127,7 @@ export function PostActions({
     },
     {
       icon: "chart-bar",
-      color: Colors.light.russianViolet,
+      color: viewed ? Colors.light.majorelleBlue : Colors.light.russianViolet,
       content: abbreviateNumber(viewsCount)
     },
     {

@@ -99,6 +99,7 @@
         "exclude": [
           "react-native-element-dropdown",
           "expo-checkbox",
+          "zod",
           "@rneui/themed",
           "react-native-controlled-mentions"
         ]

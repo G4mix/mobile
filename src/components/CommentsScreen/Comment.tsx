@@ -13,6 +13,7 @@ export type CommentType = {
   id: string;
   content: string;
   likesCount: number;
+  isLiked: boolean;
   repliesCount: number;
   created_at: string;
   parentCommentId?: string;
@@ -81,9 +82,11 @@ export function Comment({
       <CommentHeader author={comment.author} createdAt={comment.created_at} />
       <CommentBody content={comment.content} />
       <CommentActions
+        postId={comment.postId}
         commentId={comment.id}
         likesCount={comment.likesCount}
         commentReply={commentReply}
+        liked={comment.isLiked}
       />
       {!commentId && comment.repliesCount > 0 && (
         <CommentReplies comment={comment} />
