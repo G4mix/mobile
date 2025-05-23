@@ -1,10 +1,17 @@
 import React from "react";
-import { Dimensions, Pressable, StyleSheet, View } from "react-native";
+import {
+  Dimensions,
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle
+} from "react-native";
 
 import { useDispatch, useSelector } from "react-redux";
 import { Text } from "@/components/Themed";
 import { Colors } from "@/constants/colors";
-import { setActualTab } from "@/features/feed/feedSlice";
+import { setActualTab } from "@/features/profile/profileSlice";
 
 const styles = StyleSheet.create({
   actualTab: {
@@ -30,34 +37,29 @@ const styles = StyleSheet.create({
   }
 });
 
-export type Tab = {
+export type Tab<T extends string = "feed"> = {
   name: string;
-  key: "following" | "recommendations" | "highlights";
+  key: T extends "feed"
+    ? "following" | "recommendations" | "highlights"
+    : T extends "profile"
+      ? "posts" | "about"
+      : undefined;
   disabled?: boolean;
 };
 
-export function ContentTabs() {
-  const actualTab = useSelector((state: any) => state.feed.actualTab);
+export function ContentTabs({
+  tabs,
+  tabType,
+  contentTabStyles = {}
+}: {
+  tabs: Tab<any>[];
+  tabType: "feed" | "profile";
+  contentTabStyles?: StyleProp<ViewStyle>;
+}) {
+  const actualTab = useSelector((state: any) => state[tabType].actualTab);
   const dispatch = useDispatch();
 
-  const tabs: Tab[] = [
-    {
-      name: "Destaques",
-      disabled: true,
-      key: "following"
-    },
-    {
-      name: "Recomendações",
-      key: "recommendations"
-    },
-    {
-      name: "Seguindo",
-      disabled: true,
-      key: "highlights"
-    }
-  ];
-
-  const handlePress = (key: Tab["key"]) => {
+  const handlePress = (key: Tab<any>["key"]) => {
     dispatch(setActualTab(key));
   };
 
@@ -68,6 +70,7 @@ export function ContentTabs() {
           key={`content-tab-${name}`}
           style={[
             styles.contentTabItem,
+            contentTabStyles,
             actualTab === key ? styles.actualTab : {},
             disabled ? { opacity: 0.7 } : {}
           ]}
