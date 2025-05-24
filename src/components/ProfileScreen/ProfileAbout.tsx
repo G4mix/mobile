@@ -1,9 +1,11 @@
-import { Text, View } from "../Themed";
+import { ScrollView } from "react-native";
+import { View } from "../Themed";
+import { ProfileAboutCard } from "./ProfileAboutCard";
 
 export function ProfileAbout() {
   return (
-    <View>
-      <Text>About</Text>
-    </View>
+    <ScrollView style={{ flex: 1 }}>
+      <ProfileAboutCard />
+    </ScrollView>
   );
 }

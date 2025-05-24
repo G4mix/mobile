@@ -69,6 +69,14 @@ function RootLayoutNav() {
                 title: "Voltar"
               }}
             />
+            <Stack.Screen
+              name="configurations/index"
+              options={{ presentation: "modal", headerShown: true, title: "Configurações" }}
+            />
+            <Stack.Screen
+              name="configurations/profile/index"
+              options={{ presentation: "modal", headerShown: false }}
+            />
             <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen
               name="auth/loading"
