@@ -6,17 +6,17 @@ import { Icon } from "../Icon";
 import { useToast } from "@/hooks/useToast";
 import { CreateScreenFormData } from "@/app/(tabs)/create";
 
-type CreateScreenPostLinkProps = {
+type ProfileLink = {
   setValue: UseFormSetValue<CreateScreenFormData>;
   links?: string[];
   link: string;
 };
 
-export function CreateScreenPostLink({
+export function ProfileLink({
   setValue,
   links,
   link
-}: CreateScreenPostLinkProps) {
+}: ProfileLink) {
   const { showToast } = useToast();
 
   const handleLoadLinkError = () => {
@@ -32,7 +32,7 @@ export function CreateScreenPostLink({
   };
 
   return (
-    <PostLink handleError={() => handleLoadLinkError()} url={link} noHorizontalPadding={false}>
+    <PostLink handleError={() => handleLoadLinkError()} url={link} noHorizontalPadding={true}>
       <TouchableOpacity
         onPress={() => {
           setValue(

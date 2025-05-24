@@ -36,6 +36,7 @@ type PostLinkProps = {
   handleError?: () => void;
   children?: React.ReactNode;
   url?: string;
+  noHorizontalPadding?: boolean; 
 };
 
 type DataType = {
@@ -48,7 +49,7 @@ type DataType = {
   };
 };
 
-export function PostLink({ url = "", handleError, children }: PostLinkProps) {
+export function PostLink({ url = "", handleError, children, noHorizontalPadding }: PostLinkProps) {
   const [data, setData] = useState<DataType | null>(null);
 
   const fetchData = useCallback(async () => {
@@ -81,7 +82,10 @@ export function PostLink({ url = "", handleError, children }: PostLinkProps) {
 
   return (
     <ExternalLink
-      style={{ width: "100%", paddingHorizontal: 16 }}
+      style={{ 
+        width: "100%", 
+        paddingHorizontal: noHorizontalPadding ? 0 : 16 
+      }}
       href={url}
       aria-label={`Link para o site: ${data.title}`}
       target="_blank"
