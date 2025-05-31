@@ -22,6 +22,7 @@ import { api } from "@/constants/api";
 import { setItem } from "@/constants/storage";
 import { SpinLoading } from "@/components/SpinLoading";
 import { SuccessModal } from "@/components/SuccessModal";
+import { getDate } from "@/utils/getDate";
 
 const styles = StyleSheet.create({
   button: {
@@ -67,6 +68,7 @@ export default function ConfigProfileScreen() {
   const [valueKey, setValueKey] = useState<
     "icon" | "backgroundImage" | undefined
   >();
+  const date = getDate().toISOString();
   const { watch, setValue, handleSubmit } = useForm<UpdateUserFormData>({
     defaultValues: {
       displayName: user.userProfile.displayName || "",
@@ -74,7 +76,7 @@ export default function ConfigProfileScreen() {
       backgroundImage: user.userProfile.backgroundImage
         ? {
             uri: user.userProfile.backgroundImage,
-            name: `backgroundImage.${user.userProfile.backgroundImage.split(".").pop()?.split("?")[0] || "png"}`,
+            name: `backgroundImage-${date}.${user.userProfile.backgroundImage.split(".").pop()?.split("?")[0] || "png"}`,
             type: `image/${user.userProfile.backgroundImage.split(".").pop()?.split("?")[0] || "png"}`
           }
         : null,
@@ -82,7 +84,7 @@ export default function ConfigProfileScreen() {
       icon: user.userProfile.icon
         ? {
             uri: user.userProfile.icon,
-            name: `user-icon.${user.userProfile.icon.split(".").pop()?.split("?")[0] || "png"}`,
+            name: `user-icon-${date}.${user.userProfile.icon.split(".").pop()?.split("?")[0] || "png"}`,
             type: `image/${user.userProfile.icon.split(".").pop()?.split("?")[0] || "png"}`
           }
         : null,

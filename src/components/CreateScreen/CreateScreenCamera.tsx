@@ -12,6 +12,7 @@ import { Icon } from "../Icon";
 import { Colors } from "@/constants/colors";
 import { CreateScreenFormData } from "@/app/(tabs)/create";
 import { useToast } from "@/hooks/useToast";
+import { getDate } from "@/utils/getDate";
 
 const styles = StyleSheet.create({
   camera: {
@@ -134,7 +135,7 @@ export function CreateScreenCamera({
     const currentImages = images || [];
     const files: CreateScreenFormData["images"] = result.assets.map((img) => ({
       uri: img.uri,
-      name: img.fileName || `${new Date().toISOString()}`,
+      name: `${img.fileName}-${getDate().toISOString()}`,
       type: img.mimeType || "image/jpeg"
     }));
 
@@ -156,7 +157,7 @@ export function CreateScreenCamera({
     const currentImages = images || [];
     const parsedTakedPhoto = {
       uri: takedPhoto.uri,
-      name: takedPhoto.fileName || `${new Date().toISOString()}`,
+      name: `${takedPhoto.fileName}-${getDate().toISOString()}`,
       type: takedPhoto.mimeType || "image/jpeg"
     };
     setValue(
