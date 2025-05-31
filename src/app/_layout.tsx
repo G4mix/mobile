@@ -78,6 +78,22 @@ function RootLayoutNav() {
               }}
             />
             <Stack.Screen
+              name="configurations/security"
+              options={{
+                presentation: "modal",
+                headerShown: true,
+                title: "Privacidade e segurança"
+              }}
+            />
+            <Stack.Screen
+              name="configurations/account"
+              options={{
+                presentation: "modal",
+                headerShown: true,
+                title: "Informações da conta"
+              }}
+            />
+            <Stack.Screen
               name="configurations/profile/index"
               options={{ presentation: "modal", headerShown: false }}
             />
@@ -88,6 +104,10 @@ function RootLayoutNav() {
             />
             <Stack.Screen
               name="terms"
+              options={{ presentation: "modal", headerShown: true, title: "" }}
+            />
+            <Stack.Screen
+              name="privacy-policy"
               options={{ presentation: "modal", headerShown: true, title: "" }}
             />
           </Stack>

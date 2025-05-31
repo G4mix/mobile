@@ -83,7 +83,9 @@ export function PostLink({
     fetchData();
   }, []);
 
-  if (!data || !data.icon.url) return <PostLinkLoading />;
+  if (!data || !data.icon.url) {
+    return <PostLinkLoading noHorizontalPadding={noHorizontalPadding} />;
+  }
 
   return (
     <ExternalLink

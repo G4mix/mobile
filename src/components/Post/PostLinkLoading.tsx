@@ -3,9 +3,15 @@ import { Loading } from "../Loading";
 import { View } from "../Themed";
 import { Icon } from "../Icon";
 
-export function PostLinkLoading() {
+export function PostLinkLoading({
+  noHorizontalPadding
+}: {
+  noHorizontalPadding?: boolean;
+}) {
   return (
-    <View style={{ width: "100%", paddingHorizontal: 16 }}>
+    <View
+      style={{ width: "100%", paddingHorizontal: noHorizontalPadding ? 0 : 16 }}
+    >
       <View
         style={{
           alignItems: "center",

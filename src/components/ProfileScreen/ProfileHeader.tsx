@@ -14,35 +14,61 @@ export function ProfileHeader({
   displayName,
   username,
   icon,
-  disableControls = false
+  onlyView = false,
+  onPressBackground,
+  onPressIcon
 }: {
   id: string;
   backgroundImage?: string | null;
   displayName?: string | null;
   username?: string;
   icon?: string | null;
-  disableControls?: boolean;
+  onlyView?: boolean;
+  onPressBackground?: () => void;
+  onPressIcon?: () => void;
 }) {
   const user = useSelector((state: RootState) => state.user);
+  const EditableComponent = !onlyView ? TouchableOpacity : View;
 
   return (
-    <View style={{ width: "100%", position: "relative", gap: 28 }}>
-      <View
+    <View
+      style={{
+        width: "100%",
+        position: "relative",
+        gap: 28,
+        marginBottom: !onlyView ? 12 : 0
+      }}
+    >
+      <EditableComponent
         style={{
           width: "100%",
           height: 100,
-          backgroundColor: !backgroundImage ? "#353535" : undefined
+          backgroundColor: !backgroundImage ? "#353535" : undefined,
+          borderRadius: !onlyView ? 16 : 0
         }}
+        onPress={!onlyView ? onPressBackground : undefined}
       >
+        {!onlyView && (
+          <Icon
+            name="pencil"
+            size={16}
+            color={Colors.light.white}
+            style={{ position: "absolute", right: 12, top: 12, zIndex: 2 }}
+          />
+        )}
         {backgroundImage && (
           <Image
             source={{ uri: backgroundImage }}
-            style={{ width: "100%", height: 100 }}
+            style={{
+              width: "100%",
+              height: 100,
+              borderRadius: !onlyView ? 16 : 0
+            }}
             resizeMode="cover"
           />
         )}
-      </View>
-      {!disableControls && user.id === id && (
+      </EditableComponent>
+      {onlyView && user.id === id && (
         <View
           style={{
             justifyContent: "space-between",
@@ -78,36 +104,47 @@ export function ProfileHeader({
           </TouchableOpacity>
         </View>
       )}
-      {displayName ||
-        (username && (
-          <Text
-            style={{
-              color: Colors.light.russianViolet,
-              fontSize: 16,
-              fontWeight: "bold",
-              textAlign: "center",
-              zIndex: 3
-            }}
-          >
-            {displayName || username}
-          </Text>
-        ))}
-      {icon ? (
-        <Image
-          source={{ uri: icon }}
+      {(displayName || username) && (
+        <Text
           style={{
-            ...styles.imageProfile,
-            width: 80,
-            height: 80,
-            position: "absolute",
-            top: 60,
-            left: "50%",
-            zIndex: 100,
-            transform: [{ translateX: -40 }] as any
+            color: Colors.light.russianViolet,
+            fontSize: 16,
+            fontWeight: "bold",
+            textAlign: "center",
+            zIndex: 3
           }}
-        />
+        >
+          {displayName || username}
+        </Text>
+      )}
+      {icon ? (
+        <EditableComponent
+          style={{
+            position: "absolute",
+            top: 40,
+            left: "50%",
+            width: 84,
+            height: 84,
+            zIndex: 100,
+            transform: [{ translateX: -42 }] as any,
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: Colors.light.background,
+            borderRadius: 9999
+          }}
+          onPress={!onlyView ? onPressIcon : undefined}
+        >
+          <Image
+            source={{ uri: icon }}
+            style={{
+              ...styles.imageProfile,
+              width: 80,
+              height: 80
+            }}
+          />
+        </EditableComponent>
       ) : (
-        <View
+        <EditableComponent
           style={{
             position: "absolute",
             top: 50,
@@ -118,8 +155,10 @@ export function ProfileHeader({
             width: 72,
             height: 72,
             alignItems: "center",
-            justifyContent: "center"
+            justifyContent: "center",
+            backgroundColor: Colors.light.background
           }}
+          onPress={!onlyView ? onPressIcon : undefined}
         >
           <Icon
             size={80}
@@ -130,7 +169,7 @@ export function ProfileHeader({
               height: 80
             }}
           />
-        </View>
+        </EditableComponent>
       )}
     </View>
   );

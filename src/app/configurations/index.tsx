@@ -1,4 +1,4 @@
-import { View, ScrollView, TouchableOpacity } from "react-native";
+import { View, ScrollView } from "react-native";
 import { router } from "expo-router";
 import { Option } from "@/components/ConfigurationsScreen/Option";
 import { Colors } from "@/constants/colors";
@@ -18,14 +18,33 @@ export default function ConfigurationsScreen() {
         }}
       >
         <View>
-          <Option position="start" name="Informações da Conta" />
-          <Option position="end" name="Privacidade e Segurança" />
+          <Option
+            position="start"
+            name="Informações da Conta"
+            onPress={() => router.push("/configurations/account")}
+          />
+          <Option
+            position="end"
+            name="Privacidade e Segurança"
+            onPress={() => router.push("/configurations/security")}
+          />
         </View>
         <View>
-          <Option position="start" name="Termos de Serviço" />
-          <Option position="end" name="Política de Privacidade" />
+          <Option
+            position="start"
+            name="Termos de Serviço"
+            onPress={() => router.push("/terms")}
+          />
+          <Option
+            position="end"
+            name="Política de Privacidade"
+            onPress={() => router.push("/privacy-policy")}
+          />
         </View>
-        <TouchableOpacity
+        <Option
+          position="full"
+          name="Sair da conta"
+          color="red"
           onPress={() => {
             logout();
             removeItem("user");
@@ -33,9 +52,7 @@ export default function ConfigurationsScreen() {
             removeItem("refreshToken");
             router.replace("/auth/signin");
           }}
-        >
-          <Option position="full" name="Sair da conta" color="red" />
-        </TouchableOpacity>
+        />
       </View>
     </ScrollView>
   );

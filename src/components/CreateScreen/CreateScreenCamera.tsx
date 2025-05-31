@@ -80,6 +80,8 @@ type CreateScreenCameraProps = {
   isCameraVisible: boolean;
   setIsCameraVisible: Dispatch<SetStateAction<boolean>>;
   setValue: UseFormSetValue<CreateScreenFormData>;
+  singleImage?: boolean;
+  valueKey?: string;
   images?: CreateScreenFormData["images"];
 };
 
@@ -87,6 +89,8 @@ export function CreateScreenCamera({
   isCameraVisible,
   setIsCameraVisible,
   setValue,
+  valueKey = "images",
+  singleImage = false,
   images
 }: CreateScreenCameraProps) {
   const [facing, setFacing] = useState<CameraType>("back");
@@ -121,7 +125,7 @@ export function CreateScreenCamera({
     }
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
-      allowsMultipleSelection: true,
+      allowsMultipleSelection: !singleImage,
       quality: 1
     });
 
@@ -134,7 +138,10 @@ export function CreateScreenCamera({
       type: img.mimeType || "image/jpeg"
     }));
 
-    setValue("images", [...currentImages, ...files]);
+    setValue(
+      valueKey as any,
+      singleImage ? files[0] : [...currentImages, ...files]
+    );
     closeCamera();
   };
 
@@ -147,14 +154,15 @@ export function CreateScreenCamera({
     const takedPhoto =
       (await cameraRef.current?.takePictureAsync()) as ImagePicker.ImagePickerAsset;
     const currentImages = images || [];
-    setValue("images", [
-      ...currentImages,
-      {
-        uri: takedPhoto.uri,
-        name: takedPhoto.fileName || `${new Date().toISOString()}`,
-        type: takedPhoto.mimeType || "image/jpeg"
-      }
-    ]);
+    const parsedTakedPhoto = {
+      uri: takedPhoto.uri,
+      name: takedPhoto.fileName || `${new Date().toISOString()}`,
+      type: takedPhoto.mimeType || "image/jpeg"
+    };
+    setValue(
+      valueKey as any,
+      singleImage ? parsedTakedPhoto : [...currentImages, parsedTakedPhoto]
+    );
     closeCamera();
   };
 

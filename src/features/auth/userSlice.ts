@@ -8,11 +8,15 @@ export interface UserState {
   created_at: string;
   userProfile: {
     id: string;
-    icon: string | null;
     displayName: string | null;
+    icon?: string | null;
     backgroundImage?: string | null;
     autobiography?: string | null;
-    links: string[];
+    links: {
+      id: string;
+      url: string;
+      userProfileId: string;
+    }[];
   };
 }
 

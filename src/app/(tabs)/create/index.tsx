@@ -310,7 +310,7 @@ export default function CreateScreen() {
             ))}
             {links?.map((link) => (
               <CreateScreenPostLink
-                setValue={setValue}
+                setValue={setValue as any}
                 links={links}
                 link={link}
                 key={`post-link-${link}`}

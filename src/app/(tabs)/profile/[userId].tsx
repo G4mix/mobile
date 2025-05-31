@@ -12,7 +12,6 @@ import { UserState } from "@/features/auth/userSlice";
 
 export default function ProfileScreen() {
   const { userId } = useLocalSearchParams<{ userId: string }>();
-
   const { data, isLoading, isError } = useQuery({
     queryKey: ["user", userId],
     queryFn: async () => {
@@ -52,8 +51,10 @@ export default function ProfileScreen() {
         <ProfileHeader
           icon={data.userProfile.icon}
           displayName={data.userProfile.displayName}
+          backgroundImage={data.userProfile.backgroundImage}
           username={data.username}
           id={data.id}
+          onlyView
         />
       )}
       <ContentTabs tabs={tabs} tabType="profile" />

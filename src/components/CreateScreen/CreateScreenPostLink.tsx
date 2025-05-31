@@ -1,21 +1,21 @@
 import { TouchableOpacity } from "react-native";
-import { UseFormSetValue } from "react-hook-form";
 import { PostLink } from "../Post/PostLink";
 import { Colors } from "@/constants/colors";
 import { Icon } from "../Icon";
 import { useToast } from "@/hooks/useToast";
-import { CreateScreenFormData } from "@/app/(tabs)/create";
 
 type CreateScreenPostLinkProps = {
-  setValue: UseFormSetValue<CreateScreenFormData>;
+  setValue: (key: string, value?: string[]) => void;
   links?: string[];
   link: string;
+  noHorizontalPadding?: boolean;
 };
 
 export function CreateScreenPostLink({
   setValue,
   links,
-  link
+  link,
+  noHorizontalPadding = false
 }: CreateScreenPostLinkProps) {
   const { showToast } = useToast();
 
@@ -35,7 +35,7 @@ export function CreateScreenPostLink({
     <PostLink
       handleError={() => handleLoadLinkError()}
       url={link}
-      noHorizontalPadding={false}
+      noHorizontalPadding={noHorizontalPadding}
     >
       <TouchableOpacity
         onPress={() => {
