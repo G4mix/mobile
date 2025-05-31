@@ -32,7 +32,11 @@ export function CreateScreenPostLink({
   };
 
   return (
-    <PostLink handleError={() => handleLoadLinkError()} url={link} noHorizontalPadding={false}>
+    <PostLink
+      handleError={() => handleLoadLinkError()}
+      url={link}
+      noHorizontalPadding={false}
+    >
       <TouchableOpacity
         onPress={() => {
           setValue(

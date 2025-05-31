@@ -71,7 +71,11 @@ function RootLayoutNav() {
             />
             <Stack.Screen
               name="configurations/index"
-              options={{ presentation: "modal", headerShown: true, title: "Configurações" }}
+              options={{
+                presentation: "modal",
+                headerShown: true,
+                title: "Configurações"
+              }}
             />
             <Stack.Screen
               name="configurations/profile/index"

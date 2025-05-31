@@ -1,11 +1,11 @@
-import { Image, Pressable, TouchableOpacity } from "react-native";
+import { Image, TouchableOpacity } from "react-native";
+import { router } from "expo-router";
+import { useSelector } from "react-redux";
 import { Text, View } from "../Themed";
 import { styles } from "../Post/PostHeader";
 import { Colors } from "@/constants/colors";
 import { Icon } from "../Icon";
 import { Button } from "../Button";
-import { router } from "expo-router";
-import { useSelector } from "react-redux";
 import { RootState } from "@/constants/reduxStore";
 
 export function ProfileHeader({
@@ -13,13 +13,15 @@ export function ProfileHeader({
   backgroundImage,
   displayName,
   username,
-  icon
+  icon,
+  disableControls = false
 }: {
   id: string;
-  backgroundImage?: string;
+  backgroundImage?: string | null;
   displayName?: string | null;
-  username: string;
+  username?: string;
   icon?: string | null;
+  disableControls?: boolean;
 }) {
   const user = useSelector((state: RootState) => state.user);
 
@@ -40,55 +42,56 @@ export function ProfileHeader({
           />
         )}
       </View>
-      {
-        user.id === id && (
-          <View
+      {!disableControls && user.id === id && (
+        <View
+          style={{
+            justifyContent: "space-between",
+            flexDirection: "row",
+            paddingHorizontal: 12,
+            position: "absolute",
+            top: 114,
+            width: "100%",
+            alignItems: "center",
+            zIndex: 2
+          }}
+        >
+          <Button
             style={{
-              justifyContent: "space-between",
-              flexDirection: "row",
-              paddingHorizontal: 12,
-              position: "absolute",
-              top: 114,
-              width: "100%",
-              alignItems: "center",
-              zIndex: 2
+              minWidth: "auto",
+              paddingHorizontal: 14,
+              paddingVertical: 8
+            }}
+            onPress={() => router.push("/configurations/profile")}
+          >
+            <Text style={{ color: Colors.light.white }}>Editar</Text>
+          </Button>
+          <TouchableOpacity onPress={() => router.push("/configurations")}>
+            <Icon
+              size={24}
+              name="cog-6-tooth"
+              color={Colors.light.russianViolet}
+              style={{
+                width: 24,
+                height: 24
+              }}
+            />
+          </TouchableOpacity>
+        </View>
+      )}
+      {displayName ||
+        (username && (
+          <Text
+            style={{
+              color: Colors.light.russianViolet,
+              fontSize: 16,
+              fontWeight: "bold",
+              textAlign: "center",
+              zIndex: 3
             }}
           >
-            <Button
-              style={{
-                minWidth: "auto",
-                paddingHorizontal: 14,
-                paddingVertical: 8
-              }}
-              onPress={() => router.push("/configurations/profile")}
-            >
-              <Text style={{ color: Colors.light.white }}>Editar</Text>
-            </Button>
-            <TouchableOpacity onPress={() => router.push("/configurations")}>
-              <Icon
-                size={24}
-                name="cog-6-tooth"
-                color={Colors.light.russianViolet}
-                style={{
-                  width: 24,
-                  height: 24
-                }}
-              />
-            </TouchableOpacity>
-          </View>
-        )
-      }
-      <Text
-        style={{
-          color: Colors.light.russianViolet,
-          fontSize: 16,
-          fontWeight: "bold",
-          textAlign: "center",
-          zIndex: 3
-        }}
-      >
-        {displayName || username}
-      </Text>
+            {displayName || username}
+          </Text>
+        ))}
       {icon ? (
         <Image
           source={{ uri: icon }}

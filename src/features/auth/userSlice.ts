@@ -10,6 +10,9 @@ export interface UserState {
     id: string;
     icon: string | null;
     displayName: string | null;
+    backgroundImage?: string | null;
+    autobiography?: string | null;
+    links: string[];
   };
 }
 
@@ -20,6 +23,9 @@ const initialState: UserState = {
   userProfile: {
     id: "",
     displayName: null,
+    autobiography: null,
+    backgroundImage: null,
+    links: [],
     icon: null
   },
   verified: false,
@@ -44,7 +50,10 @@ const userSlice = createSlice({
       state.userProfile = {
         id: "",
         displayName: null,
-        icon: null
+        icon: null,
+        autobiography: null,
+        backgroundImage: null,
+        links: []
       };
       state.email = "";
       state.username = "";

@@ -12,11 +12,7 @@ type ProfileLink = {
   link: string;
 };
 
-export function ProfileLink({
-  setValue,
-  links,
-  link
-}: ProfileLink) {
+export function ProfileLink({ setValue, links, link }: ProfileLink) {
   const { showToast } = useToast();
 
   const handleLoadLinkError = () => {
@@ -32,7 +28,11 @@ export function ProfileLink({
   };
 
   return (
-    <PostLink handleError={() => handleLoadLinkError()} url={link} noHorizontalPadding={true}>
+    <PostLink
+      handleError={() => handleLoadLinkError()}
+      url={link}
+      noHorizontalPadding
+    >
       <TouchableOpacity
         onPress={() => {
           setValue(
