@@ -26,7 +26,7 @@ export function Header({
       >
         <Icon
           size={24}
-          name="chevron-left"
+          name="arrow-left"
           style={{
             color: Colors.light.russianViolet
           }}

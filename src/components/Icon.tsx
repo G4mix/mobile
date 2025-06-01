@@ -4,6 +4,7 @@ import { StyleProp, TextStyle } from "react-native";
 import icoMoonConfig from "@/assets/heroicons/selection.json";
 
 export type IconName =
+  | "arrow-left"
   | "arrow-left-end-on-rectangle"
   | "arrow-path"
   | "bolt-auto-enabled"
