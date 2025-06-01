@@ -5,6 +5,7 @@ import { Colors } from "@/constants/colors";
 import { formatDate } from "@/utils/formatDate";
 import { PostType } from "../Post";
 import { styles } from "../Post/PostHeader";
+import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
 
 type CommentHeaderProps = {
   author: PostType["author"];
@@ -17,7 +18,10 @@ export function CommentHeader({ author, createdAt }: CommentHeaderProps) {
       <View style={styles.leftSide}>
         <View style={styles.postUserInformation}>
           {author.icon ? (
-            <Image source={{ uri: author.icon }} style={styles.imageProfile} />
+            <Image
+              source={{ uri: getImgWithTimestamp(author.icon) }}
+              style={styles.imageProfile}
+            />
           ) : (
             <Icon size={18} name="user-circle" color={Colors.dark.background} />
           )}

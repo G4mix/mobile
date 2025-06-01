@@ -20,6 +20,7 @@ import { useSelector } from "react-redux";
 import { Colors } from "@/constants/colors";
 import { Icon, IconName } from "@/components/Icon";
 import { RootState } from "@/constants/reduxStore";
+import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
 
 interface TabBarIconProps extends React.PropsWithChildren, TabTriggerSlotProps {
   name: IconName;
@@ -45,7 +46,7 @@ const TabBarIcon = React.forwardRef<View, TabBarIconProps>((props, ref) => (
   >
     {props.userIcon ? (
       <Image
-        source={{ uri: props.userIcon }}
+        source={{ uri: getImgWithTimestamp(props.userIcon) }}
         style={{
           borderRadius: 9999,
           height: props.size,

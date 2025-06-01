@@ -8,6 +8,7 @@ import {
 import { router } from "expo-router";
 import { PostType } from ".";
 import { Text, View } from "../Themed";
+import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
 
 const styles = StyleSheet.create({
   container: {
@@ -90,7 +91,7 @@ export function PostImages({ images, postId }: PostImagesProps) {
             style={[{ position: "relative" }, getStyle(index)]}
           >
             <Image
-              source={{ uri: src }}
+              source={{ uri: getImgWithTimestamp(src) }}
               width={width}
               alt={alt}
               height={height}

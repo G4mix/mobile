@@ -5,6 +5,7 @@ import { Icon } from "../Icon";
 import { Colors } from "@/constants/colors";
 import { styles as postHeaderStyles } from "@/components/Post/PostHeader";
 import { RootState } from "@/constants/reduxStore";
+import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
 
 const styles = StyleSheet.create({
   imageProfile: {
@@ -43,7 +44,7 @@ export function CreateScreenAuthor() {
     <View style={styles.postUserInformation}>
       {user.userProfile.icon ? (
         <Image
-          source={{ uri: user?.userProfile?.icon }}
+          source={{ uri: getImgWithTimestamp(user?.userProfile?.icon) }}
           style={styles.imageProfile}
         />
       ) : (

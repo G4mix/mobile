@@ -1,5 +1,6 @@
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Icon } from "../Icon";
+import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
 
 const styles = StyleSheet.create({
   postContentImage: {
@@ -43,7 +44,7 @@ export function CreateScreenImage({
     <View style={styles.postContentImageRoot}>
       <Image
         style={styles.postContentImage}
-        src={src}
+        src={getImgWithTimestamp(src)}
         width={284}
         height={146}
       />

@@ -4,6 +4,7 @@ import { Text, View } from "@/components/Themed";
 import { ExternalLink } from "@/components/ExternalLink";
 import { Colors } from "@/constants/colors";
 import { PostLinkLoading } from "./PostLinkLoading";
+import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
 
 const styles = StyleSheet.create({
   link: {
@@ -99,7 +100,7 @@ export function PostLink({
     >
       <View style={styles.link}>
         <Image
-          src={data.icon.url || ""}
+          src={getImgWithTimestamp(data.icon.url)}
           width={data.icon.width}
           height={data.icon.height}
           alt={`Ícone do site: ${data.title}`}

@@ -15,6 +15,7 @@ import { useToast } from "@/hooks/useToast";
 import { useFeedQueries } from "@/hooks/useFeedQueries";
 import { useConfirmationModal } from "@/hooks/useConfirmationModal";
 import { Option } from "@/context/FloatingOptionsContext";
+import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
 
 export const styles = StyleSheet.create({
   firstRow: {
@@ -119,7 +120,10 @@ export function PostHeader({
       <View style={styles.leftSide}>
         <View style={styles.postUserInformation}>
           {author.icon ? (
-            <Image source={{ uri: author.icon }} style={styles.imageProfile} />
+            <Image
+              source={{ uri: getImgWithTimestamp(author.icon) }}
+              style={styles.imageProfile}
+            />
           ) : (
             <Icon size={18} name="user-circle" color={Colors.dark.background} />
           )}

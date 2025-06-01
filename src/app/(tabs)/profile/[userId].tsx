@@ -9,6 +9,7 @@ import { Colors } from "@/constants/colors";
 import { ProfileHeader } from "@/components/ProfileScreen/ProfileHeader";
 import { api } from "@/constants/api";
 import { UserState } from "@/features/auth/userSlice";
+import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
 
 export default function ProfileScreen() {
   const { userId } = useLocalSearchParams<{ userId: string }>();
@@ -51,7 +52,9 @@ export default function ProfileScreen() {
         <ProfileHeader
           icon={data.userProfile.icon}
           displayName={data.userProfile.displayName}
-          backgroundImage={data.userProfile.backgroundImage}
+          backgroundImage={getImgWithTimestamp(
+            data.userProfile.backgroundImage!
+          )}
           username={data.username}
           id={data.id}
           onlyView

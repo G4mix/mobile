@@ -23,6 +23,7 @@ import { setItem } from "@/constants/storage";
 import { SpinLoading } from "@/components/SpinLoading";
 import { SuccessModal } from "@/components/SuccessModal";
 import { getDate } from "@/utils/getDate";
+import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
 
 const styles = StyleSheet.create({
   button: {
@@ -134,20 +135,13 @@ export default function ConfigProfileScreen() {
     });
     if (!data) return;
 
-    dispatch(setUser(data));
     await setItem("user", JSON.stringify(data));
+    dispatch(setUser(data));
     queryClient.setQueryData(["user", user.id], data);
-
-    setValue("autobiography", autobiography);
-    setValue("backgroundImage", backgroundImage);
-    setValue("icon", icon);
-    setValue("displayName", displayName);
-    setValue("links", links);
-
     setIsSuccessVisible(true);
     await timeout(1000);
     setIsSuccessVisible(false);
-    router.back();
+    router.push(`/profile/${user.id}`);
   };
   const onSubmit = handleSubmit(updateUser);
 
@@ -166,6 +160,9 @@ export default function ConfigProfileScreen() {
     setValueKey("icon");
     setIsCameraVisible(true);
   };
+
+  const iconUri = getImgWithTimestamp(icon?.uri);
+  const bgUri = getImgWithTimestamp(backgroundImage?.uri);
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: Colors.light.background }}>
@@ -190,8 +187,8 @@ export default function ConfigProfileScreen() {
         </View>
         <ProfileHeader
           id={user.id}
-          icon={icon?.uri || ""}
-          backgroundImage={backgroundImage?.uri || ""}
+          icon={iconUri}
+          backgroundImage={bgUri}
           onPressBackground={handlePressProfileBackground}
           onPressIcon={handlePressProfileIcon}
         />

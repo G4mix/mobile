@@ -6,6 +6,7 @@ import { PostType } from "@/components/Post";
 import { Loading } from "@/components/Loading";
 import { Icon } from "@/components/Icon";
 import { Colors } from "@/constants/colors";
+import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
 
 const styles = StyleSheet.create({
   postImage: {
@@ -61,7 +62,7 @@ export default function PostImageScreen() {
           >
             <Image
               style={styles.postImage}
-              source={{ uri: src }}
+              source={{ uri: getImgWithTimestamp(src) }}
               width={width}
               height={height}
               alt={alt}

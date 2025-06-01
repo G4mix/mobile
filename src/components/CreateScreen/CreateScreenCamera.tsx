@@ -98,7 +98,7 @@ export function CreateScreenCamera({
   const [flash, setFlash] = useState<FlashMode>("off");
   const [permission, requestPermission] = useCameraPermissions();
   const { showToast } = useToast();
-  const cameraRef = useRef<any>(null);
+  const cameraRef = useRef<CameraView>(null);
 
   if (!isCameraVisible) return null;
   if (!permission) {
@@ -135,7 +135,7 @@ export function CreateScreenCamera({
     const currentImages = images || [];
     const files: CreateScreenFormData["images"] = result.assets.map((img) => ({
       uri: img.uri,
-      name: `${img.fileName}-${getDate().toISOString()}`,
+      name: img.fileName || getDate().toISOString(),
       type: img.mimeType || "image/jpeg"
     }));
 
@@ -157,7 +157,7 @@ export function CreateScreenCamera({
     const currentImages = images || [];
     const parsedTakedPhoto = {
       uri: takedPhoto.uri,
-      name: `${takedPhoto.fileName}-${getDate().toISOString()}`,
+      name: takedPhoto.fileName || getDate().toISOString(),
       type: takedPhoto.mimeType || "image/jpeg"
     };
     setValue(

@@ -7,6 +7,7 @@ import { Colors } from "@/constants/colors";
 import { Icon } from "../Icon";
 import { Button } from "../Button";
 import { RootState } from "@/constants/reduxStore";
+import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
 
 export function ProfileHeader({
   id,
@@ -58,7 +59,7 @@ export function ProfileHeader({
         )}
         {backgroundImage && (
           <Image
-            source={{ uri: backgroundImage }}
+            source={{ uri: getImgWithTimestamp(backgroundImage) }}
             style={{
               width: "100%",
               height: 100,
@@ -135,7 +136,7 @@ export function ProfileHeader({
           onPress={!onlyView ? onPressIcon : undefined}
         >
           <Image
-            source={{ uri: icon }}
+            source={{ uri: getImgWithTimestamp(icon) }}
             style={{
               ...styles.imageProfile,
               width: 80,
