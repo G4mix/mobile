@@ -1,19 +1,17 @@
 import { ScrollView } from "react-native";
-import { useSelector } from "react-redux";
 import { ProfileAboutCard } from "./ProfileAboutCard";
 import { Text } from "../Themed";
 import { Colors } from "@/constants/colors";
 import { PostLink } from "../Post/PostLink";
-import { RootState } from "@/constants/reduxStore";
 import { useToast } from "@/hooks/useToast";
 import { UserState } from "@/features/auth/userSlice";
 
-export function ProfileAbout() {
-  const user = useSelector((state: RootState) => state.user);
+export function ProfileAbout({ user }: { user?: UserState }) {
   const { showToast } = useToast();
   const handleLoadLinkError = (
     link: UserState["userProfile"]["links"][number]
   ) => {
+    if (!user) return;
     user.userProfile.links.filter((l) => l.url !== link.url);
     showToast({
       message:
@@ -21,6 +19,7 @@ export function ProfileAbout() {
       color: "error"
     });
   };
+  if (!user) return null;
   return (
     <ScrollView style={{ flex: 1 }}>
       <ProfileAboutCard title="Biografia">

@@ -118,7 +118,10 @@ export function PostHeader({
   return (
     <View style={styles.firstRow}>
       <View style={styles.leftSide}>
-        <View style={styles.postUserInformation}>
+        <TouchableOpacity
+          style={styles.postUserInformation}
+          onPress={() => router.push(`/(tabs)/profile/${author.user.id}`)}
+        >
           {author.icon ? (
             <Image
               source={{ uri: getImgWithTimestamp(author.icon) }}
@@ -128,7 +131,7 @@ export function PostHeader({
             <Icon size={18} name="user-circle" color={Colors.dark.background} />
           )}
           <Text style={styles.userName}>{author.user.username}</Text>
-        </View>
+        </TouchableOpacity>
         <Text>•</Text>
         <Text>{formatDate(createdAt, updatedAt)}</Text>
       </View>

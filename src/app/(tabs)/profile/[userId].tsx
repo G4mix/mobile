@@ -62,7 +62,6 @@ export default function ProfileScreen() {
       }
     })
   ).current;
-
   const ActualTab = tabComponents[actualTab];
 
   return (
@@ -79,11 +78,13 @@ export default function ProfileScreen() {
           )}
           username={data.username}
           id={data.id}
+          followersCount={data.userProfile.followersCount}
+          followingCount={data.userProfile.followingCount}
           onlyView
         />
       )}
       <ContentTabs tabs={tabs} tabType="profile" />
-      <ActualTab />
+      <ActualTab userId={userId} user={data} />
     </View>
   );
 }

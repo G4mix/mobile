@@ -1,6 +1,5 @@
 import { ScrollView, TouchableOpacity } from "react-native";
 import { router } from "expo-router";
-import { useSelector } from "react-redux";
 import { View } from "../Themed";
 import { FloatingOptionsProvider } from "@/context/FloatingOptionsContext";
 import { ConfirmationModalProvider } from "@/context/ConfirmationModalContext";
@@ -10,13 +9,10 @@ import { InView } from "../InView";
 import { useViewPosts } from "@/hooks/useViewPosts";
 import { useFeed } from "@/hooks/useFeed";
 import { styles } from "@/app/(tabs)/feed";
-import { RootState } from "@/constants/reduxStore";
 
-export function ProfilePosts() {
-  const authorId = useSelector((state: RootState) => state.user.userProfile.id);
-
+export function ProfilePosts({ userId }: { userId: string }) {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useFeed({
-    authorId
+    authorId: userId
   });
 
   const posts = data?.pages?.flatMap((page) => page?.data || []) || [];

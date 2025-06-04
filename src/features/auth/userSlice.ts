@@ -12,6 +12,8 @@ export interface UserState {
     icon?: string | null;
     backgroundImage?: string | null;
     autobiography?: string | null;
+    followersCount: number;
+    followingCount: number;
     links: {
       id: string;
       url: string;
@@ -29,6 +31,8 @@ const initialState: UserState = {
     displayName: null,
     autobiography: null,
     backgroundImage: null,
+    followersCount: 0,
+    followingCount: 0,
     links: [],
     icon: null
   },
@@ -56,6 +60,8 @@ const userSlice = createSlice({
         displayName: null,
         icon: null,
         autobiography: null,
+        followersCount: 0,
+        followingCount: 0,
         backgroundImage: null,
         links: []
       };

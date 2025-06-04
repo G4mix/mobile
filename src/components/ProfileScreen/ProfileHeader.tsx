@@ -17,7 +17,9 @@ export function ProfileHeader({
   icon,
   onlyView = false,
   onPressBackground,
-  onPressIcon
+  onPressIcon,
+  followingCount,
+  followersCount
 }: {
   id: string;
   backgroundImage?: string | null;
@@ -25,6 +27,8 @@ export function ProfileHeader({
   username?: string;
   icon?: string | null;
   onlyView?: boolean;
+  followingCount?: number;
+  followersCount?: number;
   onPressBackground?: () => void;
   onPressIcon?: () => void;
 }) {
@@ -69,70 +73,172 @@ export function ProfileHeader({
           />
         )}
       </EditableComponent>
-      {onlyView && user.id === id && (
-        <View
-          style={{
-            justifyContent: "space-between",
-            flexDirection: "row",
-            paddingHorizontal: 12,
-            position: "absolute",
-            top: 114,
-            width: "100%",
-            alignItems: "center",
-            zIndex: 2
-          }}
-        >
-          <Button
+      {onlyView &&
+        (user.id === id ? (
+          <View
             style={{
-              minWidth: "auto",
-              paddingHorizontal: 14,
-              paddingVertical: 8
+              justifyContent: "space-between",
+              flexDirection: "row",
+              paddingHorizontal: 16,
+              position: "absolute",
+              top: 114,
+              width: "100%",
+              alignItems: "center",
+              zIndex: 2
             }}
-            onPress={() => router.push("/configurations/profile")}
           >
-            <Text style={{ color: Colors.light.white }}>Editar</Text>
-          </Button>
-          <TouchableOpacity onPress={() => router.push("/configurations")}>
+            <Button
+              style={{
+                minWidth: "auto",
+                paddingHorizontal: 14,
+                paddingVertical: 8
+              }}
+              onPress={() => router.push("/configurations/profile")}
+            >
+              <Text style={{ color: Colors.light.white }}>Editar</Text>
+            </Button>
+            <TouchableOpacity onPress={() => router.push("/configurations")}>
+              <Icon
+                size={24}
+                name="cog-6-tooth"
+                color={Colors.light.russianViolet}
+                style={{
+                  width: 24,
+                  height: 24
+                }}
+              />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View
+            style={{
+              justifyContent: "flex-end",
+              flexDirection: "row",
+              paddingHorizontal: 16,
+              position: "absolute",
+              top: 114,
+              width: "100%",
+              alignItems: "center",
+              zIndex: 2,
+              gap: 4
+            }}
+          >
+            <Button
+              style={{
+                minWidth: "auto",
+                paddingHorizontal: 14,
+                paddingVertical: 8
+              }}
+              onPress={() => router.push("/configurations/profile")}
+            >
+              <Text style={{ color: Colors.light.white }}>Seguir</Text>
+            </Button>
             <Icon
               size={24}
-              name="cog-6-tooth"
+              name="ellipsis-horizontal"
               color={Colors.light.russianViolet}
               style={{
                 width: 24,
-                height: 24
+                height: 24,
+                opacity: 0.7
               }}
             />
-          </TouchableOpacity>
-        </View>
-      )}
-      {(displayName || username) && (
-        <Text
-          style={{
-            color: Colors.light.russianViolet,
-            fontSize: 16,
-            fontWeight: "bold",
-            textAlign: "center",
-            zIndex: 3
-          }}
-        >
-          {displayName || username}
-        </Text>
-      )}
+          </View>
+        ))}
+      <View style={{ gap: 12 }}>
+        {(displayName || username) && (
+          <Text
+            style={[
+              {
+                color: Colors.light.russianViolet,
+                fontSize: 16,
+                fontWeight: "bold",
+                zIndex: 3
+              },
+              user.id === id
+                ? { textAlign: "center" }
+                : { textAlign: "left", paddingLeft: 16 }
+            ]}
+          >
+            {displayName || username}
+          </Text>
+        )}
+        {onlyView && (
+          <View
+            style={[
+              {
+                alignItems: "center",
+                flexDirection: "row",
+                gap: 16
+              },
+              user.id === id
+                ? { justifyContent: "center" }
+                : { paddingLeft: 16 }
+            ]}
+          >
+            <View style={{ gap: 4, flexDirection: "row" }}>
+              <Text
+                style={{
+                  color: Colors.light.russianViolet,
+                  fontSize: 16,
+                  fontWeight: "bold",
+                  zIndex: 3
+                }}
+              >
+                {followersCount}
+              </Text>
+              <Text
+                style={{
+                  color: Colors.light.russianViolet,
+                  fontSize: 16,
+                  zIndex: 3
+                }}
+              >
+                seguidores
+              </Text>
+            </View>
+            <View style={{ gap: 4, flexDirection: "row" }}>
+              <Text
+                style={{
+                  color: Colors.light.russianViolet,
+                  fontSize: 16,
+                  fontWeight: "bold",
+                  zIndex: 3
+                }}
+              >
+                {followingCount}
+              </Text>
+              <Text
+                style={{
+                  color: Colors.light.russianViolet,
+                  fontSize: 16,
+                  zIndex: 3
+                }}
+              >
+                seguindo
+              </Text>
+            </View>
+          </View>
+        )}
+      </View>
       {icon ? (
         <EditableComponent
-          style={{
-            position: "absolute",
-            top: 40,
-            left: "50%",
-            width: 84,
-            height: 84,
-            zIndex: 100,
-            transform: [{ translateX: -42 }] as any,
-            alignItems: "center",
-            justifyContent: "center",
-            backgroundColor: Colors.light.background,
-            borderRadius: 9999
-          }}
+          style={[
+            {
+              position: "absolute",
+              top: 40,
+              width: 84,
+              height: 84,
+              zIndex: 100,
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: Colors.light.background,
+              borderRadius: 9999
+            },
+            user.id === id
+              ? { left: "50%", transform: [{ translateX: -42 }] as any }
+              : { left: 16 }
+          ]}
           onPress={!onlyView ? onPressIcon : undefined}
         >
           <Image
@@ -146,19 +252,22 @@ export function ProfileHeader({
         </EditableComponent>
       ) : (
         <EditableComponent
-          style={{
-            position: "absolute",
-            top: 50,
-            left: "50%",
-            zIndex: 2,
-            transform: [{ translateX: -36 }] as any,
-            borderRadius: 9999,
-            width: 72,
-            height: 72,
-            alignItems: "center",
-            justifyContent: "center",
-            backgroundColor: Colors.light.background
-          }}
+          style={[
+            {
+              position: "absolute",
+              top: 50,
+              zIndex: 2,
+              borderRadius: 9999,
+              width: 72,
+              height: 72,
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: Colors.light.background
+            },
+            user.id === id
+              ? { left: "50%", transform: [{ translateX: -42 }] as any }
+              : { left: 16 }
+          ]}
           onPress={!onlyView ? onPressIcon : undefined}
         >
           <Icon
