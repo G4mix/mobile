@@ -15,6 +15,7 @@ import { PostType } from "@/components/Post";
 import { Loading } from "@/components/Loading";
 import { Colors } from "@/constants/colors";
 import { Icon } from "@/components/Icon";
+import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
 
 const { width } = Dimensions.get("window");
 
@@ -107,7 +108,10 @@ export default function PostImageScreen() {
           { useNativeDriver: false }
         )}
         renderItem={({ item }) => (
-          <Image source={{ uri: item.src }} style={styles.image} />
+          <Image
+            source={{ uri: getImgWithTimestamp(item.src) }}
+            style={styles.image}
+          />
         )}
         getItemLayout={(_data, index) => ({
           length: width,

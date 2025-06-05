@@ -27,6 +27,7 @@ type InputProps = {
   onFocus?: (e?: NativeSyntheticEvent<TextInputFocusEventData>) => void;
   onBlur?: (e?: NativeSyntheticEvent<TextInputFocusEventData>) => void;
   returnKeyType?: ReturnKeyTypeOptions;
+  labelColor?: string;
   borderWidth?: number;
   onSubmitEditing?: (
     e: NativeSyntheticEvent<TextInputSubmitEditingEventData>
@@ -81,6 +82,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       placeholder,
       borderWidth = 1,
       color = Colors.light.russianViolet,
+      labelColor,
       icon,
       iconRight = false,
       handlePressIcon,
@@ -98,7 +100,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     ref
   ) => (
     <View style={styles.root}>
-      {label && <Text style={[styles.inputLabel, { color }]}>{label}</Text>}
+      {label && (
+        <Text style={[styles.inputLabel, { color: labelColor || color }]}>
+          {label}
+        </Text>
+      )}
       <View
         style={[
           styles.container,

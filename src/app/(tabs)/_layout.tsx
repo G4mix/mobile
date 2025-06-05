@@ -7,6 +7,7 @@ import {
   TabTriggerSlotProps
 } from "expo-router/ui";
 import {
+  Image,
   Pressable,
   StyleProp,
   StyleSheet,
@@ -19,11 +20,13 @@ import { useSelector } from "react-redux";
 import { Colors } from "@/constants/colors";
 import { Icon, IconName } from "@/components/Icon";
 import { RootState } from "@/constants/reduxStore";
+import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
 
 interface TabBarIconProps extends React.PropsWithChildren, TabTriggerSlotProps {
   name: IconName;
   size: number;
   style?: StyleProp<ViewStyle>;
+  userIcon?: string;
 }
 
 const TabBarIcon = React.forwardRef<View, TabBarIconProps>((props, ref) => (
@@ -41,15 +44,30 @@ const TabBarIcon = React.forwardRef<View, TabBarIconProps>((props, ref) => (
       props.style || {}
     ]}
   >
-    <Icon
-      size={props.size}
-      name={props.name}
-      color={
-        props.isFocused
-          ? Colors.light.majorelleBlue
-          : Colors.light.russianViolet
-      }
-    />
+    {props.userIcon ? (
+      <Image
+        source={{ uri: getImgWithTimestamp(props.userIcon) }}
+        style={{
+          borderRadius: 9999,
+          height: props.size,
+          width: props.size,
+          borderWidth: 1,
+          borderColor: props.isFocused
+            ? Colors.light.majorelleBlue
+            : Colors.light.russianViolet
+        }}
+      />
+    ) : (
+      <Icon
+        size={props.size}
+        name={props.name}
+        color={
+          props.isFocused
+            ? Colors.light.majorelleBlue
+            : Colors.light.russianViolet
+        }
+      />
+    )}
   </Pressable>
 ));
 
@@ -96,7 +114,7 @@ export default function TabLayout() {
       name: "search",
       href: "/search",
       iconName: "magnifying-glass",
-      size: 24,
+      size: 28,
       disabled: true
     },
     {
@@ -109,14 +127,14 @@ export default function TabLayout() {
       name: "team",
       href: "/team",
       iconName: "user-group",
-      size: 24,
+      size: 28,
       disabled: true
     },
     {
       name: "profile",
-      href: `/profile/${user.id}`,
+      href: `/profile/${user.userProfile.id}`,
       iconName: "user-circle",
-      size: 24
+      size: 28
     }
   ];
   return (
@@ -132,7 +150,15 @@ export default function TabLayout() {
             style={[styles.tabTrigger, disabled ? { opacity: 0.5 } : {}]}
             asChild
           >
-            <TabBarIcon name={iconName} size={size} />
+            <TabBarIcon
+              name={iconName}
+              size={size}
+              userIcon={
+                href.toString().startsWith("/profile") && user.userProfile.icon
+                  ? user.userProfile.icon
+                  : undefined
+              }
+            />
           </TabTrigger>
         ))}
       </TabList>

@@ -8,8 +8,18 @@ export interface UserState {
   created_at: string;
   userProfile: {
     id: string;
-    icon: string | null;
     displayName: string | null;
+    icon?: string | null;
+    backgroundImage?: string | null;
+    autobiography?: string | null;
+    followersCount: number;
+    followingCount: number;
+    isFollowing?: boolean;
+    links: {
+      id: string;
+      url: string;
+      userProfileId: string;
+    }[];
   };
 }
 
@@ -20,6 +30,11 @@ const initialState: UserState = {
   userProfile: {
     id: "",
     displayName: null,
+    autobiography: null,
+    backgroundImage: null,
+    followersCount: 0,
+    followingCount: 0,
+    links: [],
     icon: null
   },
   verified: false,
@@ -44,7 +59,12 @@ const userSlice = createSlice({
       state.userProfile = {
         id: "",
         displayName: null,
-        icon: null
+        icon: null,
+        autobiography: null,
+        followersCount: 0,
+        followingCount: 0,
+        backgroundImage: null,
+        links: []
       };
       state.email = "";
       state.username = "";

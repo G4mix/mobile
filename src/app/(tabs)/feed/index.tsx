@@ -6,7 +6,7 @@ import {
   Dimensions
 } from "react-native";
 import { router } from "expo-router";
-import { ContentTabs } from "@/components/ContentTabs";
+import { ContentTabs, Tab } from "@/components/ContentTabs";
 import { Post } from "@/components/Post";
 import { useFeed } from "@/hooks/useFeed";
 import { InView } from "@/components/InView";
@@ -16,7 +16,7 @@ import { ConfirmationModalProvider } from "@/context/ConfirmationModalContext";
 import { PostLoading } from "@/components/Post/PostLoading";
 import { Colors } from "@/constants/colors";
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     flex: 1,
@@ -47,9 +47,26 @@ export default function FeedScreen() {
     initialViewedPostIds
   });
 
+  const tabs: Tab<"feed">[] = [
+    {
+      name: "Destaques",
+      disabled: true,
+      key: "following"
+    },
+    {
+      name: "Recomendações",
+      key: "recommendations"
+    },
+    {
+      name: "Seguindo",
+      disabled: true,
+      key: "highlights"
+    }
+  ];
+
   return (
     <View style={styles.container}>
-      <ContentTabs />
+      <ContentTabs tabs={tabs} tabType="feed" />
       <ScrollView style={styles.scroll}>
         <View style={styles.posts}>
           <FloatingOptionsProvider>

@@ -12,6 +12,7 @@ import { InView } from "@/components/InView";
 import { CommentInput } from "@/components/CommentsScreen/CommentInput";
 import { PostLoading } from "@/components/Post/PostLoading";
 import { CommentLoading } from "@/components/CommentsScreen/CommentLoading";
+import { Colors } from "@/constants/colors";
 
 export default function PostScreen() {
   const [replying, setReplying] = useState<{
@@ -51,7 +52,7 @@ export default function PostScreen() {
 
   return (
     <View style={{ flex: 1, position: "relative" }}>
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1, backgroundColor: Colors.light.background }}>
         {isLoading && <PostLoading />}
         <FloatingOptionsProvider>
           <ConfirmationModalProvider>

@@ -4,6 +4,7 @@ import { Text, View } from "@/components/Themed";
 import { ExternalLink } from "@/components/ExternalLink";
 import { Colors } from "@/constants/colors";
 import { PostLinkLoading } from "./PostLinkLoading";
+import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
 
 const styles = StyleSheet.create({
   link: {
@@ -36,6 +37,7 @@ type PostLinkProps = {
   handleError?: () => void;
   children?: React.ReactNode;
   url?: string;
+  noHorizontalPadding?: boolean;
 };
 
 type DataType = {
@@ -48,7 +50,12 @@ type DataType = {
   };
 };
 
-export function PostLink({ url = "", handleError, children }: PostLinkProps) {
+export function PostLink({
+  url = "",
+  handleError,
+  children,
+  noHorizontalPadding
+}: PostLinkProps) {
   const [data, setData] = useState<DataType | null>(null);
 
   const fetchData = useCallback(async () => {
@@ -77,18 +84,23 @@ export function PostLink({ url = "", handleError, children }: PostLinkProps) {
     fetchData();
   }, []);
 
-  if (!data || !data.icon.url) return <PostLinkLoading />;
+  if (!data || !data.icon.url) {
+    return <PostLinkLoading noHorizontalPadding={noHorizontalPadding} />;
+  }
 
   return (
     <ExternalLink
-      style={{ width: "100%", paddingHorizontal: 16 }}
+      style={{
+        width: "100%",
+        paddingHorizontal: noHorizontalPadding ? 0 : 16
+      }}
       href={url}
       aria-label={`Link para o site: ${data.title}`}
       target="_blank"
     >
       <View style={styles.link}>
         <Image
-          src={data.icon.url || ""}
+          src={getImgWithTimestamp(data.icon.url)}
           width={data.icon.width}
           height={data.icon.height}
           alt={`Ícone do site: ${data.title}`}

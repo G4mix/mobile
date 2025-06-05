@@ -15,6 +15,7 @@ import { useToast } from "@/hooks/useToast";
 import { useFeedQueries } from "@/hooks/useFeedQueries";
 import { useConfirmationModal } from "@/hooks/useConfirmationModal";
 import { Option } from "@/context/FloatingOptionsContext";
+import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
 
 export const styles = StyleSheet.create({
   firstRow: {
@@ -114,17 +115,24 @@ export function PostHeader({
     }
   ];
 
+  if (!author) return null;
   return (
     <View style={styles.firstRow}>
       <View style={styles.leftSide}>
-        <View style={styles.postUserInformation}>
+        <TouchableOpacity
+          style={styles.postUserInformation}
+          onPress={() => router.push(`/(tabs)/profile/${author.id}`)}
+        >
           {author.icon ? (
-            <Image source={{ uri: author.icon }} style={styles.imageProfile} />
+            <Image
+              source={{ uri: getImgWithTimestamp(author.icon) }}
+              style={styles.imageProfile}
+            />
           ) : (
             <Icon size={18} name="user-circle" color={Colors.dark.background} />
           )}
           <Text style={styles.userName}>{author.user.username}</Text>
-        </View>
+        </TouchableOpacity>
         <Text>•</Text>
         <Text>{formatDate(createdAt, updatedAt)}</Text>
       </View>

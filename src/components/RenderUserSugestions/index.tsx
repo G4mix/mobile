@@ -8,6 +8,7 @@ import { InView } from "../InView";
 import { Icon } from "../Icon";
 import { styles } from "../Post/PostHeader";
 import { RenderUserSugestionsLoading } from "./RenderUserSugestionsLoading";
+import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
 
 export function RenderUserSuggestions({
   keyword,
@@ -36,7 +37,10 @@ export function RenderUserSuggestions({
               key={user.id}
               focusable={false}
               onPress={() =>
-                onSuggestionPress({ id: user.id, name: user.username })
+                onSuggestionPress({
+                  id: user.userProfile.id,
+                  name: user.username
+                })
               }
               style={{
                 padding: 12,
@@ -48,7 +52,7 @@ export function RenderUserSuggestions({
             >
               {user.userProfile.icon ? (
                 <Image
-                  source={{ uri: user.userProfile.icon }}
+                  source={{ uri: getImgWithTimestamp(user.userProfile.icon) }}
                   style={styles.imageProfile}
                 />
               ) : (

@@ -13,10 +13,8 @@ type PostPageable = {
 };
 
 export const useFeed = ({ authorId }: { authorId?: string } = {}) => {
-  // const queryClient = useQueryClient();
   const lastFetchTime = useSelector((state: any) => state.feed.lastFetchTime);
   const actualTab = useSelector((state: any) => state.feed.actualTab);
-
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: ["posts", { actualTab, lastFetchTime, authorId }],
@@ -36,7 +34,6 @@ export const useFeed = ({ authorId }: { authorId?: string } = {}) => {
       getNextPageParam: (lastPage) => lastPage?.nextPage,
       enabled: !!lastFetchTime
     });
-
   // useEffect(() => {
   //   const socket = new WebSocket(`wss://${process.env.EXPO_PUBLIC_API_URL}`);
 

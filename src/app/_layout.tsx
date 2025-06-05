@@ -12,14 +12,21 @@ import { Provider } from "react-redux";
 import { useColorScheme } from "react-native";
 import { useFonts } from "expo-font";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { ToastProvider } from "@/context/ToastContext";
 import { reduxStore } from "@/constants/reduxStore";
 import { useMiddleware } from "@/hooks/useMiddleware";
+import { Header } from "@/components/Header";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 const queryClient = new QueryClient();
+
+const customHeader = (title?: string) =>
+  function header(props: NativeStackHeaderProps) {
+    return <Header {...props} title={title} />;
+  };
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
@@ -42,7 +49,7 @@ function RootLayoutNav() {
               options={{
                 presentation: "modal",
                 headerShown: true,
-                title: "Voltar"
+                header: customHeader("Comentários")
               }}
             />
             <Stack.Screen
@@ -50,7 +57,7 @@ function RootLayoutNav() {
               options={{
                 presentation: "modal",
                 headerShown: true,
-                title: "Voltar"
+                header: customHeader("Respostas")
               }}
             />
             <Stack.Screen
@@ -58,7 +65,7 @@ function RootLayoutNav() {
               options={{
                 presentation: "modal",
                 headerShown: true,
-                title: "Voltar"
+                header: customHeader()
               }}
             />
             <Stack.Screen
@@ -66,8 +73,36 @@ function RootLayoutNav() {
               options={{
                 presentation: "modal",
                 headerShown: true,
-                title: "Voltar"
+                header: customHeader()
               }}
+            />
+            <Stack.Screen
+              name="configurations/index"
+              options={{
+                presentation: "modal",
+                headerShown: true,
+                header: customHeader("Configurações")
+              }}
+            />
+            <Stack.Screen
+              name="configurations/security"
+              options={{
+                presentation: "modal",
+                headerShown: true,
+                header: customHeader("Privacidade e segurança")
+              }}
+            />
+            <Stack.Screen
+              name="configurations/account"
+              options={{
+                presentation: "modal",
+                headerShown: true,
+                header: customHeader("Informações da conta")
+              }}
+            />
+            <Stack.Screen
+              name="configurations/profile/index"
+              options={{ presentation: "modal", headerShown: false }}
             />
             <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen
@@ -76,7 +111,19 @@ function RootLayoutNav() {
             />
             <Stack.Screen
               name="terms"
-              options={{ presentation: "modal", headerShown: true, title: "" }}
+              options={{
+                presentation: "modal",
+                headerShown: true,
+                header: customHeader("")
+              }}
+            />
+            <Stack.Screen
+              name="privacy-policy"
+              options={{
+                presentation: "modal",
+                headerShown: true,
+                header: customHeader("")
+              }}
             />
           </Stack>
         </ToastProvider>

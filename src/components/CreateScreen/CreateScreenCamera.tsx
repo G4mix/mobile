@@ -12,6 +12,7 @@ import { Icon } from "../Icon";
 import { Colors } from "@/constants/colors";
 import { CreateScreenFormData } from "@/app/(tabs)/create";
 import { useToast } from "@/hooks/useToast";
+import { getDate } from "@/utils/getDate";
 
 const styles = StyleSheet.create({
   camera: {
@@ -80,6 +81,8 @@ type CreateScreenCameraProps = {
   isCameraVisible: boolean;
   setIsCameraVisible: Dispatch<SetStateAction<boolean>>;
   setValue: UseFormSetValue<CreateScreenFormData>;
+  singleImage?: boolean;
+  valueKey?: string;
   images?: CreateScreenFormData["images"];
 };
 
@@ -87,13 +90,15 @@ export function CreateScreenCamera({
   isCameraVisible,
   setIsCameraVisible,
   setValue,
+  valueKey = "images",
+  singleImage = false,
   images
 }: CreateScreenCameraProps) {
   const [facing, setFacing] = useState<CameraType>("back");
   const [flash, setFlash] = useState<FlashMode>("off");
   const [permission, requestPermission] = useCameraPermissions();
   const { showToast } = useToast();
-  const cameraRef = useRef<any>(null);
+  const cameraRef = useRef<CameraView>(null);
 
   if (!isCameraVisible) return null;
   if (!permission) {
@@ -121,7 +126,7 @@ export function CreateScreenCamera({
     }
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
-      allowsMultipleSelection: true,
+      allowsMultipleSelection: !singleImage,
       quality: 1
     });
 
@@ -130,11 +135,14 @@ export function CreateScreenCamera({
     const currentImages = images || [];
     const files: CreateScreenFormData["images"] = result.assets.map((img) => ({
       uri: img.uri,
-      name: img.fileName || `${new Date().toISOString()}`,
+      name: img.fileName || getDate().toISOString(),
       type: img.mimeType || "image/jpeg"
     }));
 
-    setValue("images", [...currentImages, ...files]);
+    setValue(
+      valueKey as any,
+      singleImage ? files[0] : [...currentImages, ...files]
+    );
     closeCamera();
   };
 
@@ -147,14 +155,15 @@ export function CreateScreenCamera({
     const takedPhoto =
       (await cameraRef.current?.takePictureAsync()) as ImagePicker.ImagePickerAsset;
     const currentImages = images || [];
-    setValue("images", [
-      ...currentImages,
-      {
-        uri: takedPhoto.uri,
-        name: takedPhoto.fileName || `${new Date().toISOString()}`,
-        type: takedPhoto.mimeType || "image/jpeg"
-      }
-    ]);
+    const parsedTakedPhoto = {
+      uri: takedPhoto.uri,
+      name: takedPhoto.fileName || getDate().toISOString(),
+      type: takedPhoto.mimeType || "image/jpeg"
+    };
+    setValue(
+      valueKey as any,
+      singleImage ? parsedTakedPhoto : [...currentImages, parsedTakedPhoto]
+    );
     closeCamera();
   };
 
