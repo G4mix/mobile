@@ -37,7 +37,10 @@ export function RenderUserSuggestions({
               key={user.id}
               focusable={false}
               onPress={() =>
-                onSuggestionPress({ id: user.id, name: user.username })
+                onSuggestionPress({
+                  id: user.userProfile.id,
+                  name: user.username
+                })
               }
               style={{
                 padding: 12,

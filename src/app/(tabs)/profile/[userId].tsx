@@ -63,7 +63,6 @@ export default function ProfileScreen() {
     })
   ).current;
   const ActualTab = tabComponents[actualTab];
-
   return (
     <View
       style={{ backgroundColor: Colors.light.background, flex: 1 }}
@@ -71,6 +70,7 @@ export default function ProfileScreen() {
     >
       {!isLoading && data && (
         <ProfileHeader
+          isFollowing={data.userProfile.isFollowing}
           icon={getImgWithTimestamp(data.userProfile.icon!)}
           displayName={data.userProfile.displayName}
           backgroundImage={getImgWithTimestamp(
@@ -78,6 +78,7 @@ export default function ProfileScreen() {
           )}
           username={data.username}
           id={data.id}
+          userProfileId={data.userProfile.id}
           followersCount={data.userProfile.followersCount}
           followingCount={data.userProfile.followingCount}
           onlyView

@@ -1,6 +1,8 @@
 import { Image, TouchableOpacity } from "react-native";
 import { router } from "expo-router";
 import { useSelector } from "react-redux";
+import { useRef, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Text, View } from "../Themed";
 import { styles } from "../Post/PostHeader";
 import { Colors } from "@/constants/colors";
@@ -8,13 +10,19 @@ import { Icon } from "../Icon";
 import { Button } from "../Button";
 import { RootState } from "@/constants/reduxStore";
 import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
+import { handleRequest } from "@/utils/handleRequest";
+import { api } from "@/constants/api";
+import { useToast } from "@/hooks/useToast";
+import { debounce } from "@/utils/debounce";
 
 export function ProfileHeader({
   id,
+  userProfileId,
   backgroundImage,
   displayName,
   username,
   icon,
+  isFollowing,
   onlyView = false,
   onPressBackground,
   onPressIcon,
@@ -22,18 +30,57 @@ export function ProfileHeader({
   followersCount
 }: {
   id: string;
+  userProfileId?: string;
   backgroundImage?: string | null;
   displayName?: string | null;
   username?: string;
   icon?: string | null;
   onlyView?: boolean;
   followingCount?: number;
+  isFollowing?: boolean;
   followersCount?: number;
   onPressBackground?: () => void;
   onPressIcon?: () => void;
 }) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isFollowingState, setIsFollowing] = useState(isFollowing);
+  const { showToast } = useToast();
   const user = useSelector((state: RootState) => state.user);
   const EditableComponent = !onlyView ? TouchableOpacity : View;
+  const queryClient = useQueryClient();
+
+  const executeFollow = () => {
+    if (isLoading) return;
+    const data = handleRequest({
+      requestFn: async () =>
+        api.post(
+          `/follow?followingUserId=${userProfileId!}&wantFollow=${isFollowingState}`
+        ),
+      showToast,
+      setIsLoading
+    });
+    if (!data) return;
+    queryClient.setQueryData(["user", userProfileId], (oldData: any) => {
+      if (!oldData) return oldData;
+
+      return {
+        ...oldData,
+        userProfile: {
+          ...oldData.userProfile,
+          isFollowing: !oldData.userProfile.isFollowing
+        }
+      };
+    });
+  };
+
+  const debouncedHandleFollow = useRef(
+    debounce(() => executeFollow(), 700)
+  ).current;
+
+  const handleFollow = () => {
+    setIsFollowing((prevValue) => !prevValue);
+    debouncedHandleFollow();
+  };
 
   return (
     <View
@@ -129,9 +176,11 @@ export function ProfileHeader({
                 paddingHorizontal: 14,
                 paddingVertical: 8
               }}
-              onPress={() => router.push("/configurations/profile")}
+              onPress={handleFollow}
             >
-              <Text style={{ color: Colors.light.white }}>Seguir</Text>
+              <Text style={{ color: Colors.light.white }}>
+                {isFollowingState ? "Parar de seguir" : "Seguir"}
+              </Text>
             </Button>
             <Icon
               size={24}

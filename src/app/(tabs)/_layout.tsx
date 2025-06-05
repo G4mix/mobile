@@ -132,7 +132,7 @@ export default function TabLayout() {
     },
     {
       name: "profile",
-      href: `/profile/${user.id}`,
+      href: `/profile/${user.userProfile.id}`,
       iconName: "user-circle",
       size: 28
     }

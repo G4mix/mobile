@@ -115,12 +115,13 @@ export function PostHeader({
     }
   ];
 
+  if (!author) return null;
   return (
     <View style={styles.firstRow}>
       <View style={styles.leftSide}>
         <TouchableOpacity
           style={styles.postUserInformation}
-          onPress={() => router.push(`/(tabs)/profile/${author.user.id}`)}
+          onPress={() => router.push(`/(tabs)/profile/${author.id}`)}
         >
           {author.icon ? (
             <Image

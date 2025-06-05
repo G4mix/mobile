@@ -141,7 +141,7 @@ export default function ConfigProfileScreen() {
     setIsSuccessVisible(true);
     await timeout(1000);
     setIsSuccessVisible(false);
-    router.push(`/profile/${user.id}`);
+    router.push(`/profile/${user.userProfile.id}`);
   };
   const onSubmit = handleSubmit(updateUser);
 

@@ -14,9 +14,7 @@ export function ProfilePosts({ userId }: { userId: string }) {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useFeed({
     authorId: userId
   });
-
   const posts = data?.pages?.flatMap((page) => page?.data || []) || [];
-
   const initialViewedPostIds = posts.filter((p) => p.isViewed).map((p) => p.id);
 
   const { alreadyVisualized, addVisualizedPost } = useViewPosts({

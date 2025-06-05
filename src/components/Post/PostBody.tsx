@@ -29,8 +29,8 @@ export function PostBody({ postId, title, content, images }: PostBodyProps) {
   if (!title && !content && (!images || images.length === 0)) return null;
   return (
     <View>
-      <Text style={styles.postTitle}>{title}</Text>
-      <Text style={styles.postDescription}>{content}</Text>
+      {title && <Text style={styles.postTitle}>{title}</Text>}
+      {content && <Text style={styles.postDescription}>{content}</Text>}
       <PostImages images={images} postId={postId} />
     </View>
   );

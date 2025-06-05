@@ -14,6 +14,7 @@ export interface UserState {
     autobiography?: string | null;
     followersCount: number;
     followingCount: number;
+    isFollowing?: boolean;
     links: {
       id: string;
       url: string;
