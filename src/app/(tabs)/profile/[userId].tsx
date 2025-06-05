@@ -12,6 +12,7 @@ import { api } from "@/constants/api";
 import { UserState } from "@/features/auth/userSlice";
 import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
 import { setActualTab } from "@/features/profile/profileSlice"; // <- sua action de redux
+import { ProfileHeaderLoading } from "@/components/ProfileScreen/ProfileHeaderLoading";
 
 export default function ProfileScreen() {
   const dispatch = useDispatch();
@@ -63,11 +64,13 @@ export default function ProfileScreen() {
     })
   ).current;
   const ActualTab = tabComponents[actualTab];
+
   return (
     <View
       style={{ backgroundColor: Colors.light.background, flex: 1 }}
       {...panResponder.panHandlers}
     >
+      {isLoading && !data && <ProfileHeaderLoading id={userId} />}
       {!isLoading && data && (
         <ProfileHeader
           isFollowing={data.userProfile.isFollowing}
