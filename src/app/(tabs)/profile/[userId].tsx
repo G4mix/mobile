@@ -71,24 +71,26 @@ export default function ProfileScreen() {
       {...panResponder.panHandlers}
     >
       {isLoading && !data && <ProfileHeaderLoading id={userId} />}
-      {!isLoading && data && (
-        <ProfileHeader
-          isFollowing={data.userProfile.isFollowing}
-          icon={getImgWithTimestamp(data.userProfile.icon!)}
-          displayName={data.userProfile.displayName}
-          backgroundImage={getImgWithTimestamp(
-            data.userProfile.backgroundImage!
-          )}
-          username={data.username}
-          id={data.id}
-          userProfileId={data.userProfile.id}
-          followersCount={data.userProfile.followersCount}
-          followingCount={data.userProfile.followingCount}
-          onlyView
-        />
-      )}
-      <ContentTabs tabs={tabs} tabType="profile" />
-      <ActualTab userId={userId} user={data} />
+      <ConfirmationModalProvider>
+        {!isLoading && data && (
+          <ProfileHeader
+            isFollowing={data.userProfile.isFollowing}
+            icon={getImgWithTimestamp(data.userProfile.icon!)}
+            displayName={data.userProfile.displayName}
+            backgroundImage={getImgWithTimestamp(
+              data.userProfile.backgroundImage!
+            )}
+            username={data.username}
+            id={data.id}
+            userProfileId={data.userProfile.id}
+            followersCount={data.userProfile.followersCount}
+            followingCount={data.userProfile.followingCount}
+            onlyView
+          />
+        )}
+        <ContentTabs tabs={tabs} tabType="profile" />
+        <ActualTab userId={userId} user={data} />
+      </ConfirmationModalProvider>
     </View>
   );
 }

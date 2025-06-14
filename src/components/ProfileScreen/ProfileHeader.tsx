@@ -78,8 +78,13 @@ export function ProfileHeader({
   ).current;
 
   const handleFollow = () => {
-    setIsFollowing((prevValue) => !prevValue);
-    debouncedHandleFollow();
+    if (isFollowingState) {
+      console.log('aaa')
+      
+    } else {
+      setIsFollowing((prevValue) => !prevValue);
+      debouncedHandleFollow();
+    }
   };
 
   return (
@@ -179,7 +184,7 @@ export function ProfileHeader({
               onPress={handleFollow}
             >
               <Text style={{ color: Colors.light.white }}>
-                {isFollowingState ? "Parar de seguir" : "Seguir"}
+                {isFollowingState ? "Seguindo" : "Seguir"}
               </Text>
             </Button>
             <Icon

@@ -56,7 +56,14 @@ export function CreateScreenImage({
           name="x-mark"
           color="white"
           size={24}
-          style={styles.postContentImageCancel}
+          style={[
+            styles.postContentImageCancel,
+            {
+              textShadowColor: 'rgba(0, 0, 0, 0.8)',
+              textShadowOffset: { width: 1, height: 1 },
+              textShadowRadius: 5.7,
+            },
+          ]}
         />
       </TouchableOpacity>
     </View>

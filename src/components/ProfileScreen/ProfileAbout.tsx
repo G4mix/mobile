@@ -1,4 +1,4 @@
-import { ScrollView } from "react-native";
+import { ScrollView, View } from "react-native";
 import { ProfileAboutCard } from "./ProfileAboutCard";
 import { Text } from "../Themed";
 import { Colors } from "@/constants/colors";
@@ -21,7 +21,7 @@ export function ProfileAbout({ user }: { user?: UserState }) {
   };
   if (!user) return null;
   return (
-    <ScrollView style={{ flex: 1 }}>
+    <ScrollView style={{ flex: 1, marginBottom: 60 }}>
       <ProfileAboutCard title="Biografia">
         <Text
           style={{
@@ -38,7 +38,7 @@ export function ProfileAbout({ user }: { user?: UserState }) {
             <PostLink
               url={link.url}
               noHorizontalPadding
-              key={`user-link-${link}`}
+              key={`user-link-${link.id}`}
               handleError={() => handleLoadLinkError(link)}
             />
           ))}

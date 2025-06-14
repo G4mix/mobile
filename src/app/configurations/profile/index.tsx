@@ -123,6 +123,7 @@ export default function ConfigProfileScreen() {
       icon,
       links
     });
+
     const data = await handleRequest<UserState>({
       requestFn: async () =>
         api.patch("/user", formData, {

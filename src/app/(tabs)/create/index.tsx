@@ -101,7 +101,7 @@ export default function CreateScreen() {
   });
 
   const getPost = () => {
-    if (!post) return;
+    if (!post || !postId) return;
     setValue("title", post.title);
     setValue("content", post.content);
     setValue(
@@ -126,9 +126,21 @@ export default function CreateScreen() {
     setValue("event", post.event);
   };
 
+  const clearFields = () => {
+    setValue("title", undefined);
+    if (titleRef.current) (titleRef.current as any).clear();
+    setValue("content", undefined);
+    if (contentRef.current) (contentRef.current as any).clear();
+    setValue("tags", []);
+    setValue("images", []);
+    setValue("links", []);
+    setValue("event", undefined);
+  }
+
   useEffect(() => {
     getPost();
-  }, [post]);
+    return clearFields;
+  }, [post, postId]);
 
   const createOrUpdatePost = async ({
     title,
@@ -144,7 +156,6 @@ export default function CreateScreen() {
       setIsLoading(false);
       return;
     }
-
     const formData = objectToFormData({
       title,
       content,
@@ -173,14 +184,7 @@ export default function CreateScreen() {
     } else {
       addNewPost(data);
     }
-    setValue("title", undefined);
-    (titleRef.current as any).clear();
-    setValue("content", undefined);
-    (contentRef.current as any).clear();
-    setValue("tags", []);
-    setValue("images", []);
-    setValue("links", []);
-    setValue("event", undefined);
+    clearFields();
     setIsSuccessVisible(true);
     await timeout(1000);
     setIsSuccessVisible(false);
