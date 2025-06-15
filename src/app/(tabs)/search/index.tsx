@@ -10,69 +10,17 @@ import {
 import { Text } from "@/components/Themed";
 import { Colors } from "@/constants/colors";
 import { Icon } from "@/components/Icon";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { formatFollowers } from "@/utils/formatFollowers";
 import { Button } from "@/components/Button";
 import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
 import { router } from "expo-router";
-
-const users = [
-  {
-    id: `${Date.now()}-${Math.floor(Math.random() * 1000000)}`,
-    name: "Vinicius",
-    followers: 10000,
-  },
-  {
-    id: `${Date.now()}-${Math.floor(Math.random() * 1000000)}`,
-    name: "Ana",
-    followers: 8500,
-  },
-  {
-    id: `${Date.now()}-${Math.floor(Math.random() * 1000000)}`,
-    name: "Carlos",
-    followers: 12000,
-  },
-  {
-    id: `${Date.now()}-${Math.floor(Math.random() * 1000000)}`,
-    name: "Mariana",
-    followers: 5300,
-  },
-  {
-    id: `${Date.now()}-${Math.floor(Math.random() * 1000000)}`,
-    name: "Lucas",
-    followers: 7800,
-  },
-  {
-    id: `${Date.now()}-${Math.floor(Math.random() * 1000000)}`,
-    name: "Fernanda",
-    followers: 1000,
-  },
-  {
-    id: `${Date.now()}-${Math.floor(Math.random() * 1000000)}`,
-    name: "João",
-    followers: 6700,
-  },
-  {
-    id: `${Date.now()}-${Math.floor(Math.random() * 1000000)}`,
-    name: "Patrícia",
-    followers: 11000,
-  },
-  {
-    id: `${Date.now()}-${Math.floor(Math.random() * 1000000)}`,
-    name: "Rafael",
-    followers: 4900,
-  },
-  {
-    id: `${Date.now()}-${Math.floor(Math.random() * 1000000)}`,
-    name: "Isabela",
-    followers: 10200,
-  },
-  {
-    id: `${Date.now()}-${Math.floor(Math.random() * 1000000)}`,
-    name: "Thiago",
-    followers: 8800,
-  },
-];
+import { useQueryClient } from "@tanstack/react-query";
+import { useUsers } from "@/hooks/useUsers";
+import { handleRequest } from "@/utils/handleRequest";
+import { api } from "@/constants/api";
+import { useToast } from "@/hooks/useToast";
+import { debounce } from "@/utils/debounce";
 
 const styles = StyleSheet.create({
   header: {
@@ -139,19 +87,94 @@ const styles = StyleSheet.create({
   },
   followers: {
     fontSize: 10,
-    marginTop: 8
+    marginTop: 8,
   },
 });
 
 export default function SearchScreen() {
   const [searchValue, setSearchValue] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { showToast } = useToast();
+  const queryClient = useQueryClient();
+
+  const { data } = useUsers({
+    search: searchValue,
+  });
+
+  const users = data?.pages?.flatMap((page) => page?.data || []) || [];
+
+  const debounceSearch = useRef(
+    debounce((value: string) => {
+      setSearchValue(value);
+    }, 1000)
+  ).current;
 
   const onChangeText = (value: string) => {
-    setSearchValue(value);
+    debounceSearch(value);
   };
 
   const onSubmitEditing = () => {
     Keyboard.dismiss();
+  };
+
+  const executeFollow = async ({
+    user_profile_id,
+    is_following,
+  }: {
+    user_profile_id: string;
+    is_following: boolean;
+  }) => {
+    if (isLoading) return;
+
+    const data = await handleRequest({
+      requestFn: () =>
+        api.post(
+          `/follow?followingUserId=${user_profile_id}&wantFollow=${is_following}`
+        ),
+      showToast,
+      setIsLoading,
+    });
+
+    if (!data) {
+      return;
+    }
+
+    console.log(data);
+    queryClient.setQueryData(["users", user_profile_id], (oldData: any) => {
+      if (!oldData) return oldData;
+
+      return {
+        ...oldData,
+        userProfile: {
+          ...oldData.userProfile,
+          isFollowing: !oldData.userProfile.isFollowing,
+        },
+      };
+    });
+  };
+
+  const debouncedHandleFollow = useRef(
+    debounce(
+      ({
+        user_profile_id,
+        is_following,
+      }: {
+        user_profile_id: string;
+        is_following: boolean;
+      }) => executeFollow({ user_profile_id, is_following }),
+      1000
+    )
+  );
+
+  const handleFollow = ({
+    user_profile_id,
+    is_following,
+  }: {
+    user_profile_id: string;
+    is_following: boolean;
+  }) => {
+    debouncedHandleFollow.current({ user_profile_id, is_following });
   };
 
   return (
@@ -203,7 +226,7 @@ export default function SearchScreen() {
             }}
           >
             <FlatList
-              data={users}
+              data={users ?? []}
               keyExtractor={(user) => user.id}
               renderItem={({ item }) => (
                 <View
@@ -223,12 +246,14 @@ export default function SearchScreen() {
                       <TouchableOpacity
                         style={styles.postUserInformation}
                         onPress={() =>
-                          router.push(`/(tabs)/profile/${"author.id"}`)
+                          router.push(`/(tabs)/profile/${item.userProfile.id}`)
                         }
                       >
-                        {false ? (
+                        {item.userProfile.icon ? (
                           <Image
-                            source={{ uri: getImgWithTimestamp("author.icon") }}
+                            source={{
+                              uri: getImgWithTimestamp(item.userProfile.icon),
+                            }}
                             style={styles.imageProfile}
                           />
                         ) : (
@@ -238,12 +263,13 @@ export default function SearchScreen() {
                             color={Colors.dark.background}
                           />
                         )}
-                        <Text style={styles.userName}>{item.name}</Text>
+                        <Text style={styles.userName}>{item.username}</Text>
                       </TouchableOpacity>
                     </View>
 
                     <Text style={styles.followers}>
-                      {formatFollowers(item.followers)} seguidores
+                      {formatFollowers(item.userProfile.followersCount)}{" "}
+                      seguidores
                     </Text>
                   </View>
 
@@ -253,10 +279,15 @@ export default function SearchScreen() {
                       paddingHorizontal: 14,
                       paddingVertical: 8,
                     }}
-                    // onPress={handleFollow}
+                    onPress={() =>
+                      handleFollow({
+                        user_profile_id: item.userProfile.id,
+                        is_following: item.userProfile.isFollowing ?? false,
+                      })
+                    }
                   >
                     <Text style={{ color: Colors.light.white }}>
-                      {false ? "Seguindo" : "Seguir"}
+                      {item.userProfile.isFollowing ? "Seguindo" : "Seguir"}
                     </Text>
                   </Button>
                 </View>
