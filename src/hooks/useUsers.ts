@@ -11,7 +11,7 @@ type UserPageable = {
 };
 
 export const useUsers = ({ search }: { search: string }) => {
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } =
     useInfiniteQuery({
       queryKey: ["users", { search }],
       queryFn: async ({ pageParam }) =>
@@ -33,6 +33,7 @@ export const useUsers = ({ search }: { search: string }) => {
     data,
     fetchNextPage,
     hasNextPage,
-    isFetchingNextPage
+    isFetchingNextPage,
+    refetch
   };
 };

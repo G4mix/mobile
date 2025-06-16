@@ -1,4 +1,4 @@
-import { ScrollView, View } from "react-native";
+import { ScrollView } from "react-native";
 import { ProfileAboutCard } from "./ProfileAboutCard";
 import { Text } from "../Themed";
 import { Colors } from "@/constants/colors";
