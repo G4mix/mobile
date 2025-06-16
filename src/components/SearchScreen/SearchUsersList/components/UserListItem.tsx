@@ -79,7 +79,7 @@ export function UserListItem({ userId }: { userId: string }) {
 
     setIsLoading(true);
 
-    const data = await handleRequest({
+    const res = await handleRequest({
       requestFn: () =>
         api.post(
           `/follow?followingUserId=${userProfileId}&wantFollow=${isFollowing}`
@@ -88,7 +88,7 @@ export function UserListItem({ userId }: { userId: string }) {
       setIsLoading,
     });
 
-    if (!data) {
+    if (!res) {
       return;
     }
 
@@ -113,68 +113,69 @@ export function UserListItem({ userId }: { userId: string }) {
     }
   };
 
-  return !isLoading && data ? (
-    <View
-      style={{
-        width: "100%",
-        display: "flex",
-        justifyContent: "space-between",
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 16,
-        paddingBlock: 10,
-        paddingInline: 18,
-      }}
-    >
-      <View>
-        <View style={styles.leftSide}>
-          <TouchableOpacity
-            style={styles.postUserInformation}
-            onPress={() =>
-              router.push(`/(tabs)/profile/${data.userProfile.id}`)
-            }
-          >
-            {data.userProfile.icon ? (
-              <Image
-                source={{
-                  uri: getImgWithTimestamp(data.userProfile.icon),
-                }}
-                style={styles.imageProfile}
-              />
-            ) : (
-              <Icon
-                size={30}
-                name="user-circle"
-                color={Colors.dark.background}
-              />
-            )}
-            <Text style={styles.userName}>{data?.username}</Text>
-          </TouchableOpacity>
+  return (
+    !isLoading &&
+    data && (
+      <View
+        style={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "space-between",
+          flexDirection: "row",
+          alignItems: "center",
+          gap: 16,
+          paddingBlock: 10,
+          paddingInline: 18,
+        }}
+      >
+        <View>
+          <View style={styles.leftSide}>
+            <TouchableOpacity
+              style={styles.postUserInformation}
+              onPress={() =>
+                router.push(`/(tabs)/profile/${data.userProfile.id}`)
+              }
+            >
+              {data.userProfile.icon ? (
+                <Image
+                  source={{
+                    uri: getImgWithTimestamp(data.userProfile.icon),
+                  }}
+                  style={styles.imageProfile}
+                />
+              ) : (
+                <Icon
+                  size={30}
+                  name="user-circle"
+                  color={Colors.dark.background}
+                />
+              )}
+              <Text style={styles.userName}>{data?.username}</Text>
+            </TouchableOpacity>
+          </View>
+
+          <Text style={styles.followers}>
+            {formatFollowers(data?.userProfile.followersCount)} seguidores
+          </Text>
         </View>
 
-        <Text style={styles.followers}>
-          {formatFollowers(data?.userProfile.followersCount)} seguidores
-        </Text>
+        <Button
+          style={{
+            minWidth: "auto",
+            paddingHorizontal: 14,
+            paddingVertical: 8,
+          }}
+          onPress={() =>
+            handleFollow({
+              userProfileId: data.userProfile.id,
+            })
+          }
+        >
+          <Text style={{ color: Colors.light.white }}>
+            {isFollowing ? "Seguindo" : "Seguir"}
+          </Text>
+        </Button>
       </View>
-
-      <Button
-        style={{
-          minWidth: "auto",
-          paddingHorizontal: 14,
-          paddingVertical: 8,
-        }}
-        onPress={() =>
-          handleFollow({
-            userProfileId: data.userProfile.id,
-          })
-        }
-      >
-        <Text style={{ color: Colors.light.white }}>
-          {isFollowing ? "Seguindo" : "Seguir"}
-        </Text>
-      </Button>
-    </View>
-  ) : (
-    <></>
+    )
   );
 }
