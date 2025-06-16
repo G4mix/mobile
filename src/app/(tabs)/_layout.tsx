@@ -115,7 +115,6 @@ export default function TabLayout() {
       href: "/search",
       iconName: "magnifying-glass",
       size: 28,
-      disabled: true
     },
     {
       name: "create",

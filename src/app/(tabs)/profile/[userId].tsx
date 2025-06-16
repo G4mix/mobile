@@ -13,6 +13,7 @@ import { UserState } from "@/features/auth/userSlice";
 import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
 import { setActualTab } from "@/features/profile/profileSlice"; // <- sua action de redux
 import { ProfileHeaderLoading } from "@/components/ProfileScreen/ProfileHeaderLoading";
+import { ConfirmationModalProvider } from "@/context/ConfirmationModalContext";
 
 export default function ProfileScreen() {
   const dispatch = useDispatch();
