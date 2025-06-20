@@ -2,8 +2,8 @@ import { View, ScrollView } from "react-native";
 import { router } from "expo-router";
 import { Option } from "@/components/ConfigurationsScreen/Option";
 import { Colors } from "@/constants/colors";
-import { logout } from "@/features/auth/userSlice";
-import { removeItem } from "@/constants/storage";
+import { ConfirmationModalProvider } from "@/context/ConfirmationModalContext";
+import { Logout } from "@/components/ConfigurationsScreen/Logout";
 
 export default function ConfigurationsScreen() {
   return (
@@ -41,18 +41,9 @@ export default function ConfigurationsScreen() {
             onPress={() => router.push("/privacy-policy")}
           />
         </View>
-        <Option
-          position="full"
-          name="Sair da conta"
-          color="red"
-          onPress={() => {
-            logout();
-            removeItem("user");
-            removeItem("accessToken");
-            removeItem("refreshToken");
-            router.replace("/auth/signin");
-          }}
-        />
+        <ConfirmationModalProvider>
+          <Logout />
+        </ConfirmationModalProvider>
       </View>
     </ScrollView>
   );

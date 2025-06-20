@@ -135,7 +135,7 @@ export default function CreateScreen() {
     setValue("images", []);
     setValue("links", []);
     setValue("event", undefined);
-  }
+  };
 
   useEffect(() => {
     getPost();

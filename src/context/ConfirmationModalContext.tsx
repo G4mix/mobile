@@ -4,7 +4,7 @@ import { ConfirmationModal } from "@/components/ConfirmationModal";
 type ConfirmationProps = {
   title: string;
   content: string;
-  actionName: string;
+  actionName?: string;
   handleConfirm: () => void;
 };
 

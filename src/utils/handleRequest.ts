@@ -27,7 +27,6 @@ export const handleRequest = async <T>({
     return req;
   } catch (error) {
     setIsLoading(false);
-    console.log(error)
     if (ignoreErrors) return null;
     if (isAxiosError(error)) {
       const message = error.response?.data?.message;

@@ -14,6 +14,7 @@ import { handleRequest } from "@/utils/handleRequest";
 import { api } from "@/constants/api";
 import { useToast } from "@/hooks/useToast";
 import { debounce } from "@/utils/debounce";
+import { useConfirmationModal } from "@/hooks/useConfirmationModal";
 
 export function ProfileHeader({
   id,
@@ -42,6 +43,7 @@ export function ProfileHeader({
   onPressBackground?: () => void;
   onPressIcon?: () => void;
 }) {
+  const { showConfirmationModal } = useConfirmationModal();
   const [isLoading, setIsLoading] = useState(false);
   const [isFollowingState, setIsFollowing] = useState(isFollowing);
   const { showToast } = useToast();
@@ -79,8 +81,15 @@ export function ProfileHeader({
 
   const handleFollow = () => {
     if (isFollowingState) {
-      console.log('aaa')
-      
+      showConfirmationModal({
+        title: "Parar de seguir",
+        content: `Tem certeza de que deseja parar de seguir o usuário ${displayName || username}?`,
+        handleConfirm: () => {
+          setIsFollowing((prevValue) => !prevValue);
+          debouncedHandleFollow();
+        },
+        actionName: "Parar de seguir"
+      });
     } else {
       setIsFollowing((prevValue) => !prevValue);
       debouncedHandleFollow();

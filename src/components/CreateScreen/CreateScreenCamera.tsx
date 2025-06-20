@@ -182,11 +182,7 @@ export function CreateScreenCamera({
         flash={flash}
       >
         <TouchableOpacity style={styles.closePhoto} onPress={closeCamera}>
-          <Icon
-            size={24}
-            name="x-mark"
-            color="white"
-          />
+          <Icon size={24} name="x-mark" color="white" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.changeFlashIcon} onPress={changeFlash}>
           <Icon
