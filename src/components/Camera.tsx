@@ -8,9 +8,8 @@ import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { StyleSheet, TouchableOpacity, View, Modal } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { UseFormSetValue } from "react-hook-form";
-import { Icon } from "../Icon";
+import { Icon } from "./Icon";
 import { Colors } from "@/constants/colors";
-import { CreateScreenFormData } from "@/app/(tabs)/create";
 import { useToast } from "@/hooks/useToast";
 import { getDate } from "@/utils/getDate";
 
@@ -77,28 +76,35 @@ const styles = StyleSheet.create({
   }
 });
 
-type CreateScreenCameraProps = {
-  isCameraVisible: boolean;
-  setIsCameraVisible: Dispatch<SetStateAction<boolean>>;
-  setValue: UseFormSetValue<CreateScreenFormData>;
-  singleImage?: boolean;
-  valueKey?: string;
-  images?: CreateScreenFormData["images"];
+export type CameraImage = {
+  uri: string;
+  name: string;
+  type: string;
 };
 
-export function CreateScreenCamera({
+type CameraProps = {
+  isCameraVisible: boolean;
+  setIsCameraVisible: Dispatch<SetStateAction<boolean>>;
+  setValue: UseFormSetValue<{ [key: string]: CameraImage | CameraImage[] }>;
+  singleImage?: boolean;
+  valueKey?: string;
+  images?: CameraImage[];
+};
+
+export function Camera({
   isCameraVisible,
   setIsCameraVisible,
   setValue,
   valueKey = "images",
   singleImage = false,
   images
-}: CreateScreenCameraProps) {
+}: CameraProps) {
   const [facing, setFacing] = useState<CameraType>("back");
   const [flash, setFlash] = useState<FlashMode>("off");
   const [permission, requestPermission] = useCameraPermissions();
   const { showToast } = useToast();
   const cameraRef = useRef<CameraView>(null);
+  const MAX_SIZE = 1_000_000;
 
   if (!isCameraVisible) return null;
   if (!permission) {
@@ -124,6 +130,7 @@ export function CreateScreenCamera({
       showToast({ message: "O máximo de imagens é 8.", color: "warn" });
       return;
     }
+
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
       allowsMultipleSelection: !singleImage,
@@ -133,15 +140,32 @@ export function CreateScreenCamera({
     if (result.canceled) return;
 
     const currentImages = images || [];
-    const files: CreateScreenFormData["images"] = result.assets.map((img) => ({
-      uri: img.uri,
-      name: img.fileName || getDate().toISOString(),
-      type: img.mimeType || "image/jpeg"
-    }));
+
+    const fileChecks = await Promise.all(
+      result.assets.map(async (asset, i) => {
+        if (asset.fileSize && asset.fileSize > MAX_SIZE) {
+          showToast({
+            message: `A imagem ${i + 1} é muito pesada.`,
+            color: "warn"
+          });
+          return null;
+        }
+
+        return {
+          uri: asset.uri,
+          name: asset.fileName || getDate().toISOString(),
+          type: asset.mimeType || "image/jpeg"
+        };
+      })
+    );
+
+    const validFiles = fileChecks.filter(Boolean);
+
+    if (validFiles.length === 0) return;
 
     setValue(
       valueKey as any,
-      singleImage ? files[0] : [...currentImages, ...files]
+      (singleImage ? validFiles[0] : [...currentImages, ...validFiles]) as any
     );
     closeCamera();
   };
@@ -160,6 +184,20 @@ export function CreateScreenCamera({
       name: takedPhoto.fileName || getDate().toISOString(),
       type: takedPhoto.mimeType || "image/jpeg"
     };
+    try {
+      const response = await fetch(takedPhoto.uri);
+      const blob = await response.blob();
+      if (blob.size > MAX_SIZE) {
+        showToast({
+          message: `A imagem é muito pesada.`,
+          color: "warn"
+        });
+        closeCamera();
+        return;
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-empty
+    } catch (_error) {}
+
     setValue(
       valueKey as any,
       singleImage ? parsedTakedPhoto : [...currentImages, parsedTakedPhoto]

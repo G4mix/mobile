@@ -16,7 +16,7 @@ import { CreateScreenPostLink } from "@/components/CreateScreen/CreateScreenPost
 import { CreateScreenAddLink } from "@/components/CreateScreen/CreateScreenAddLink";
 import { CreateScreenContentActions } from "@/components/CreateScreen/CreateScreenContentActions";
 import { IconName } from "@/components/Icon";
-import { CreateScreenCamera } from "@/components/CreateScreen/CreateScreenCamera";
+import { Camera, CameraImage } from "@/components/Camera";
 import { CreateScreenImage } from "@/components/CreateScreen/CreateScreenImage";
 import { api } from "@/constants/api";
 import { handleRequest } from "@/utils/handleRequest";
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
 export type CreateScreenFormData = {
   title?: string;
   content?: string;
-  images?: { uri: string; name: string; type: string }[];
+  images?: CameraImage[];
   links?: string[];
   tags?: string[];
   event?: Partial<PostType["event"]>;
@@ -326,10 +326,10 @@ export default function CreateScreen() {
               setValue={setValue}
               links={links}
             />
-            <CreateScreenCamera
+            <Camera
               isCameraVisible={isCameraVisible}
               setIsCameraVisible={setIsCameraVisible}
-              setValue={setValue}
+              setValue={setValue as any}
               images={images}
             />
           </View>

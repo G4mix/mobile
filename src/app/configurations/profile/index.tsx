@@ -11,7 +11,6 @@ import { ProfileHeader } from "@/components/ProfileScreen/ProfileHeader";
 import { RootState } from "@/constants/reduxStore";
 import { Button } from "@/components/Button";
 import { CreateScreenPostLink } from "@/components/CreateScreen/CreateScreenPostLink";
-import { CreateScreenCamera } from "@/components/CreateScreen/CreateScreenCamera";
 import { timeout } from "@/utils/timeout";
 import { objectToFormData } from "@/utils/objectToFormData";
 import { useToast } from "@/hooks/useToast";
@@ -24,6 +23,8 @@ import { SpinLoading } from "@/components/SpinLoading";
 import { SuccessModal } from "@/components/SuccessModal";
 import { getDate } from "@/utils/getDate";
 import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
+import { Camera } from "@/components/Camera";
+import { ConfirmationModalProvider } from "@/context/ConfirmationModalContext";
 
 const styles = StyleSheet.create({
   button: {
@@ -186,13 +187,15 @@ export default function ConfigProfileScreen() {
             </Text>
           </Button>
         </View>
-        <ProfileHeader
-          id={user.id}
-          icon={iconUri}
-          backgroundImage={bgUri}
-          onPressBackground={handlePressProfileBackground}
-          onPressIcon={handlePressProfileIcon}
-        />
+        <ConfirmationModalProvider>
+          <ProfileHeader
+            id={user.id}
+            icon={iconUri}
+            backgroundImage={bgUri}
+            onPressBackground={handlePressProfileBackground}
+            onPressIcon={handlePressProfileIcon}
+          />
+        </ConfirmationModalProvider>
         <Input
           placeholder={
             user.userProfile.displayName ||
@@ -259,7 +262,7 @@ export default function ConfigProfileScreen() {
             ))}
           </View>
         </View>
-        <CreateScreenCamera
+        <Camera
           isCameraVisible={isCameraVisible}
           setIsCameraVisible={setIsCameraVisible}
           setValue={setValue as any}
