@@ -32,6 +32,7 @@ type InputProps = {
   onSubmitEditing?: (
     e: NativeSyntheticEvent<TextInputSubmitEditingEventData>
   ) => void;
+  editable?: boolean;
   value?: string;
 };
 
@@ -95,6 +96,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       label,
       returnKeyType,
       onSubmitEditing,
+      editable,
       value
     },
     ref
@@ -164,6 +166,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref as any}
           returnKeyType={returnKeyType}
           onSubmitEditing={onSubmitEditing}
+          editable={editable}
           value={value}
         />
       </View>
