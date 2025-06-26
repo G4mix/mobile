@@ -60,7 +60,8 @@ const styles = StyleSheet.create({
     width: "100%"
   },
   root: {
-    gap: 16
+    backgroundColor: "transparent",
+    gap: 16,
   }
 });
 

@@ -101,6 +101,30 @@ function RootLayoutNav() {
               }}
             />
             <Stack.Screen
+              name="configurations/email"
+              options={{
+                presentation: "modal",
+                headerShown: true,
+                header: customHeader("Atualize seu E-mail")
+              }}
+            />
+            <Stack.Screen
+              name="configurations/username"
+              options={{
+                presentation: "modal",
+                headerShown: true,
+                header: customHeader("Atualize seu nome")
+              }}
+            />
+            <Stack.Screen
+              name="configurations/password"
+              options={{
+                presentation: "modal",
+                headerShown: true,
+                header: customHeader("Atualize sua Senha")
+              }}
+            />
+            <Stack.Screen
               name="configurations/profile/index"
               options={{ presentation: "modal", headerShown: false }}
             />
