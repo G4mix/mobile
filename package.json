@@ -31,7 +31,7 @@
     "@rneui/themed": "^4.0.0-rc.8",
     "@tanstack/react-query": "^5.72.1",
     "axios": "^1.8.3",
-    "expo": "~52.0.46",
+    "expo": "~52.0.47",
     "expo-blur": "~14.0.3",
     "expo-calendar": "~14.0.6",
     "expo-camera": "~16.0.18",
