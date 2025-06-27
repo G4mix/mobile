@@ -48,8 +48,8 @@ export function CreateScreenHeader({
     (images && images.length > 0) ||
     (links && links.length > 0) ||
     (event &&
-      isValidEventSubject(event.subject) === "valid" &&
-      isValidEventDescription(event.description) === "valid")
+      (isValidEventSubject(event.subject) === "valid" ||
+        isValidEventDescription(event.description) === "valid"))
   );
 
   return (

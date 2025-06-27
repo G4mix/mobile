@@ -78,7 +78,7 @@ export function PostHeader({
   const options: Option[] = [
     {
       name: "Editar",
-      iconName: "check",
+      iconName: "pencil",
       onPress: ({ selectedPost }: any) => {
         router.push(`/create?postId=${selectedPost}`);
       }

@@ -164,6 +164,7 @@ export default function CreateScreen() {
       tags,
       event
     });
+
     const data = await handleRequest<PostType>({
       requestFn: async () =>
         api[post && postId ? "patch" : "post"](

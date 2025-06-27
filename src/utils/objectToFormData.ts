@@ -29,7 +29,7 @@ export const objectToFormData = (
           formData.append(key, JSON.stringify(value));
         }
       } else if (typeof value === "object") {
-        formData.append(key, value);
+        formData.append(key, JSON.stringify(value));
       } else {
         formData.append(key, value);
       }
