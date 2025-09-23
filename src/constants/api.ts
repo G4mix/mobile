@@ -9,7 +9,7 @@ const globalForAxios = globalThis as unknown as {
 
 if (!globalForAxios.axiosInstance) {
   globalForAxios.axiosInstance = axios.create({
-    baseURL: `https://${env.EXPO_PUBLIC_API_URL}/api/v1`
+    baseURL: `https://${env.EXPO_PUBLIC_API_URL}/v1`
   });
 }
 
