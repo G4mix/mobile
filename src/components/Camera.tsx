@@ -4,14 +4,15 @@ import {
   useCameraPermissions,
   FlashMode
 } from "expo-camera";
-import { Dispatch, SetStateAction, useRef, useState } from "react";
-import { StyleSheet, TouchableOpacity, View, Modal } from "react-native";
+import { Dispatch, SetStateAction, useRef, useState, useEffect } from "react";
+import { StyleSheet, TouchableOpacity, View, Modal, Animated, Easing } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { UseFormSetValue } from "react-hook-form";
 import { Icon } from "./Icon";
 import { Colors } from "@/constants/colors";
 import { useToast } from "@/hooks/useToast";
 import { getDate } from "@/utils/getDate";
+import { Accelerometer } from "expo-sensors";
 
 const styles = StyleSheet.create({
   camera: {
@@ -105,6 +106,45 @@ export function Camera({
   const { showToast } = useToast();
   const cameraRef = useRef<CameraView>(null);
   const MAX_SIZE = 1_000_000;
+
+  const [orientation, setOrientation] = useState("portrait");
+  const rotation = useRef(new Animated.Value(0)).current;
+
+  const rotateIcon = (orientation: string) => {
+    let toValue = 0;
+    switch (orientation) {
+      case "landscape-left": toValue = -90; break;
+      case "landscape-right": toValue = 90; break;
+      case "portrait-upside-down": toValue = 180; break;
+      default: toValue = 0;
+    }
+    Animated.timing(rotation, {
+      toValue,
+      duration: 300,
+      easing: Easing.out(Easing.ease),
+      useNativeDriver: true,
+    }).start();
+  };
+
+  useEffect(() => {
+    if (!isCameraVisible) return;
+
+    Accelerometer.setUpdateInterval(200);
+    const subscription = Accelerometer.addListener(({ x, y, z }) => {
+      let newOrientation = "portrait";
+
+      if (Math.abs(x) > Math.abs(y)) {
+        newOrientation = x > 0 ? "landscape-right" : "landscape-left";
+      } else {
+        newOrientation = y > 0 ? "portrait" : "portrait-upside-down";
+      }
+
+      setOrientation(newOrientation);
+      rotateIcon(newOrientation);
+    });
+
+    return () => subscription.remove();
+  }, [isCameraVisible]);
 
   if (!isCameraVisible) return null;
   if (!permission) {
@@ -211,6 +251,11 @@ export function Camera({
     );
   };
 
+  const rotateInterpolate = rotation.interpolate({
+    inputRange: [-180, 180],
+    outputRange: ["-180deg", "180deg"]
+  });
+
   return (
     <Modal style={styles.container}>
       <CameraView
@@ -220,23 +265,19 @@ export function Camera({
         flash={flash}
       >
         <TouchableOpacity style={styles.closePhoto} onPress={closeCamera}>
-          <Icon size={24} name="x-mark" color="white" />
+          <Animated.View style={{ transform: [{ rotate: rotateInterpolate }] }}>
+            <Icon size={24} name="x-mark" color="white" />
+          </Animated.View>
         </TouchableOpacity>
         <TouchableOpacity style={styles.changeFlashIcon} onPress={changeFlash}>
-          <Icon
-            size={24}
-            name={
-              flash === "off"
-                ? "bolt-disabled"
-                : flash === "on"
-                  ? "bolt-enabled"
-                  : "bolt-auto-enabled"
-            }
-            color="white"
-          />
+          <Animated.View style={{ transform: [{ rotate: rotateInterpolate }] }}>
+            <Icon size={24} name={ flash === "off" ? "bolt-disabled" : flash === "on" ? "bolt-enabled" : "bolt-auto-enabled"} color="white" />
+          </Animated.View>
         </TouchableOpacity>
         <TouchableOpacity style={styles.pickImageRoot} onPress={pickImageAsync}>
-          <Icon size={24} name="photo" color="white" />
+          <Animated.View style={{ transform: [{ rotate: rotateInterpolate }] }}>
+            <Icon size={24} name="photo" color="white" />
+          </Animated.View>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.printButtonRoot}
@@ -247,7 +288,9 @@ export function Camera({
           </View>
         </TouchableOpacity>
         <TouchableOpacity style={styles.photoFlip} onPress={toggleCameraFacing}>
-          <Icon size={24} name="arrow-path" color="white" />
+          <Animated.View style={{ transform: [{ rotate: rotateInterpolate }] }}>
+            <Icon size={24} name="arrow-path" color="white" />
+          </Animated.View>
         </TouchableOpacity>
       </CameraView>
     </Modal>
