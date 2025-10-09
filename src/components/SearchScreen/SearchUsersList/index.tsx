@@ -22,7 +22,7 @@ function ItemSeparator() {
 }
 
 const renderUserItem = ({ item }: { item: UserState }) => (
-  <UserListItem userId={item.userProfile.id} />
+  <UserListItem userId={item.id} />
 );
 
 export function SearchUsersList({ users }: { users: UserState[] }) {

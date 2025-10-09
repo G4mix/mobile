@@ -68,7 +68,7 @@ export default function LoginScreen() {
     const data = await handleRequest<{
       accessToken: string;
       refreshToken: string;
-      user: UserState;
+      userProfile: UserState;
     }>({
       requestFn: async () =>
         api.post("/auth/signin", { password, email }, {
@@ -78,8 +78,9 @@ export default function LoginScreen() {
       setIsLoading
     });
     if (!data) return;
-    dispatch(setUser(data.user));
-    await setItem("user", JSON.stringify(data.user));
+
+    dispatch(setUser(data.userProfile));
+    await setItem("user", JSON.stringify(data.userProfile));
     await setItem("accessToken", data.accessToken);
     await setItem("refreshToken", data.refreshToken);
     router.replace("/feed");

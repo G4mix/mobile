@@ -2,43 +2,39 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface UserState {
   id: string;
-  username: string;
-  email: string;
-  verified: boolean;
-  created_at: string;
-  userProfile: {
+  displayName: string | null;
+  icon?: string | null;
+  backgroundImage?: string | null;
+  autobiography?: string | null;
+  followersCount: number;
+  followingCount: number;
+  isFollowing?: boolean;
+  links: string[];
+  user: {
     id: string;
-    displayName: string | null;
-    icon?: string | null;
-    backgroundImage?: string | null;
-    autobiography?: string | null;
-    followersCount: number;
-    followingCount: number;
-    isFollowing?: boolean;
-    links: {
-      id: string;
-      url: string;
-      userProfileId: string;
-    }[];
+    username: string;
+    email: string;
+    verified: boolean;
+    created_at: string;
   };
 }
 
 const initialState: UserState = {
   id: "",
-  username: "",
-  created_at: "",
-  userProfile: {
+  displayName: null,
+  autobiography: null,
+  backgroundImage: null,
+  followersCount: 0,
+  followingCount: 0,
+  links: [],
+  icon: null,
+  user: {
     id: "",
-    displayName: null,
-    autobiography: null,
-    backgroundImage: null,
-    followersCount: 0,
-    followingCount: 0,
-    links: [],
-    icon: null
-  },
-  verified: false,
-  email: ""
+    username: "",
+    created_at: "",
+    verified: false,
+    email: ""
+  }
 };
 
 const userSlice = createSlice({
@@ -46,29 +42,33 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action: PayloadAction<UserState>) => {
-      state.created_at = action.payload.created_at;
       state.id = action.payload.id;
-      state.userProfile = action.payload.userProfile;
-      state.email = action.payload.email;
-      state.username = action.payload.username;
-      state.verified = action.payload.verified;
+      state.displayName = action.payload.displayName;
+      state.icon = action.payload.icon;
+      state.autobiography = action.payload.autobiography;
+      state.followersCount = action.payload.followersCount;
+      state.followingCount = action.payload.followingCount;
+      state.backgroundImage = action.payload.backgroundImage;
+      state.links = action.payload.links;
+      state.user = action.payload.user;
     },
     logout: (state) => {
-      state.created_at = "";
       state.id = "";
-      state.userProfile = {
+      state.displayName = null;
+      state.icon = null;
+      state.autobiography = null;
+      state.followersCount = 0;
+      state.followingCount = 0;
+      state.backgroundImage = null;
+      state.links = [];
+
+      state.user = {
+        created_at: "",
         id: "",
-        displayName: null,
-        icon: null,
-        autobiography: null,
-        followersCount: 0,
-        followingCount: 0,
-        backgroundImage: null,
-        links: []
+        email: "",
+        username: "",
+        verified: false
       };
-      state.email = "";
-      state.username = "";
-      state.verified = false;
     }
   }
 });

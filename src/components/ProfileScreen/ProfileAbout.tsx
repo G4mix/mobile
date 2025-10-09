@@ -8,11 +8,8 @@ import { UserState } from "@/features/auth/userSlice";
 
 export function ProfileAbout({ user }: { user?: UserState }) {
   const { showToast } = useToast();
-  const handleLoadLinkError = (
-    link: UserState["userProfile"]["links"][number]
-  ) => {
+  const handleLoadLinkError = () => {
     if (!user) return;
-    user.userProfile.links.filter((l) => l.url !== link.url);
     showToast({
       message:
         "Houve um erro ao tentar encontrar informações sobre o link fornecido!",
@@ -29,17 +26,17 @@ export function ProfileAbout({ user }: { user?: UserState }) {
             fontSize: 16
           }}
         >
-          {user.userProfile.autobiography || "Ainda não tem uma bio..."}
+          {user.autobiography || "Ainda não tem uma bio..."}
         </Text>
       </ProfileAboutCard>
-      {user.userProfile.links.length !== 0 && (
+      {user.links.length !== 0 && (
         <ProfileAboutCard title="Links">
-          {user.userProfile.links.map((link) => (
+          {user.links.map((link) => (
             <PostLink
-              url={link.url}
+              url={link}
               noHorizontalPadding
-              key={`user-link-${link.id}`}
-              handleError={() => handleLoadLinkError(link)}
+              key={`user-link-${link}`}
+              handleError={handleLoadLinkError}
             />
           ))}
         </ProfileAboutCard>

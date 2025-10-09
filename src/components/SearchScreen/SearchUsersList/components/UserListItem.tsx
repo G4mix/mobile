@@ -67,7 +67,7 @@ export function UserListItem({ userId }: { userId: string }) {
   }, [isError]);
 
   useEffect(() => {
-    if (isSuccess) setIsFollowing(data.userProfile.isFollowing ?? false);
+    if (isSuccess) setIsFollowing(data.isFollowing ?? false);
   }, [isSuccess]);
 
   const executeFollow = async ({
@@ -132,14 +132,12 @@ export function UserListItem({ userId }: { userId: string }) {
           <View style={styles.leftSide}>
             <TouchableOpacity
               style={styles.postUserInformation}
-              onPress={() =>
-                router.push(`/(tabs)/profile/${data.userProfile.id}`)
-              }
+              onPress={() => router.push(`/(tabs)/profile/${data.id}`)}
             >
-              {data.userProfile.icon ? (
+              {data.icon ? (
                 <Image
                   source={{
-                    uri: getImgWithTimestamp(data.userProfile.icon)
+                    uri: getImgWithTimestamp(data.icon)
                   }}
                   style={styles.imageProfile}
                 />
@@ -150,12 +148,12 @@ export function UserListItem({ userId }: { userId: string }) {
                   color={Colors.dark.background}
                 />
               )}
-              <Text style={styles.userName}>{data?.username}</Text>
+              <Text style={styles.userName}>{data?.user.username}</Text>
             </TouchableOpacity>
           </View>
 
           <Text style={styles.followers}>
-            {formatFollowers(data?.userProfile.followersCount)} seguidores
+            {formatFollowers(data?.followersCount)} seguidores
           </Text>
         </View>
 
@@ -167,7 +165,7 @@ export function UserListItem({ userId }: { userId: string }) {
           }}
           onPress={() =>
             handleFollow({
-              userProfileId: data.userProfile.id
+              userProfileId: data.id
             })
           }
         >

@@ -131,7 +131,7 @@ export default function TabLayout() {
     },
     {
       name: "profile",
-      href: `/profile/${user.userProfile.id}`,
+      href: `/profile/${user.id}`,
       iconName: "user-circle",
       size: 28
     }
@@ -153,8 +153,8 @@ export default function TabLayout() {
               name={iconName}
               size={size}
               userIcon={
-                href.toString().startsWith("/profile") && user.userProfile.icon
-                  ? user.userProfile.icon
+                href.toString().startsWith("/profile") && user.icon
+                  ? user.icon
                   : undefined
               }
             />

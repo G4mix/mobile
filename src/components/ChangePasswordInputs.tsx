@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   },
   root: {
     backgroundColor: "transparent",
-    gap: 16,
+    gap: 16
   }
 });
 

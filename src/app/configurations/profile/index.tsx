@@ -73,24 +73,24 @@ export default function ConfigProfileScreen() {
   const date = getDate().toISOString();
   const { watch, setValue, handleSubmit } = useForm<UpdateUserFormData>({
     defaultValues: {
-      displayName: user.userProfile.displayName || "",
-      autobiography: user.userProfile.autobiography || "",
-      backgroundImage: user.userProfile.backgroundImage
+      displayName: user.displayName || "",
+      autobiography: user.autobiography || "",
+      backgroundImage: user.backgroundImage
         ? {
-            uri: user.userProfile.backgroundImage,
-            name: `backgroundImage-${date}.${user.userProfile.backgroundImage.split(".").pop()?.split("?")[0] || "png"}`,
-            type: `image/${user.userProfile.backgroundImage.split(".").pop()?.split("?")[0] || "png"}`
+            uri: user.backgroundImage,
+            name: `backgroundImage-${date}.${user.backgroundImage.split(".").pop()?.split("?")[0] || "png"}`,
+            type: `image/${user.backgroundImage.split(".").pop()?.split("?")[0] || "png"}`
           }
         : null,
 
-      icon: user.userProfile.icon
+      icon: user.icon
         ? {
-            uri: user.userProfile.icon,
-            name: `user-icon-${date}.${user.userProfile.icon.split(".").pop()?.split("?")[0] || "png"}`,
-            type: `image/${user.userProfile.icon.split(".").pop()?.split("?")[0] || "png"}`
+            uri: user.icon,
+            name: `user-icon-${date}.${user.icon.split(".").pop()?.split("?")[0] || "png"}`,
+            type: `image/${user.icon.split(".").pop()?.split("?")[0] || "png"}`
           }
         : null,
-      links: user.userProfile.links.map((l) => l.url) || []
+      links: user.links
     }
   });
 
@@ -103,14 +103,11 @@ export default function ConfigProfileScreen() {
   }: UpdateUserFormData) => {
     if (isLoading) return;
     if (
-      user.userProfile.autobiography === autobiography &&
-      user.userProfile.backgroundImage === backgroundImage?.uri &&
-      user.userProfile.displayName === displayName &&
-      user.userProfile.icon === icon?.uri &&
-      isArrayEqual(
-        user.userProfile.links.map((l) => l.url),
-        links
-      )
+      user.autobiography === autobiography &&
+      user.backgroundImage === backgroundImage?.uri &&
+      user.displayName === displayName &&
+      user.icon === icon?.uri &&
+      isArrayEqual(user.links, links)
     ) {
       router.back();
       setIsLoading(false);
@@ -143,7 +140,7 @@ export default function ConfigProfileScreen() {
     setIsSuccessVisible(true);
     await timeout(1000);
     setIsSuccessVisible(false);
-    router.push(`/profile/${user.userProfile.id}`);
+    router.push(`/profile/${user.id}`);
   };
   const onSubmit = handleSubmit(updateUser);
 
@@ -198,8 +195,7 @@ export default function ConfigProfileScreen() {
         </ConfirmationModalProvider>
         <Input
           placeholder={
-            user.userProfile.displayName ||
-            "Como quer que as pessoas te chamem?"
+            user.displayName || "Como quer que as pessoas te chamem?"
           }
           label="Nome de Usuário"
           labelColor={Colors.light.russianViolet}
@@ -215,9 +211,7 @@ export default function ConfigProfileScreen() {
             Descrição
           </Text>
           <TextArea
-            placeholder={
-              user.userProfile.autobiography || "Conte-nos um pouco sobre você"
-            }
+            placeholder={user.autobiography || "Conte-nos um pouco sobre você"}
             value={autobiography}
             onChangeText={(value) => setValue("autobiography", value)}
             style={{ minHeight: 136, color: Colors.light.tropicalIndigo }}

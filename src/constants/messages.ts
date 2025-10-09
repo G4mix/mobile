@@ -1,14 +1,6 @@
 export const messages = {
   INVALID_TOKEN: "O token passado é inválido!",
-  WRONG_PASSWORD_ONCE: "Você errou a senha uma vez!",
-  WRONG_PASSWORD_TWICE:
-    'Você errou a senha duas vezes! Caso tenha esquecido sua senha, redefina-a clicando em "esqueci minha senha".',
-  WRONG_PASSWORD_THREE_TIMES:
-    "Você errou a senha 3 vezes! Apenas mais duas chances.",
-  WRONG_PASSWORD_FOUR_TIMES:
-    "Você errou a senha 4 vezes! Se errar novamente seu login será temporariamente bloquedo.",
-  WRONG_PASSWORD_FIVE_TIMES:
-    "Você errou a senha 5 vezes! Seu login foi bloqueado temporariamente, tente novamente mais tarde.",
+  INVALID_EMAIL_OR_PASSWORD: "E-mail ou senha inválidos!",
   INVALID_NAME: "O nome passado é inválido!",
   INVALID_EMAIL: "O e-mail informado é inválido!",
   INVALID_PASSWORD: "A senha informada é inválida!",

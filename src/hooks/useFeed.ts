@@ -14,15 +14,13 @@ type PostPageable = {
 
 export const useFeed = ({ authorId }: { authorId?: string } = {}) => {
   const lastFetchTime = useSelector((state: any) => state.feed.lastFetchTime);
-  const actualTab = useSelector((state: any) => state.feed.actualTab);
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
-      queryKey: ["posts", { actualTab, lastFetchTime, authorId }],
+      queryKey: ["ideas", { lastFetchTime, authorId }],
       queryFn: async ({ pageParam }) =>
         (
-          await api.get<PostPageable>("/post", {
+          await api.get<PostPageable>("/idea", {
             params: {
-              tab: actualTab,
               page: pageParam,
               since: lastFetchTime,
               authorId,

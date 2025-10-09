@@ -244,7 +244,7 @@ export default function CreateScreen() {
     );
   };
 
-  if (post && post.author.id !== user.userProfile.id) {
+  if (post && post.author.id !== user.id) {
     router.push("/feed");
     return null;
   }

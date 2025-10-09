@@ -9,11 +9,11 @@ import { Text, View } from "../Themed";
 import { Icon, IconName } from "@/components/Icon";
 
 const styles = StyleSheet.create({
-  arrowedView: {   
+  arrowedView: {
     display: "flex",
     flexDirection: "row",
     flex: 1,
-    justifyContent: "flex-end",
+    justifyContent: "flex-end"
   },
   end: {
     borderBottomLeftRadius: 8,
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 10,
     paddingHorizontal: 16,
-    paddingVertical: 24,
+    paddingVertical: 24
   },
   start: {
     borderTopLeftRadius: 8,
@@ -66,22 +66,16 @@ export function Option({
           styles[position]
         ]}
       >
-        {icon !== "undefined" && <Icon
-          size={24}
-          name={icon}
-          color={
-            Colors.light.russianViolet
-          }
-        />}
+        {icon !== "undefined" && (
+          <Icon size={24} name={icon} color={Colors.light.russianViolet} />
+        )}
         <Text style={{ color: Colors.light[color], fontSize: 16 }}>{name}</Text>
         {icon !== "undefined" && (
           <View style={styles.arrowedView}>
             <Icon
               size={24}
               name="chevron-right"
-              color={
-                Colors.light.russianViolet
-              }
+              color={Colors.light.russianViolet}
             />
           </View>
         )}

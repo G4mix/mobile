@@ -42,9 +42,9 @@ export function CreateScreenAuthor() {
 
   return (
     <View style={styles.postUserInformation}>
-      {user.userProfile.icon ? (
+      {user.icon ? (
         <Image
-          source={{ uri: getImgWithTimestamp(user?.userProfile?.icon) }}
+          source={{ uri: getImgWithTimestamp(user?.icon) }}
           style={styles.imageProfile}
         />
       ) : (
@@ -74,7 +74,7 @@ export function CreateScreenAuthor() {
           />
         </View>
       )}
-      <Text style={styles.userName}>{user.username}</Text>
+      <Text style={styles.userName}>{user.user.username}</Text>
     </View>
   );
 }

@@ -38,8 +38,8 @@ export function RenderUserSuggestions({
               focusable={false}
               onPress={() =>
                 onSuggestionPress({
-                  id: user.userProfile.id,
-                  name: user.username
+                  id: user.id,
+                  name: user.user.username
                 })
               }
               style={{
@@ -50,9 +50,9 @@ export function RenderUserSuggestions({
                 borderColor: Colors.light.periwinkle
               }}
             >
-              {user.userProfile.icon ? (
+              {user.icon ? (
                 <Image
-                  source={{ uri: getImgWithTimestamp(user.userProfile.icon) }}
+                  source={{ uri: getImgWithTimestamp(user.icon) }}
                   style={styles.imageProfile}
                 />
               ) : (
@@ -64,9 +64,9 @@ export function RenderUserSuggestions({
               )}
               <View style={{ flexDirection: "column", gap: 4 }}>
                 <Text style={{ fontWeight: "bold" }}>
-                  {user.userProfile.displayName || user.username}
+                  {user.displayName || user.user.username}
                 </Text>
-                {user.userProfile.displayName && <Text>{user.username}</Text>}
+                {user.displayName && <Text>{user.user.username}</Text>}
               </View>
             </Pressable>
           ))}

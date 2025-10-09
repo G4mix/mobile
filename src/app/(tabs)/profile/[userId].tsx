@@ -75,17 +75,15 @@ export default function ProfileScreen() {
       <ConfirmationModalProvider>
         {!isLoading && data && (
           <ProfileHeader
-            isFollowing={data.userProfile.isFollowing}
-            icon={getImgWithTimestamp(data.userProfile.icon!)}
-            displayName={data.userProfile.displayName}
-            backgroundImage={getImgWithTimestamp(
-              data.userProfile.backgroundImage!
-            )}
-            username={data.username}
+            isFollowing={data.isFollowing}
+            icon={getImgWithTimestamp(data.icon!)}
+            displayName={data.displayName}
+            backgroundImage={getImgWithTimestamp(data.backgroundImage!)}
+            username={data.user.username}
             id={data.id}
-            userProfileId={data.userProfile.id}
-            followersCount={data.userProfile.followersCount}
-            followingCount={data.userProfile.followingCount}
+            userProfileId={data.id}
+            followersCount={data.followersCount}
+            followingCount={data.followingCount}
             onlyView
           />
         )}

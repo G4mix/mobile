@@ -67,7 +67,7 @@ export function PostHeader({
   setIsDeleting
 }: PostHeaderProps) {
   const userProfileId = useSelector(
-    (state: { user: UserState }) => state.user.userProfile.id
+    (state: { user: UserState }) => state.user.id
   );
   const { showConfirmationModal } = useConfirmationModal();
   const { showFloatingOptions } = useFloatingOptions();

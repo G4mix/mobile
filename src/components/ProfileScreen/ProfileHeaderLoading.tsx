@@ -8,7 +8,7 @@ import { RootState } from "@/constants/reduxStore";
 
 export function ProfileHeaderLoading({ id }: { id?: string }) {
   const user = useSelector((state: RootState) => state.user);
-  const isOwnProfile = user.userProfile.id === id;
+  const isOwnProfile = user.id === id;
   return (
     <View
       style={{

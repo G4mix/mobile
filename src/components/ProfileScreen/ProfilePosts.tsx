@@ -6,7 +6,6 @@ import { ConfirmationModalProvider } from "@/context/ConfirmationModalContext";
 import { Post } from "../Post";
 import { PostLoading } from "../Post/PostLoading";
 import { InView } from "../InView";
-import { useViewPosts } from "@/hooks/useViewPosts";
 import { useFeed } from "@/hooks/useFeed";
 import { styles } from "@/app/(tabs)/feed";
 
@@ -15,11 +14,6 @@ export function ProfilePosts({ userId }: { userId: string }) {
     authorId: userId
   });
   const posts = data?.pages?.flatMap((page) => page?.data || []) || [];
-  const initialViewedPostIds = posts.filter((p) => p.isViewed).map((p) => p.id);
-
-  const { alreadyVisualized, addVisualizedPost } = useViewPosts({
-    initialViewedPostIds
-  });
 
   return (
     <ScrollView style={styles.scroll}>
@@ -33,12 +27,12 @@ export function ProfilePosts({ userId }: { userId: string }) {
               >
                 <Post
                   post={post}
-                  onInView={() => {
-                    if (post) addVisualizedPost(post.id);
-                  }}
-                  alreadyVisualized={
-                    post ? alreadyVisualized.current.has(post.id) : false
-                  }
+                  // onInView={() => {
+                  //   if (post) addVisualizedPost(post.id);
+                  // }}
+                  // alreadyVisualized={
+                  //   post ? alreadyVisualized.current.has(post.id) : false
+                  // }
                 />
               </TouchableOpacity>
             ))}

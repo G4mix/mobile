@@ -6,11 +6,9 @@ import {
   Dimensions
 } from "react-native";
 import { router } from "expo-router";
-import { ContentTabs, Tab } from "@/components/ContentTabs";
 import { Post } from "@/components/Post";
 import { useFeed } from "@/hooks/useFeed";
 import { InView } from "@/components/InView";
-import { useViewPosts } from "@/hooks/useViewPosts";
 import { FloatingOptionsProvider } from "@/context/FloatingOptionsContext";
 import { ConfirmationModalProvider } from "@/context/ConfirmationModalContext";
 import { PostLoading } from "@/components/Post/PostLoading";
@@ -38,35 +36,10 @@ export const styles = StyleSheet.create({
 
 export default function FeedScreen() {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useFeed();
-
   const posts = data?.pages?.flatMap((page) => page?.data || []) || [];
-
-  const initialViewedPostIds = posts.filter((p) => p.isViewed).map((p) => p.id);
-
-  const { alreadyVisualized, addVisualizedPost } = useViewPosts({
-    initialViewedPostIds
-  });
-
-  const tabs: Tab<"feed">[] = [
-    {
-      name: "Destaques",
-      disabled: true,
-      key: "following"
-    },
-    {
-      name: "Recomendações",
-      key: "recommendations"
-    },
-    {
-      name: "Seguindo",
-      disabled: true,
-      key: "highlights"
-    }
-  ];
 
   return (
     <View style={styles.container}>
-      <ContentTabs tabs={tabs} tabType="feed" />
       <ScrollView style={styles.scroll}>
         <View style={styles.posts}>
           <FloatingOptionsProvider>
@@ -78,12 +51,12 @@ export default function FeedScreen() {
                 >
                   <Post
                     post={post}
-                    onInView={() => {
-                      if (post) addVisualizedPost(post.id);
-                    }}
-                    alreadyVisualized={
-                      post ? alreadyVisualized.current.has(post.id) : false
-                    }
+                    // onInView={() => {
+                    //   if (post) addVisualizedPost(post.id);
+                    // }}
+                    // alreadyVisualized={
+                    //   post ? alreadyVisualized.current.has(post.id) : false
+                    // }
                   />
                 </TouchableOpacity>
               ))}
