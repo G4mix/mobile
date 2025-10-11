@@ -42,7 +42,7 @@ export type Tab<T extends string = "feed"> = {
   key: T extends "feed"
     ? "following" | "recommendations" | "highlights"
     : T extends "profile"
-      ? "posts" | "about"
+      ? "ideas" | "about"
       : undefined;
   disabled?: boolean;
 };

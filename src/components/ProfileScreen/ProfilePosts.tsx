@@ -14,7 +14,6 @@ export function ProfilePosts({ userId }: { userId: string }) {
     authorId: userId
   });
   const posts = data?.pages?.flatMap((page) => page?.data || []) || [];
-
   return (
     <ScrollView style={styles.scroll}>
       <View style={styles.posts}>

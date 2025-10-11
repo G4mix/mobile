@@ -4,7 +4,7 @@ const profileSlice = createSlice({
   name: "profile",
   initialState: {
     lastFetchTime: new Date().toISOString(),
-    actualTab: "posts"
+    actualTab: "ideas"
   },
   reducers: {
     setActualTab: (state, action) => {

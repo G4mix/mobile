@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
 });
 
 export default function TabLayout() {
-  const user = useSelector((state: RootState) => state.user);
+  const { icon, id } = useSelector((state: RootState) => state.user);
   const tabs: {
     name: string;
     href: Href;
@@ -131,7 +131,7 @@ export default function TabLayout() {
     },
     {
       name: "profile",
-      href: `/profile/${user.id}`,
+      href: `/profile/${id}`,
       iconName: "user-circle",
       size: 28
     }
@@ -153,8 +153,8 @@ export default function TabLayout() {
               name={iconName}
               size={size}
               userIcon={
-                href.toString().startsWith("/profile") && user.icon
-                  ? user.icon
+                href.toString().startsWith("/profile") && icon
+                  ? icon
                   : undefined
               }
             />

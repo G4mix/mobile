@@ -11,7 +11,7 @@ import { ProfileHeader } from "@/components/ProfileScreen/ProfileHeader";
 import { api } from "@/constants/api";
 import { UserState } from "@/features/auth/userSlice";
 import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
-import { setActualTab } from "@/features/profile/profileSlice"; // <- sua action de redux
+import { setActualTab } from "@/features/profile/profileSlice";
 import { ProfileHeaderLoading } from "@/components/ProfileScreen/ProfileHeaderLoading";
 import { ConfirmationModalProvider } from "@/context/ConfirmationModalContext";
 
@@ -26,20 +26,18 @@ export default function ProfileScreen() {
     },
     enabled: !!userId
   });
-
   if (isError) router.push("/feed");
 
   const actualTab = useSelector(
     (state: any) => state.profile.actualTab
   ) as Tab<"profile">["key"];
-
   const tabs: Tab<"profile">[] = [
-    { name: "Postagens", key: "posts" },
+    { name: "Ideias", key: "ideas" },
     { name: "Sobre", key: "about" }
   ];
 
   const tabComponents = {
-    posts: ProfilePosts,
+    ideas: ProfilePosts,
     about: ProfileAbout
   };
 

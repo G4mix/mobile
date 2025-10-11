@@ -7,7 +7,7 @@ const globalForAxios = globalThis as unknown as {
   axiosInstance?: AxiosInstance;
 };
 
-const baseURL = `http://${env.EXPO_PUBLIC_API_URL}/v1`;
+const baseURL = `https://${env.EXPO_PUBLIC_API_URL}/v1`;
 
 if (!globalForAxios.axiosInstance) {
   globalForAxios.axiosInstance = axios.create({
@@ -39,6 +39,7 @@ api.interceptors.request.use(
     if (!accessTokenCache) {
       accessTokenCache = await getItem("accessToken");
     }
+    console.log(accessTokenCache);
     if (accessTokenCache) {
       config.headers = config.headers || {};
       config.headers.Authorization = `Bearer ${accessTokenCache}`;
@@ -54,7 +55,6 @@ api.interceptors.response.use(
     const originalRequest = error.config;
     const isAuthError =
       error.response?.status === 401 || error.response?.status === 403;
-
     if (isAuthError && !originalRequest.retry) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {

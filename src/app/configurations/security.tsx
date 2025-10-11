@@ -17,12 +17,11 @@ export default function SecurityScreen() {
       >
         <View>
           <Option
-                position="full"
-                name="Altere sua senha"
-                icon="lock-closed"
-                onPress={() => router.push("/configurations/password")}
-              />
-              
+            position="full"
+            name="Altere sua senha"
+            icon="lock-closed"
+            onPress={() => router.push("/configurations/password")}
+          />
         </View>
         <View>
           <Option

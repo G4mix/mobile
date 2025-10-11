@@ -11,12 +11,12 @@ import { RootState } from "@/constants/reduxStore";
 export default function AccountScreen() {
   const user = useSelector((state: RootState) => state.user);
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["user", user.userProfile.id],
+    queryKey: ["user", user.id],
     queryFn: async () => {
-      const response = await api.get<UserState>(`/user/${user.userProfile.id}`);
+      const response = await api.get<UserState>(`/user/${user.id}`);
       return response.data;
     },
-    enabled: !!user.userProfile.id
+    enabled: !!user.id
   });
   if (isError) router.push("/configurations");
 
@@ -32,29 +32,28 @@ export default function AccountScreen() {
         }}
       >
         {isLoading && !data && <Text>Carregando...</Text>}
-          {!isLoading && data && (
-            <View>
-              <Option
-                position="start"
-                name={`${data.username}`}
-                icon="user"
-                onPress={() => router.push("/configurations/username")}
-              />
-              <Option
-                position="middle"
-                name={`${data.email}`}
-                icon="envelope"
-                onPress={() => router.push("/configurations/email")}
-              />
-              <Option
-                position="end"
-                name="************"
-                icon="lock-closed"
-                onPress={() => router.push("/configurations/password")}
-              />
-
-            </View>
-          )}
+        {!isLoading && data && (
+          <View>
+            <Option
+              position="start"
+              name={`${data.user.username}`}
+              icon="user"
+              onPress={() => router.push("/configurations/username")}
+            />
+            <Option
+              position="middle"
+              name={`${data.user.email}`}
+              icon="envelope"
+              onPress={() => router.push("/configurations/email")}
+            />
+            <Option
+              position="end"
+              name="************"
+              icon="lock-closed"
+              onPress={() => router.push("/configurations/password")}
+            />
+          </View>
+        )}
       </View>
     </ScrollView>
   );
