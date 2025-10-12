@@ -11,7 +11,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 import { api } from "@/constants/api";
-import { PostType } from "@/components/Post";
+import { IdeaType } from "@/components/Idea";
 import { Loading } from "@/components/Loading";
 import { Colors } from "@/constants/colors";
 import { Icon } from "@/components/Icon";
@@ -48,28 +48,28 @@ const styles = StyleSheet.create({
   }
 });
 
-export default function PostImageScreen() {
-  const { postId, imageId } = useLocalSearchParams();
+export default function IdeaImageScreen() {
+  const { ideaId, imageId } = useLocalSearchParams();
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollX = useRef(new Animated.Value(0)).current;
 
   const {
-    data: post,
+    data: idea,
     isLoading,
     isError
   } = useQuery({
-    queryKey: ["post", postId],
+    queryKey: ["idea", ideaId],
     queryFn: async () => {
-      const response = await api.get(`/post/${postId}`);
+      const response = await api.get(`/idea/${ideaId}`);
       return response.data;
     },
-    enabled: !!postId
+    enabled: !!ideaId
   });
 
   if (isError)
     return <Text style={{ color: "#fff" }}>Erro ao carregar...</Text>;
 
-  const images: PostType["images"] = post?.images || [];
+  const images: IdeaType["images"] = idea?.images || [];
   const initialImageIndex = images.findIndex((img) => img.id === imageId);
 
   const handleViewableItemsChanged = ({ viewableItems }: any) => {
@@ -80,7 +80,7 @@ export default function PostImageScreen() {
 
   return (
     <View style={styles.container}>
-      {(isLoading || !post) && (
+      {(isLoading || !idea) && (
         <Loading
           width="100%"
           height={Dimensions.get("screen").height}
@@ -96,7 +96,7 @@ export default function PostImageScreen() {
       )}
       <FlatList
         data={images}
-        keyExtractor={(item) => `post-image-${item.id}`}
+        keyExtractor={(item) => `idea-image-${item.id}`}
         horizontal
         pagingEnabled
         showsHorizontalScrollIndicator={false}

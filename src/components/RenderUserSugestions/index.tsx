@@ -6,7 +6,7 @@ import { Colors } from "@/constants/colors";
 import { useUsers } from "@/hooks/useUsers";
 import { InView } from "../InView";
 import { Icon } from "../Icon";
-import { styles } from "../Post/PostHeader";
+import { styles } from "../Idea/IdeaHeader";
 import { RenderUserSugestionsLoading } from "./RenderUserSugestionsLoading";
 import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
 

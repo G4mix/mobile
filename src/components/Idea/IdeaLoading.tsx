@@ -3,7 +3,7 @@ import { Loading } from "../Loading";
 import { View } from "../Themed";
 import { Icon } from "../Icon";
 
-export function PostLoading() {
+export function IdeaLoading() {
   return (
     <View
       style={{

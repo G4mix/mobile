@@ -3,41 +3,41 @@ import { router } from "expo-router";
 import { View } from "../Themed";
 import { FloatingOptionsProvider } from "@/context/FloatingOptionsContext";
 import { ConfirmationModalProvider } from "@/context/ConfirmationModalContext";
-import { Post } from "../Post";
-import { PostLoading } from "../Post/PostLoading";
+import { Idea } from "../Idea";
+import { IdeaLoading } from "../Idea/IdeaLoading";
 import { InView } from "../InView";
 import { useFeed } from "@/hooks/useFeed";
 import { styles } from "@/app/(tabs)/feed";
 
-export function ProfilePosts({ userId }: { userId: string }) {
+export function ProfileIdeas({ userId }: { userId: string }) {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useFeed({
     authorId: userId
   });
-  const posts = data?.pages?.flatMap((page) => page?.data || []) || [];
+  const ideas = data?.pages?.flatMap((page) => page?.data || []) || [];
   return (
     <ScrollView style={styles.scroll}>
-      <View style={styles.posts}>
+      <View style={styles.ideas}>
         <FloatingOptionsProvider>
           <ConfirmationModalProvider>
-            {posts?.map((post, index) => (
+            {ideas?.map((idea, index) => (
               <TouchableOpacity
-                onPress={() => router.push(`/posts/${post!.id}`)}
-                key={`post-${post?.id || index}`}
+                onPress={() => router.push(`/ideas/${idea!.id}`)}
+                key={`idea-${idea?.id || index}`}
               >
-                <Post
-                  post={post}
+                <Idea
+                  idea={idea}
                   // onInView={() => {
-                  //   if (post) addVisualizedPost(post.id);
+                  //   if (idea) addVisualizedPost(idea.id);
                   // }}
                   // alreadyVisualized={
-                  //   post ? alreadyVisualized.current.has(post.id) : false
+                  //   idea ? alreadyVisualized.current.has(idea.id) : false
                   // }
                 />
               </TouchableOpacity>
             ))}
             {isFetchingNextPage &&
-              [1, 2, 3].map((post) => (
-                <PostLoading key={`post-loading-${post}`} />
+              [1, 2, 3].map((idea) => (
+                <IdeaLoading key={`idea-loading-${idea}`} />
               ))}
             {isFetchingNextPage || !hasNextPage ? null : (
               <InView onInView={fetchNextPage} />

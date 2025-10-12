@@ -5,20 +5,21 @@ import { Colors } from "@/constants/colors";
 import { CommentActions } from "./CommentActions";
 import { CommentHeader } from "./CommentHeader";
 import { CommentBody } from "./CommentBody";
-import { PostType } from "../Post";
+import { IdeaType } from "../Idea";
 import { View } from "../Themed";
 import { CommentReplies } from "./CommentReplies";
 
 export type CommentType = {
   id: string;
   content: string;
-  likesCount: number;
+  likes: number;
   isLiked: boolean;
-  repliesCount: number;
-  created_at: string;
+  replies: number;
+  createdAt: string;
+  updatedAt: string;
   parentCommentId?: string;
-  postId: string;
-  author: PostType["author"];
+  ideaId: string;
+  author: IdeaType["author"];
 };
 
 type CommentProps = {
@@ -74,21 +75,21 @@ export function Comment({
         if (commentId) {
           commentReply();
         } else {
-          router.push(`/posts/${comment.postId}/comments/${comment.id}`);
+          router.push(`/ideas/${comment.ideaId}/comments/${comment.id}`);
         }
       }}
     >
       {replying.toMark === comment.id && <View style={styles.leftBar} />}
-      <CommentHeader author={comment.author} createdAt={comment.created_at} />
+      <CommentHeader author={comment.author} createdAt={comment.createdAt} />
       <CommentBody content={comment.content} />
       <CommentActions
-        postId={comment.postId}
+        ideaId={comment.ideaId}
         commentId={comment.id}
-        likesCount={comment.likesCount}
+        likesCount={comment.likes}
         commentReply={commentReply}
         liked={comment.isLiked}
       />
-      {!commentId && comment.repliesCount > 0 && (
+      {!commentId && comment.replies > 0 && (
         <CommentReplies comment={comment} />
       )}
     </TouchableOpacity>

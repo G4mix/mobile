@@ -45,7 +45,7 @@ function RootLayoutNav() {
           <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen
-              name="posts/[postId]/index"
+              name="ideas/[ideaId]/index"
               options={{
                 presentation: "modal",
                 headerShown: true,
@@ -53,7 +53,7 @@ function RootLayoutNav() {
               }}
             />
             <Stack.Screen
-              name="posts/[postId]/comments/[commentId]"
+              name="ideas/[ideaId]/comments/[commentId]"
               options={{
                 presentation: "modal",
                 headerShown: true,
@@ -61,7 +61,7 @@ function RootLayoutNav() {
               }}
             />
             <Stack.Screen
-              name="posts/[postId]/images/index"
+              name="ideas/[ideaId]/images/index"
               options={{
                 presentation: "modal",
                 headerShown: true,
@@ -69,7 +69,7 @@ function RootLayoutNav() {
               }}
             />
             <Stack.Screen
-              name="posts/[postId]/images/[imageId]"
+              name="ideas/[ideaId]/images/[imageId]"
               options={{
                 presentation: "modal",
                 headerShown: true,

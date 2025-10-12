@@ -39,7 +39,7 @@ api.interceptors.request.use(
     if (!accessTokenCache) {
       accessTokenCache = await getItem("accessToken");
     }
-    console.log(accessTokenCache);
+
     if (accessTokenCache) {
       config.headers = config.headers || {};
       config.headers.Authorization = `Bearer ${accessTokenCache}`;

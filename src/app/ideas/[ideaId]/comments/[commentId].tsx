@@ -6,13 +6,13 @@ import { Comment, CommentType } from "@/components/CommentsScreen/Comment";
 import { useComments } from "@/hooks/useComments";
 import { InView } from "@/components/InView";
 import { CommentInput } from "@/components/CommentsScreen/CommentInput";
-import { PostType } from "@/components/Post";
+import { IdeaType } from "@/components/Idea";
 import { api } from "@/constants/api";
 import { CommentLoading } from "@/components/CommentsScreen/CommentLoading";
 
 export default function RepliesScreen() {
-  const { postId, commentId } = useLocalSearchParams<{
-    postId: string;
+  const { ideaId, commentId } = useLocalSearchParams<{
+    ideaId: string;
     commentId: string;
   }>();
 
@@ -26,16 +26,16 @@ export default function RepliesScreen() {
   });
 
   const {
-    data: post,
+    data: idea,
     isLoading,
     isError
   } = useQuery({
-    queryKey: ["post", postId],
+    queryKey: ["idea", ideaId],
     queryFn: async () => {
-      const response = await api.get<PostType>(`/post/${postId}`);
+      const response = await api.get<IdeaType>(`/idea/${ideaId}`);
       return response.data;
     },
-    enabled: !!postId
+    enabled: !!ideaId
   });
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
@@ -106,7 +106,7 @@ export default function RepliesScreen() {
         )}
       </ScrollView>
       <CommentInput
-        commentsCount={post?.commentsCount || 0}
+        commentsCount={idea?.comments || 0}
         isVisible={isVisible}
         setIsVisible={setIsVisible}
         replying={replying}

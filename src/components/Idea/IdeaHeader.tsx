@@ -7,7 +7,7 @@ import { Text } from "../Themed";
 import { Colors } from "@/constants/colors";
 import { UserState } from "@/features/auth/userSlice";
 import { formatDate } from "@/utils/formatDate";
-import { PostType } from ".";
+import { IdeaType } from ".";
 import { useFloatingOptions } from "@/hooks/useFloatingOptions";
 import { handleRequest } from "@/utils/handleRequest";
 import { api } from "@/constants/api";
@@ -49,29 +49,29 @@ export const styles = StyleSheet.create({
   }
 });
 
-type PostHeaderProps = {
-  postId: string;
-  author: PostType["author"];
+type IdeaHeaderProps = {
+  ideaId: string;
+  author: IdeaType["author"];
   createdAt: string;
   updatedAt?: string;
   isDeleting: boolean;
   setIsDeleting: Dispatch<SetStateAction<boolean>>;
 };
 
-export function PostHeader({
-  postId,
+export function IdeaHeader({
+  ideaId,
   author,
   createdAt,
   updatedAt,
   isDeleting,
   setIsDeleting
-}: PostHeaderProps) {
+}: IdeaHeaderProps) {
   const userProfileId = useSelector(
     (state: { user: UserState }) => state.user.id
   );
   const { showConfirmationModal } = useConfirmationModal();
   const { showFloatingOptions } = useFloatingOptions();
-  const { removePost, invalidateAllPosts } = useFeedQueries();
+  const { removeIdea, invalidateAllIdeas } = useFeedQueries();
   const { showToast } = useToast();
   const pathname = usePathname();
 
@@ -80,7 +80,7 @@ export function PostHeader({
       name: "Editar",
       iconName: "pencil",
       onPress: ({ selectedPost }: any) => {
-        router.push(`/create?postId=${selectedPost}`);
+        router.push(`/create?ideaId=${selectedPost}`);
       }
     },
     {
@@ -90,15 +90,15 @@ export function PostHeader({
         if (isDeleting) return;
         const handleConfirm = () => {
           handleRequest({
-            requestFn: async () => api.delete(`/post?postId=${selectedPost}`),
+            requestFn: async () => api.delete(`/idea/${selectedPost}`),
             showToast,
             setIsLoading: setIsDeleting
           });
 
-          if (pathname.startsWith("/posts")) {
-            removePost(selectedPost);
+          if (pathname.startsWith("/ideas")) {
+            removeIdea(selectedPost);
           } else {
-            invalidateAllPosts();
+            invalidateAllIdeas();
           }
 
           router.push("/feed");
@@ -140,7 +140,7 @@ export function PostHeader({
         <TouchableOpacity
           onPress={() =>
             showFloatingOptions({
-              optionProps: { selectedPost: postId },
+              optionProps: { selectedPost: ideaId },
               options
             })
           }

@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
 type CommentActionsProps = {
   commentReply: () => void;
   commentId: string;
-  postId: string;
+  ideaId: string;
   liked: boolean;
   likesCount: number;
 };
@@ -36,7 +36,7 @@ type CommentActionsProps = {
 export function CommentActions({
   commentReply,
   commentId,
-  postId,
+  ideaId,
   liked,
   likesCount
 }: CommentActionsProps) {
@@ -51,7 +51,7 @@ export function CommentActions({
 
   const addLikeCount = (data: { isLiked: boolean; likesCount: number }) => {
     queryClient.setQueryData(
-      ["comments", { lastFetchTime, postId, commentId }],
+      ["comments", { lastFetchTime, ideaId, commentId }],
       (oldData: any) => {
         if (!oldData) return oldData;
 
@@ -81,7 +81,10 @@ export function CommentActions({
     if (isLoading) return;
     const data = await handleRequest({
       requestFn: async () =>
-        api.get(`/like/comment?isLiked=${newIsLiked}&commentId=${commentId}`),
+        api.post("/like", {
+          targetLikeId: commentId,
+          likeType: "Comment"
+        }),
       showToast,
       setIsLoading,
       ignoreErrors: true

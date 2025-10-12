@@ -2,33 +2,33 @@ import { Link, router, useLocalSearchParams } from "expo-router";
 import { View, Image, StyleSheet, ScrollView } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/constants/api";
-import { PostType } from "@/components/Post";
+import { IdeaType } from "@/components/Idea";
 import { Loading } from "@/components/Loading";
 import { Icon } from "@/components/Icon";
 import { Colors } from "@/constants/colors";
 import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
 
 const styles = StyleSheet.create({
-  postImage: {
+  ideaImage: {
     objectFit: "cover",
     width: "100%"
   }
 });
 
-export default function PostImageScreen() {
-  const { postId } = useLocalSearchParams<{ postId: string }>();
+export default function IdeaImageScreen() {
+  const { ideaId } = useLocalSearchParams<{ ideaId: string }>();
 
   const {
-    data: post,
+    data: idea,
     isLoading,
     isError
   } = useQuery({
-    queryKey: ["post", postId],
+    queryKey: ["idea", ideaId],
     queryFn: async () => {
-      const response = await api.get<PostType>(`/post/${postId}`);
+      const response = await api.get<IdeaType>(`/idea/${ideaId}`);
       return response.data;
     },
-    enabled: !!postId
+    enabled: !!ideaId
   });
 
   if (isError) router.push("/feed");
@@ -36,7 +36,7 @@ export default function PostImageScreen() {
   return (
     <ScrollView>
       <View style={{ flexDirection: "column", gap: 32 }}>
-        {(isLoading || !post) &&
+        {(isLoading || !idea) &&
           [0, 1, 2].map((value) => (
             <Loading
               key={`loading-image-${value}`}
@@ -52,19 +52,19 @@ export default function PostImageScreen() {
               <Icon name="photo" size={64} color={Colors.light.background} />
             </Loading>
           ))}
-        {post?.images.map(({ src, alt, height, width, id: imageId }) => (
+        {idea?.images.map(({ src, alt, id: imageId }) => (
           <Link
             href={{
-              pathname: "/posts/[postId]/images/[imageId]",
-              params: { postId, imageId }
+              pathname: "/ideas/[ideaId]/images/[imageId]",
+              params: { ideaId, imageId }
             }}
-            key={`post-image-${imageId}`}
+            key={`idea-image-${imageId}`}
           >
             <Image
-              style={styles.postImage}
+              style={styles.ideaImage}
               source={{ uri: getImgWithTimestamp(src) }}
-              width={width}
-              height={height}
+              width={360}
+              height={451}
               alt={alt}
             />
           </Link>

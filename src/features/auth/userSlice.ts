@@ -6,8 +6,8 @@ export interface UserState {
   icon?: string | null;
   backgroundImage?: string | null;
   autobiography?: string | null;
-  followersCount: number;
-  followingCount: number;
+  followers: number;
+  following: number;
   isFollowing?: boolean;
   links: string[];
   user: {
@@ -15,7 +15,6 @@ export interface UserState {
     username: string;
     email: string;
     verified: boolean;
-    created_at: string;
   };
 }
 
@@ -24,14 +23,13 @@ const initialState: UserState = {
   displayName: null,
   autobiography: null,
   backgroundImage: null,
-  followersCount: 0,
-  followingCount: 0,
+  followers: 0,
+  following: 0,
   links: [],
   icon: null,
   user: {
     id: "",
     username: "",
-    created_at: "",
     verified: false,
     email: ""
   }
@@ -46,10 +44,11 @@ const userSlice = createSlice({
       state.displayName = action.payload.displayName;
       state.icon = action.payload.icon;
       state.autobiography = action.payload.autobiography;
-      state.followersCount = action.payload.followersCount;
-      state.followingCount = action.payload.followingCount;
+      state.followers = action.payload.followers;
+      state.following = action.payload.following;
       state.backgroundImage = action.payload.backgroundImage;
       state.links = action.payload.links;
+      state.isFollowing = action.payload.isFollowing;
       state.user = action.payload.user;
     },
     logout: (state) => {
@@ -57,13 +56,13 @@ const userSlice = createSlice({
       state.displayName = null;
       state.icon = null;
       state.autobiography = null;
-      state.followersCount = 0;
-      state.followingCount = 0;
+      state.followers = 0;
+      state.following = 0;
       state.backgroundImage = null;
       state.links = [];
+      state.isFollowing = false;
 
       state.user = {
-        created_at: "",
         id: "",
         email: "",
         username: "",

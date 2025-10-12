@@ -1,5 +1,4 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useSelector } from "react-redux";
 import { useLocalSearchParams } from "expo-router";
 import { api } from "@/constants/api";
 import { CommentType } from "@/components/CommentsScreen/Comment";
@@ -17,27 +16,23 @@ export const useComments = () => {
     postId?: string;
     commentId?: string;
   }>();
-  const lastFetchTime = useSelector(
-    (state: any) => state.comments.lastFetchTime
-  );
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
-      queryKey: ["comments", { lastFetchTime, postId, commentId }],
+      queryKey: ["comments", { postId, commentId }],
       queryFn: async ({ pageParam }) =>
         (
           await api.get<CommentPageable>("/comment", {
             params: {
-              postId,
+              ideaId: postId,
               commentId,
               page: pageParam,
-              since: lastFetchTime,
-              quantity: 10
+              limit: 10
             }
           })
         ).data,
       initialPageParam: 0,
       getNextPageParam: (lastPage) => lastPage?.nextPage,
-      enabled: !!lastFetchTime
+      enabled: !!postId
     });
 
   return {

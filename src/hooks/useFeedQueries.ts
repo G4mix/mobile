@@ -1,15 +1,15 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
-import { PostType } from "@/components/Post";
+import { IdeaType } from "@/components/Idea";
 
 export const useFeedQueries = ({ authorId }: { authorId?: string } = {}) => {
   const queryClient = useQueryClient();
   const lastFetchTime = useSelector((state: any) => state.feed.lastFetchTime);
   const actualTab = useSelector((state: any) => state.feed.actualTab);
 
-  const addNewPost = (post: PostType) => {
+  const addNewIdea = (idea: IdeaType) => {
     queryClient.setQueryData(
-      ["posts", { actualTab, lastFetchTime, authorId }],
+      ["ideas", { actualTab, lastFetchTime, authorId }],
       (oldData: any) => {
         if (!oldData || !oldData.pages[0]) return oldData;
 
@@ -18,7 +18,7 @@ export const useFeedQueries = ({ authorId }: { authorId?: string } = {}) => {
           pages: [
             {
               ...oldData.pages[0],
-              data: [post, ...oldData.pages[0].data],
+              data: [idea, ...oldData.pages[0].data],
               total: oldData.pages[0].total + 1
             },
             ...oldData.pages.slice(1)
@@ -30,20 +30,20 @@ export const useFeedQueries = ({ authorId }: { authorId?: string } = {}) => {
     );
   };
 
-  const updatePost = (updatedPost: Partial<PostType>) => {
+  const updateIdea = (updatedIdea: Partial<IdeaType>) => {
     queryClient.setQueryData(
-      ["posts", { actualTab, lastFetchTime, authorId }],
+      ["ideas", { actualTab, lastFetchTime, authorId }],
       (oldData: any) => {
         if (!oldData || !oldData.pages) return oldData;
 
         const updatedPages = oldData.pages.map((page: any) => {
-          const postIndex = page.data.findIndex(
-            (p: PostType) => p.id === updatedPost.id
+          const ideaIndex = page.data.findIndex(
+            (i: IdeaType) => i.id === updatedIdea.id
           );
 
-          if (postIndex !== -1) {
+          if (ideaIndex !== -1) {
             const newData = [...page.data];
-            newData[postIndex] = { ...newData[postIndex], ...updatedPost };
+            newData[ideaIndex] = { ...newData[ideaIndex], ...updatedIdea };
 
             return {
               ...page,
@@ -62,52 +62,50 @@ export const useFeedQueries = ({ authorId }: { authorId?: string } = {}) => {
     );
   };
 
-  const increaseViews = (updatedPostIds: string[]) => {
+  const increaseViews = (updatedIdeaIds: string[]) => {
     queryClient.setQueryData(
-      ["posts", { actualTab, lastFetchTime, authorId }],
+      ["ideas", { actualTab, lastFetchTime, authorId }],
       (oldData: any) => {
         if (!oldData || !oldData.pages) return oldData;
-        const updatedPostsData = oldData.pages.map((page: any) => ({
+        const updatedIdeasData = oldData.pages.map((page: any) => ({
           ...page,
-          data: page.data.map((post: PostType) => {
-            const updatedPost = updatedPostIds.find((p) => p === post.id);
-            if (updatedPost) {
+          data: page.data.map((idea: IdeaType) => {
+            const updatedIdea = updatedIdeaIds.find((i) => i === idea.id);
+            if (updatedIdea) {
               return {
-                ...post,
-                viewsCount: post.isViewed
-                  ? post.viewsCount
-                  : post.viewsCount + 1,
+                ...idea,
+                views: idea.isViewed ? idea.views : idea.views + 1,
                 isViewed: true
               };
             }
-            return post;
+            return idea;
           })
         }));
-        return { ...oldData, pages: updatedPostsData };
+        return { ...oldData, pages: updatedIdeasData };
       }
     );
   };
 
-  const removePost = (postId: string) => {
+  const removeIdea = (ideaId: string) => {
     queryClient.setQueryData(
-      ["posts", { actualTab, lastFetchTime, authorId }],
+      ["ideas", { actualTab, lastFetchTime, authorId }],
       (oldData: any) => {
         if (!oldData) return oldData;
 
         const updatedPages = oldData.pages.map((page: any) => {
           if (!page) return page;
 
-          const idsBefore = page.data.map((post: any) => post.id);
+          const idsBefore = page.data.map((idea: any) => idea.id);
           const filteredData = page.data.filter(
-            (post: any) => post.id !== postId
+            (idea: any) => idea.id !== ideaId
           );
 
-          const postWasInThisPage = idsBefore.length !== filteredData.length;
+          const ideaWasInThisPage = idsBefore.length !== filteredData.length;
 
           return {
             ...page,
             data: filteredData,
-            total: postWasInThisPage ? page.total - 1 : page.total
+            total: ideaWasInThisPage ? page.total - 1 : page.total
           };
         });
 
@@ -119,9 +117,9 @@ export const useFeedQueries = ({ authorId }: { authorId?: string } = {}) => {
     );
   };
 
-  const invalidateAllPosts = () => {
+  const invalidateAllIdeas = () => {
     queryClient.invalidateQueries(
-      ["posts", { actualTab, lastFetchTime, authorId }] as any,
+      ["ideas", { actualTab, lastFetchTime, authorId }] as any,
       {
         cancelRefetch: true
       }
@@ -129,10 +127,10 @@ export const useFeedQueries = ({ authorId }: { authorId?: string } = {}) => {
   };
 
   return {
-    addNewPost,
-    updatePost,
+    addNewIdea,
+    updateIdea,
     increaseViews,
-    removePost,
-    invalidateAllPosts
+    removeIdea,
+    invalidateAllIdeas
   };
 };

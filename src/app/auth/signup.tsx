@@ -110,7 +110,7 @@ export default function RegisterScreen() {
     const data = await handleRequest<{
       accessToken: string;
       refreshToken: string;
-      user: UserState;
+      userProfile: UserState;
     }>({
       requestFn: async () =>
         api.post("/auth/signup", { username, password: pwd, email }, {
@@ -121,8 +121,8 @@ export default function RegisterScreen() {
       successMessage: "Registro concluído com sucesso!"
     });
     if (!data) return;
-    dispatch(setUser(data.user));
-    await setItem("user", JSON.stringify(data.user));
+    dispatch(setUser(data.userProfile));
+    await setItem("user", JSON.stringify(data.userProfile));
     await setItem("accessToken", data.accessToken);
     await setItem("refreshToken", data.refreshToken);
     setIsSuccessVisible(true);

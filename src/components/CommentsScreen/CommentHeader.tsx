@@ -3,12 +3,12 @@ import { Icon } from "../Icon";
 import { Text } from "../Themed";
 import { Colors } from "@/constants/colors";
 import { formatDate } from "@/utils/formatDate";
-import { PostType } from "../Post";
-import { styles } from "../Post/PostHeader";
+import { IdeaType } from "../Idea";
+import { styles } from "../Idea/IdeaHeader";
 import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
 
 type CommentHeaderProps = {
-  author: PostType["author"];
+  author: IdeaType["author"];
   createdAt: string;
 };
 

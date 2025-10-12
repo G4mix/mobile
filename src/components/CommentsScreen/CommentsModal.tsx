@@ -32,7 +32,7 @@ import { Button } from "../Button";
 import { Text } from "../Themed";
 import { setLastFetchTime } from "@/features/comments/commentsSlice";
 import { useFeedQueries } from "@/hooks/useFeedQueries";
-import { PostType } from "../Post";
+import { IdeaType } from "../Idea";
 import { RenderUserSuggestions } from "../RenderUserSugestions";
 import { timeout } from "@/utils/timeout";
 import { InView } from "../InView";
@@ -107,7 +107,7 @@ export function CommentsModal({
   setReplying
 }: CommentsModalProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const { updatePost } = useFeedQueries();
+  const { updateIdea } = useFeedQueries();
   const queryClient = useQueryClient();
   const { postId, commentId } = useLocalSearchParams<{
     postId: string;
@@ -163,28 +163,27 @@ export function CommentsModal({
     );
   };
 
-  const updateSinglePost = () => {
-    queryClient.setQueryData<PostType>(["post", postId], (oldData) => {
+  const updateSingleIdea = () => {
+    queryClient.setQueryData<IdeaType>(["idea", postId], (oldData) => {
       if (!oldData) return oldData;
 
       return {
         ...oldData,
-        commentsCount: commentsCount + 1
+        comments: commentsCount + 1
       };
     });
   };
 
   const createComment = async ({ content }: { content: string }) => {
     if (content.length < 3) return;
-    const queryParams = new URLSearchParams();
-    if (postId) queryParams.append("postId", postId);
-    if (commentId || replying.parentComment !== "") {
-      queryParams.append("commentId", commentId || replying.parentComment);
-    }
-    const queryString = queryParams.toString();
-    const url = `/comment${queryString ? `?${queryString}` : ""}`;
+
     const data = await handleRequest<CommentType>({
-      requestFn: async () => api.post(url, { content }),
+      requestFn: async () =>
+        api.post("/comment", {
+          ideaId: postId,
+          content,
+          parentCommentId: commentId || replying.parentComment || undefined
+        }),
       showToast,
       setIsLoading
     });
@@ -197,11 +196,11 @@ export function CommentsModal({
       toMark: "",
       author: undefined
     });
-    updatePost({ id: postId, commentsCount: commentsCount + 1 });
-    updateSinglePost();
+    updateIdea({ id: postId, comments: commentsCount + 1 });
+    updateSingleIdea();
     if (data.parentCommentId && !commentId) {
       await timeout(500);
-      router.push(`/posts/${data.postId}/comments/${data.parentCommentId}`);
+      router.push(`/ideas/${data.ideaId}/comments/${data.parentCommentId}`);
     }
   };
 

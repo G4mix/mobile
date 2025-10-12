@@ -79,11 +79,15 @@ export function UserListItem({ userId }: { userId: string }) {
 
     setIsLoading(true);
 
-    const res = await handleRequest({
+    const res = await handleRequest<{
+      following: boolean;
+      followersCount: number;
+      followingCount: number;
+    }>({
       requestFn: () =>
-        api.post(
-          `/follow?followingUserId=${userProfileId}&wantFollow=${isFollowing}`
-        ),
+        api.post("/follow", {
+          targetUserId: userProfileId
+        }),
       showToast,
       setIsLoading
     });
@@ -91,6 +95,9 @@ export function UserListItem({ userId }: { userId: string }) {
     if (!res) {
       return;
     }
+
+    // Atualizar o estado local com a resposta da API
+    setIsFollowing(res.following);
 
     queryClient.invalidateQueries({ queryKey: [userId] });
     refetch();
@@ -153,7 +160,7 @@ export function UserListItem({ userId }: { userId: string }) {
           </View>
 
           <Text style={styles.followers}>
-            {formatFollowers(data?.followersCount)} seguidores
+            {formatFollowers(data?.followers)} seguidores
           </Text>
         </View>
 

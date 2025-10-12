@@ -6,7 +6,7 @@ import {
   ViewStyle
 } from "react-native";
 import { router } from "expo-router";
-import { PostType } from ".";
+import { IdeaType } from ".";
 import { Text, View } from "../Themed";
 import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
 
@@ -54,12 +54,12 @@ const styles = StyleSheet.create({
   }
 });
 
-type PostImagesProps = {
-  images: PostType["images"];
-  postId: string;
+type IdeaImagesProps = {
+  images: IdeaType["images"];
+  ideaId: string;
 };
 
-export function PostImages({ images, postId }: PostImagesProps) {
+export function IdeaImages({ images, ideaId }: IdeaImagesProps) {
   const imagesCount = images.length;
   const imagesToRender = images.slice(0, 4);
 
@@ -81,20 +81,23 @@ export function PostImages({ images, postId }: PostImagesProps) {
   return (
     <TouchableOpacity
       onPress={() =>
-        router.push({ pathname: "/posts/[postId]/images", params: { postId } })
+        router.push({
+          pathname: "/ideas/[ideaId]/images",
+          params: { ideaId }
+        })
       }
     >
       <View style={containerStyle}>
-        {imagesToRender.map(({ src, alt, height, width, id }, index) => (
+        {imagesToRender.map(({ src, alt, id }, index) => (
           <View
             key={`post-image-${id}`}
             style={[{ position: "relative" }, getStyle(index)]}
           >
             <Image
               source={{ uri: getImgWithTimestamp(src) }}
-              width={width}
+              width={360}
               alt={alt}
-              height={height}
+              height={451}
               style={{ width: "100%", objectFit: "cover", flex: 1 }}
             />
             {index === imagesToRender.length - 1 && imagesCount > 4 && (

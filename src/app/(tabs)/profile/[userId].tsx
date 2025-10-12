@@ -5,7 +5,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { ContentTabs, Tab } from "@/components/ContentTabs";
 import { ProfileAbout } from "@/components/ProfileScreen/ProfileAbout";
-import { ProfilePosts } from "@/components/ProfileScreen/ProfilePosts";
+import { ProfileIdeas } from "@/components/ProfileScreen/ProfileIdeas";
 import { Colors } from "@/constants/colors";
 import { ProfileHeader } from "@/components/ProfileScreen/ProfileHeader";
 import { api } from "@/constants/api";
@@ -37,7 +37,7 @@ export default function ProfileScreen() {
   ];
 
   const tabComponents = {
-    ideas: ProfilePosts,
+    ideas: ProfileIdeas,
     about: ProfileAbout
   };
 
@@ -80,8 +80,8 @@ export default function ProfileScreen() {
             username={data.user.username}
             id={data.id}
             userProfileId={data.id}
-            followersCount={data.followersCount}
-            followingCount={data.followingCount}
+            followersCount={data.followers}
+            followingCount={data.following}
             onlyView
           />
         )}

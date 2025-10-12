@@ -6,12 +6,12 @@ import {
   Dimensions
 } from "react-native";
 import { router } from "expo-router";
-import { Post } from "@/components/Post";
+import { Idea } from "@/components/Idea";
 import { useFeed } from "@/hooks/useFeed";
 import { InView } from "@/components/InView";
 import { FloatingOptionsProvider } from "@/context/FloatingOptionsContext";
 import { ConfirmationModalProvider } from "@/context/ConfirmationModalContext";
-import { PostLoading } from "@/components/Post/PostLoading";
+import { IdeaLoading } from "@/components/Idea/IdeaLoading";
 import { Colors } from "@/constants/colors";
 
 export const styles = StyleSheet.create({
@@ -21,7 +21,7 @@ export const styles = StyleSheet.create({
     flexDirection: "column",
     minHeight: Dimensions.get("window").height - 60
   },
-  posts: {
+  ideas: {
     display: "flex",
     flexDirection: "column",
     flex: 1,
@@ -36,21 +36,21 @@ export const styles = StyleSheet.create({
 
 export default function FeedScreen() {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useFeed();
-  const posts = data?.pages?.flatMap((page) => page?.data || []) || [];
+  const ideas = data?.pages?.flatMap((page) => page?.data || []) || [];
 
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scroll}>
-        <View style={styles.posts}>
+        <View style={styles.ideas}>
           <FloatingOptionsProvider>
             <ConfirmationModalProvider>
-              {posts?.map((post, index) => (
+              {ideas?.map((idea, index) => (
                 <TouchableOpacity
-                  onPress={() => router.push(`/posts/${post!.id}`)}
-                  key={`post-${post?.id || index}`}
+                  onPress={() => router.push(`/ideas/${idea!.id}` as any)}
+                  key={`post-${idea?.id || index}`}
                 >
-                  <Post
-                    post={post}
+                  <Idea
+                    idea={idea}
                     // onInView={() => {
                     //   if (post) addVisualizedPost(post.id);
                     // }}
@@ -61,8 +61,8 @@ export default function FeedScreen() {
                 </TouchableOpacity>
               ))}
               {isFetchingNextPage &&
-                [1, 2, 3].map((post) => (
-                  <PostLoading key={`post-loading-${post}`} />
+                [1, 2, 3].map((idea) => (
+                  <IdeaLoading key={`idea-loading-${idea}`} />
                 ))}
               {isFetchingNextPage || !hasNextPage ? null : (
                 <InView onInView={fetchNextPage} />

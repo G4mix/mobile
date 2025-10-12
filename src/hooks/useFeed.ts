@@ -1,28 +1,24 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useSelector } from "react-redux";
 import { api } from "@/constants/api";
-// import { getItem } from "@/constants/storage";
-import { PostType } from "@/components/Post";
+import { IdeaType } from "@/components/Idea";
 
-type PostPageable = {
+type IdeaPageable = {
   page: number;
   nextPage: number | null;
   pages: number;
   total: number;
-  data: PostType[];
+  data: IdeaType[];
 };
 
 export const useFeed = ({ authorId }: { authorId?: string } = {}) => {
-  const lastFetchTime = useSelector((state: any) => state.feed.lastFetchTime);
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
-      queryKey: ["ideas", { lastFetchTime, authorId }],
+      queryKey: ["ideas", { authorId }],
       queryFn: async ({ pageParam }) =>
         (
-          await api.get<PostPageable>("/idea", {
+          await api.get<IdeaPageable>("/idea", {
             params: {
               page: pageParam,
-              since: lastFetchTime,
               authorId,
               quantity: 10
             }
@@ -30,17 +26,17 @@ export const useFeed = ({ authorId }: { authorId?: string } = {}) => {
         ).data,
       initialPageParam: 0,
       getNextPageParam: (lastPage) => lastPage?.nextPage,
-      enabled: !!lastFetchTime
+      enabled: true
     });
   // useEffect(() => {
   //   const socket = new WebSocket(`wss://${process.env.EXPO_PUBLIC_API_URL}`);
 
   //   socket.onmessage = (event) => {
   //     const post = JSON.parse(event.data);
-  //     queryClient.setQueryData(["posts", { actualTab: post.tab, lastFetchTime }], (oldData: any) => ({
+  //     queryClient.setQueryData(["ideas", { actualTab: post.tab, lastFetchTime }], (oldData: any) => ({
   //       pages: [[post, ...oldData.pages.flat()]]
   //     }));
-  //     dispatch(setNewPostIndicator({ tab: post.tab }));
+  //     dispatch(setNewIdeaIndicator({ tab: idea.tab }));
   //   };
 
   //   return () => socket.close();

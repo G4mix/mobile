@@ -4,17 +4,17 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { FloatingOptionsProvider } from "@/context/FloatingOptionsContext";
 import { api } from "@/constants/api";
-import { Post, PostType } from "@/components/Post";
+import { Idea, IdeaType } from "@/components/Idea";
 import { ConfirmationModalProvider } from "@/context/ConfirmationModalContext";
 import { Comment, CommentType } from "@/components/CommentsScreen/Comment";
 import { useComments } from "@/hooks/useComments";
 import { InView } from "@/components/InView";
 import { CommentInput } from "@/components/CommentsScreen/CommentInput";
-import { PostLoading } from "@/components/Post/PostLoading";
+import { IdeaLoading } from "@/components/Idea/IdeaLoading";
 import { CommentLoading } from "@/components/CommentsScreen/CommentLoading";
 import { Colors } from "@/constants/colors";
 
-export default function PostScreen() {
+export default function IdeaScreen() {
   const [replying, setReplying] = useState<{
     parentComment: string;
     toMark: string;
@@ -26,18 +26,18 @@ export default function PostScreen() {
   });
   const [isVisible, setIsVisible] = useState(false);
 
-  const { postId } = useLocalSearchParams();
+  const { ideaId } = useLocalSearchParams();
   const {
-    data: post,
+    data: idea,
     isLoading,
     isError
   } = useQuery({
-    queryKey: ["post", postId],
+    queryKey: ["idea", ideaId],
     queryFn: async () => {
-      const response = await api.get<PostType>(`/post/${postId}`);
+      const response = await api.get<IdeaType>(`/idea/${ideaId}`);
       return response.data;
     },
-    enabled: !!postId
+    enabled: !!ideaId
   });
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
@@ -45,7 +45,7 @@ export default function PostScreen() {
   const comments = data?.pages?.flatMap((page) => page?.data || []) || [];
 
   const commentReply = async (commentId: string) => {
-    router.push(`/posts/${postId}/comments/${commentId}`);
+    router.push(`/ideas/${ideaId}/comments/${commentId}`);
   };
 
   if (isError) router.push("/feed");
@@ -53,10 +53,10 @@ export default function PostScreen() {
   return (
     <View style={{ flex: 1, position: "relative" }}>
       <ScrollView style={{ flex: 1, backgroundColor: Colors.light.background }}>
-        {isLoading && <PostLoading />}
+        {isLoading && <IdeaLoading />}
         <FloatingOptionsProvider>
           <ConfirmationModalProvider>
-            <Post post={post} />
+            <Idea idea={idea} />
           </ConfirmationModalProvider>
         </FloatingOptionsProvider>
         <View style={{ marginBottom: 56 }}>
@@ -83,7 +83,7 @@ export default function PostScreen() {
         </View>
       </ScrollView>
       <CommentInput
-        commentsCount={post?.commentsCount || 0}
+        commentsCount={idea?.comments || 0}
         isVisible={isVisible}
         setIsVisible={setIsVisible}
         replying={replying}

@@ -2,19 +2,14 @@ import { StyleSheet } from "react-native";
 import { Button } from "../Button";
 import { Text, View } from "../Themed";
 import { CreateScreenFormData } from "@/app/(tabs)/create";
-import {
-  isValidEventDescription,
-  isValidEventSubject,
-  isValidPostContent,
-  isValidPostTitle
-} from "@/constants/validations";
-import { PostType } from "../Post";
+import { isValidPostContent, isValidPostTitle } from "@/constants/validations";
+import { IdeaType } from "../Idea";
 
 type CreateScreenHeaderProps = {
   isLoading: boolean;
   onSubmit: () => void;
   data: CreateScreenFormData;
-  post?: PostType;
+  post?: IdeaType;
 };
 
 const styles = StyleSheet.create({
@@ -39,17 +34,14 @@ const styles = StyleSheet.create({
 export function CreateScreenHeader({
   isLoading,
   onSubmit,
-  data: { title, content, images, links, event },
+  data: { title, content, images, links },
   post
 }: CreateScreenHeaderProps) {
   const isReadyToSubmit = !!(
     isValidPostTitle(title) === "valid" ||
     isValidPostContent(content) === "valid" ||
     (images && images.length > 0) ||
-    (links && links.length > 0) ||
-    (event &&
-      (isValidEventSubject(event.subject) === "valid" ||
-        isValidEventDescription(event.description) === "valid"))
+    (links && links.length > 0)
   );
 
   return (

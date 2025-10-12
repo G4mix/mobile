@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Text, View } from "../Themed";
-import { styles } from "../Post/PostHeader";
+import { styles } from "../Idea/IdeaHeader";
 import { Colors } from "@/constants/colors";
 import { Icon } from "../Icon";
 import { Button } from "../Button";
@@ -51,17 +51,22 @@ export function ProfileHeader({
   const EditableComponent = !onlyView ? TouchableOpacity : View;
   const queryClient = useQueryClient();
 
-  const executeFollow = () => {
+  const executeFollow = async () => {
     if (isLoading) return;
-    const data = handleRequest({
+    const data = await handleRequest<{
+      following: boolean;
+      followersCount: number;
+      followingCount: number;
+    }>({
       requestFn: async () =>
-        api.post(
-          `/follow?followingUserId=${userProfileId!}&wantFollow=${isFollowingState}`
-        ),
+        api.post("/follow", {
+          targetUserId: userProfileId!
+        }),
       showToast,
       setIsLoading
     });
     if (!data) return;
+
     queryClient.setQueryData(["user", userProfileId], (oldData: any) => {
       if (!oldData) return oldData;
 
@@ -69,7 +74,9 @@ export function ProfileHeader({
         ...oldData,
         userProfile: {
           ...oldData.userProfile,
-          isFollowing: !oldData.userProfile.isFollowing
+          isFollowing: data.following,
+          followers: data.followersCount,
+          following: data.followingCount
         }
       };
     });

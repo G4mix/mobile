@@ -24,28 +24,28 @@ const styles = StyleSheet.create({
   }
 });
 
-type PostActionsProps = {
-  postId: string;
-  likesCount: number;
-  commentsCount: number;
-  viewsCount: number;
+type IdeaActionsProps = {
+  ideaId: string;
+  likes: number;
+  comments: number;
+  views: number;
   liked: boolean;
   viewed: boolean;
 };
 
-export function PostActions({
-  postId,
-  likesCount,
-  commentsCount,
-  viewsCount,
+export function IdeaActions({
+  ideaId,
+  likes,
+  comments,
+  views,
   liked,
   viewed
-}: PostActionsProps) {
+}: IdeaActionsProps) {
   const { showToast } = useToast();
   const [isLiked, setIsLiked] = useState(liked);
-  const [currentLikesCount, setCurrentLikesCount] = useState(likesCount);
+  const [currentLikesCount, setCurrentLikesCount] = useState(likes);
   const [isLoading, setIsLoading] = useState(false);
-  const { updatePost } = useFeedQueries();
+  const { updateIdea } = useFeedQueries();
 
   const likePostRequest = async (
     newIsLiked: boolean,
@@ -54,16 +54,19 @@ export function PostActions({
     if (isLoading) return;
     const data = await handleRequest({
       requestFn: async () =>
-        api.get(`/like/post?isLiked=${newIsLiked}&postId=${postId}`),
+        api.post("/like", {
+          targetLikeId: ideaId,
+          likeType: "Idea"
+        }),
       showToast,
       setIsLoading,
       ignoreErrors: true
     });
     if (!data) return;
-    updatePost({
-      id: postId,
+    updateIdea({
+      id: ideaId,
       isLiked: newIsLiked,
-      likesCount: newLikesCount
+      likes: newLikesCount
     });
   };
 
@@ -88,7 +91,7 @@ export function PostActions({
   };
 
   const commentPost = async () => {
-    router.push(`/posts/${postId}`);
+    router.push(`/ideas/${ideaId}`);
   };
 
   const sharePost = async () => {
@@ -96,7 +99,7 @@ export function PostActions({
       await Share.share({
         title: "Olha só esse post do Gamix!",
         message: "Venha conferir esse novo post do Gamix comigo!",
-        url: `https://g4mix.vercel.app/posts/${postId}`
+        url: `https://g4mix.vercel.app/ideas/${ideaId}`
       });
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
@@ -122,13 +125,13 @@ export function PostActions({
     {
       icon: "chat-bubble-left-right",
       color: Colors.light.russianViolet,
-      content: abbreviateNumber(commentsCount),
+      content: abbreviateNumber(comments),
       handlePress: commentPost
     },
     {
       icon: "chart-bar",
       color: viewed ? Colors.light.majorelleBlue : Colors.light.russianViolet,
-      content: abbreviateNumber(viewsCount)
+      content: abbreviateNumber(views)
     },
     {
       icon: "share",

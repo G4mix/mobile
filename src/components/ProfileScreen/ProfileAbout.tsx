@@ -2,7 +2,7 @@ import { ScrollView } from "react-native";
 import { ProfileAboutCard } from "./ProfileAboutCard";
 import { Text } from "../Themed";
 import { Colors } from "@/constants/colors";
-import { PostLink } from "../Post/PostLink";
+import { IdeaLink } from "../Idea/IdeaLink";
 import { useToast } from "@/hooks/useToast";
 import { UserState } from "@/features/auth/userSlice";
 
@@ -32,7 +32,7 @@ export function ProfileAbout({ user }: { user?: UserState }) {
       {user.links.length !== 0 && (
         <ProfileAboutCard title="Links">
           {user.links.map((link) => (
-            <PostLink
+            <IdeaLink
               url={link}
               noHorizontalPadding
               key={`user-link-${link}`}

@@ -21,11 +21,9 @@ import { CreateScreenImage } from "@/components/CreateScreen/CreateScreenImage";
 import { api } from "@/constants/api";
 import { handleRequest } from "@/utils/handleRequest";
 import { objectToFormData } from "@/utils/objectToFormData";
-import { PostType } from "@/components/Post";
+import { IdeaType } from "@/components/Idea";
 import { SpinLoading } from "@/components/SpinLoading";
 import { useFeedQueries } from "@/hooks/useFeedQueries";
-import { CreateScreenEvent } from "@/components/CreateScreen/CreateScreenEvent";
-import { getDate } from "@/utils/getDate";
 import { isValidPostContent, isValidPostTitle } from "@/constants/validations";
 import { RootState } from "@/constants/reduxStore";
 import { SuccessModal } from "@/components/SuccessModal";
@@ -73,17 +71,15 @@ export type CreateScreenFormData = {
   images?: CameraImage[];
   links?: string[];
   tags?: string[];
-  event?: Partial<PostType["event"]>;
 };
 
 export default function CreateScreen() {
   const [isAddLinkVisible, setIsAddLinkVisible] = useState(false);
   const [isCameraVisible, setIsCameraVisible] = useState(false);
-  const [isAddEventVisible, setIsAddEventVisible] = useState(false);
   const [isSuccessVisible, setIsSuccessVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { addNewPost, updatePost } = useFeedQueries();
-  const { postId } = useLocalSearchParams<{ postId: string }>();
+  const { addNewIdea, updateIdea } = useFeedQueries();
+  const { postId: ideaId } = useLocalSearchParams<{ postId: string }>();
   const user = useSelector((state: RootState) => state.user);
 
   const { watch, setValue, handleSubmit } = useForm<CreateScreenFormData>();
@@ -92,16 +88,16 @@ export default function CreateScreen() {
   const contentRef = useRef<HTMLInputElement>(null);
 
   const { data: post } = useQuery({
-    queryKey: ["post", postId],
+    queryKey: ["idea", ideaId],
     queryFn: async () => {
-      const response = await api.get<PostType>(`/post/${postId}`);
+      const response = await api.get<IdeaType>(`/idea/${ideaId}`);
       return response.data;
     },
-    enabled: !!postId
+    enabled: !!ideaId
   });
 
   const getPost = () => {
-    if (!post || !postId) return;
+    if (!post || !ideaId) return;
     setValue("title", post.title);
     setValue("content", post.content);
     setValue(
@@ -115,15 +111,8 @@ export default function CreateScreen() {
         };
       })
     );
-    setValue(
-      "links",
-      post.links.map((l) => l.url)
-    );
-    setValue(
-      "tags",
-      post.tags.map((t) => t.name)
-    );
-    setValue("event", post.event);
+    setValue("links", post.links);
+    setValue("tags", post.tags);
   };
 
   const clearFields = () => {
@@ -134,24 +123,22 @@ export default function CreateScreen() {
     setValue("tags", []);
     setValue("images", []);
     setValue("links", []);
-    setValue("event", undefined);
   };
 
   useEffect(() => {
     getPost();
     return clearFields;
-  }, [post, postId]);
+  }, [post, ideaId]);
 
   const createOrUpdatePost = async ({
     title,
     content,
-    event,
     images,
     links,
     tags
   }: CreateScreenFormData) => {
     if (isLoading) return;
-    if (!title && !content && !images && !links && !event) {
+    if (!title && !content && !images && !links) {
       showToast({ message: "Você precisa preencher ao menos um campo!" });
       setIsLoading(false);
       return;
@@ -161,14 +148,13 @@ export default function CreateScreen() {
       content,
       images,
       links,
-      tags,
-      event
+      tags
     });
 
-    const data = await handleRequest<PostType>({
+    const data = await handleRequest<IdeaType>({
       requestFn: async () =>
-        api[post && postId ? "patch" : "post"](
-          `/post${post && postId ? `?postId=${postId}` : ""}`,
+        api[post && ideaId ? "patch" : "post"](
+          `/idea${post && ideaId ? `/${ideaId}` : ""}`,
           formData,
           {
             headers: {
@@ -180,10 +166,10 @@ export default function CreateScreen() {
       setIsLoading
     });
     if (!data) return;
-    if (post && postId) {
-      updatePost(data);
+    if (post && ideaId) {
+      updateIdea(data);
     } else {
-      addNewPost(data);
+      addNewIdea(data);
     }
     clearFields();
     setIsSuccessVisible(true);
@@ -198,7 +184,6 @@ export default function CreateScreen() {
   const content = watch("content");
   const images = watch("images");
   const links = watch("links");
-  const event = watch("event");
 
   const postContentActions: { name: IconName; handleClick?: () => void }[] = [
     {
@@ -222,17 +207,6 @@ export default function CreateScreen() {
     },
     {
       name: "code-bracket"
-    },
-    {
-      name: "calendar",
-      handleClick: () => {
-        setIsAddEventVisible((prevValue) => !prevValue);
-        const actualDate = getDate().toISOString();
-        setValue("event", {
-          startDate: actualDate,
-          endDate: actualDate
-        });
-      }
     }
   ];
 
@@ -253,10 +227,10 @@ export default function CreateScreen() {
     <ScrollView style={styles.scroll}>
       <View style={styles.container}>
         {isLoading && (
-          <SpinLoading message={postId ? "Atualizando..." : "Publicando..."} />
+          <SpinLoading message={ideaId ? "Atualizando..." : "Publicando..."} />
         )}
         {isSuccessVisible && (
-          <SuccessModal message={postId ? "Atualizado!" : "Publicado!"} />
+          <SuccessModal message={ideaId ? "Atualizado!" : "Publicado!"} />
         )}
         <CreateScreenHeader
           isLoading={isLoading}
@@ -265,8 +239,7 @@ export default function CreateScreen() {
             title,
             content,
             images,
-            links,
-            event
+            links
           }}
           post={post}
         />
@@ -344,11 +317,6 @@ export default function CreateScreen() {
           />
         </View>
         <CreateScreenTags setValue={setValue} watch={watch} />
-        <CreateScreenEvent
-          isAddEventVisible={isAddEventVisible}
-          setValue={setValue}
-          watch={watch}
-        />
       </View>
     </ScrollView>
   );

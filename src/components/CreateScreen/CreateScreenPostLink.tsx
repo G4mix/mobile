@@ -1,5 +1,5 @@
 import { TouchableOpacity } from "react-native";
-import { PostLink } from "../Post/PostLink";
+import { IdeaLink } from "../Idea/IdeaLink";
 import { Colors } from "@/constants/colors";
 import { Icon } from "../Icon";
 import { useToast } from "@/hooks/useToast";
@@ -32,7 +32,7 @@ export function CreateScreenPostLink({
   };
 
   return (
-    <PostLink
+    <IdeaLink
       handleError={() => handleLoadLinkError()}
       url={link}
       noHorizontalPadding={noHorizontalPadding}
@@ -62,6 +62,6 @@ export function CreateScreenPostLink({
           }}
         />
       </TouchableOpacity>
-    </PostLink>
+    </IdeaLink>
   );
 }

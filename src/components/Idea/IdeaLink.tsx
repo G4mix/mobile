@@ -3,7 +3,7 @@ import { Image, StyleSheet } from "react-native";
 import { Text, View } from "@/components/Themed";
 import { ExternalLink } from "@/components/ExternalLink";
 import { Colors } from "@/constants/colors";
-import { PostLinkLoading } from "./PostLinkLoading";
+import { IdeaLinkLoading } from "./IdeaLinkLoading";
 import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
 
 const styles = StyleSheet.create({
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   }
 });
 
-type PostLinkProps = {
+type IdeaLinkProps = {
   handleError?: () => void;
   children?: React.ReactNode;
   url?: string;
@@ -50,12 +50,12 @@ type DataType = {
   };
 };
 
-export function PostLink({
+export function IdeaLink({
   url = "",
   handleError,
   children,
   noHorizontalPadding
-}: PostLinkProps) {
+}: IdeaLinkProps) {
   const [data, setData] = useState<DataType | null>(null);
 
   const fetchData = useCallback(async () => {
@@ -85,7 +85,7 @@ export function PostLink({
   }, []);
 
   if (!data || !data.icon.url) {
-    return <PostLinkLoading noHorizontalPadding={noHorizontalPadding} />;
+    return <IdeaLinkLoading noHorizontalPadding={noHorizontalPadding} />;
   }
 
   return (
