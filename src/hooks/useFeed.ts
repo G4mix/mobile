@@ -11,7 +11,7 @@ type IdeaPageable = {
 };
 
 export const useFeed = ({ authorId }: { authorId?: string } = {}) => {
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } =
     useInfiniteQuery({
       queryKey: ["ideas", { authorId }],
       queryFn: async ({ pageParam }) =>
@@ -46,6 +46,7 @@ export const useFeed = ({ authorId }: { authorId?: string } = {}) => {
     data,
     fetchNextPage,
     hasNextPage,
-    isFetchingNextPage
+    isFetchingNextPage,
+    refetch
   };
 };

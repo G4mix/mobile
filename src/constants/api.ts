@@ -17,6 +17,9 @@ if (!globalForAxios.axiosInstance) {
 export const api = globalForAxios.axiosInstance;
 
 let accessTokenCache: string | null = null;
+export const clearAccessTokenCache = () => {
+  accessTokenCache = null;
+};
 let isRefreshing = false;
 let failedQueue: {
   resolve: (token: string) => void;

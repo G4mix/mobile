@@ -6,6 +6,7 @@ import {
   Dimensions
 } from "react-native";
 import { router } from "expo-router";
+import { useQueryClient } from "@tanstack/react-query";
 import { Idea } from "@/components/Idea";
 import { useFeed } from "@/hooks/useFeed";
 import { InView } from "@/components/InView";
@@ -13,6 +14,7 @@ import { FloatingOptionsProvider } from "@/context/FloatingOptionsContext";
 import { ConfirmationModalProvider } from "@/context/ConfirmationModalContext";
 import { IdeaLoading } from "@/components/Idea/IdeaLoading";
 import { Colors } from "@/constants/colors";
+import { usePullToRefresh } from "@/hooks/usePullToRefresh";
 
 export const styles = StyleSheet.create({
   container: {
@@ -35,12 +37,24 @@ export const styles = StyleSheet.create({
 });
 
 export default function FeedScreen() {
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useFeed();
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } =
+    useFeed();
+  const queryClient = useQueryClient();
   const ideas = data?.pages?.flatMap((page) => page?.data || []) || [];
+
+  const handleRefresh = async () => {
+    // Invalidar e refazer fetch das queries de ideas
+    await queryClient.invalidateQueries({ queryKey: ["ideas"] });
+    await refetch();
+  };
+
+  const { refreshControl } = usePullToRefresh({
+    onRefresh: handleRefresh
+  });
 
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.scroll}>
+      <ScrollView style={styles.scroll} refreshControl={refreshControl}>
         <View style={styles.ideas}>
           <FloatingOptionsProvider>
             <ConfirmationModalProvider>

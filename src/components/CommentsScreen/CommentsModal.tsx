@@ -109,8 +109,8 @@ export function CommentsModal({
   const [isLoading, setIsLoading] = useState(false);
   const { updateIdea } = useFeedQueries();
   const queryClient = useQueryClient();
-  const { postId, commentId } = useLocalSearchParams<{
-    postId: string;
+  const { ideaId, commentId } = useLocalSearchParams<{
+    ideaId: string;
     commentId: string;
   }>();
   const lastFetchTime = useSelector(
@@ -135,7 +135,7 @@ export function CommentsModal({
 
   const addNewComment = (comment: CommentType) => {
     queryClient.setQueryData(
-      ["comments", { lastFetchTime, postId, commentId }],
+      ["comments", { lastFetchTime, ideaId, commentId }],
       (oldData: any) => {
         if (!oldData || !oldData.pages[0]) return oldData;
 
@@ -164,7 +164,7 @@ export function CommentsModal({
   };
 
   const updateSingleIdea = () => {
-    queryClient.setQueryData<IdeaType>(["idea", postId], (oldData) => {
+    queryClient.setQueryData<IdeaType>(["idea", ideaId], (oldData) => {
       if (!oldData) return oldData;
 
       return {
@@ -176,11 +176,15 @@ export function CommentsModal({
 
   const createComment = async ({ content }: { content: string }) => {
     if (content.length < 3) return;
-
+    console.log("createComment", {
+      ideaId,
+      parentCommentId: commentId || replying.parentComment,
+      content
+    });
     const data = await handleRequest<CommentType>({
       requestFn: async () =>
         api.post("/comment", {
-          ideaId: postId,
+          ideaId,
           content,
           parentCommentId: commentId || replying.parentComment || undefined
         }),
@@ -196,7 +200,7 @@ export function CommentsModal({
       toMark: "",
       author: undefined
     });
-    updateIdea({ id: postId, comments: commentsCount + 1 });
+    updateIdea({ id: ideaId, comments: commentsCount + 1 });
     updateSingleIdea();
     if (data.parentCommentId && !commentId) {
       await timeout(500);

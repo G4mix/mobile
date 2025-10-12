@@ -1,14 +1,15 @@
 import { View, ScrollView } from "react-native";
 import { useEffect, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Comment, CommentType } from "@/components/CommentsScreen/Comment";
-import { useComments } from "@/hooks/useComments";
+import { CommentPageable, useComments } from "@/hooks/useComments";
 import { InView } from "@/components/InView";
 import { CommentInput } from "@/components/CommentsScreen/CommentInput";
 import { IdeaType } from "@/components/Idea";
 import { api } from "@/constants/api";
 import { CommentLoading } from "@/components/CommentsScreen/CommentLoading";
+import { usePullToRefresh } from "@/hooks/usePullToRefresh";
 
 export default function RepliesScreen() {
   const { ideaId, commentId } = useLocalSearchParams<{
@@ -16,11 +17,20 @@ export default function RepliesScreen() {
     commentId: string;
   }>();
 
-  const { data: comment } = useQuery({
-    queryKey: ["comment", commentId],
+  const queryClient = useQueryClient();
+
+  const { data: comment, refetch: refetchComment } = useQuery({
+    queryKey: ["comment", { commentId, ideaId }],
     queryFn: async () => {
-      const response = await api.get<CommentType>(`/comment/${commentId}`);
-      return response.data;
+      const response = await api.get<CommentPageable>("/comment", {
+        params: {
+          ideaId,
+          parentCommentId: commentId,
+          page: 0,
+          limit: 1
+        }
+      });
+      return response.data.data[0];
     },
     enabled: !!commentId
   });
@@ -28,7 +38,8 @@ export default function RepliesScreen() {
   const {
     data: idea,
     isLoading,
-    isError
+    isError,
+    refetch: refetchIdea
   } = useQuery({
     queryKey: ["idea", ideaId],
     queryFn: async () => {
@@ -38,8 +49,13 @@ export default function RepliesScreen() {
     enabled: !!ideaId
   });
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useComments();
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    refetch: refetchReplies
+  } = useComments();
 
   const replies = data?.pages?.flatMap((page) => page?.data || []) || [];
   const [replying, setReplying] = useState<{
@@ -62,13 +78,31 @@ export default function RepliesScreen() {
     setIsVisible(true);
   };
 
+  const handleRefresh = async () => {
+    await queryClient.invalidateQueries({ queryKey: ["comment", commentId] });
+    await queryClient.invalidateQueries({ queryKey: ["idea", ideaId] });
+    await queryClient.invalidateQueries({
+      queryKey: ["comments", { ideaId, commentId }]
+    });
+    await refetchReplies();
+    await refetchComment();
+    await refetchIdea();
+  };
+
+  const { refreshControl } = usePullToRefresh({
+    onRefresh: handleRefresh
+  });
+
   if (isError) router.push("/feed");
 
   useEffect(() => setIsVisible(true), []);
 
   return (
     <View style={{ flex: 1, position: "relative" }}>
-      <ScrollView style={{ flex: 1, position: "relative", marginBottom: 56 }}>
+      <ScrollView
+        style={{ flex: 1, position: "relative", marginBottom: 56 }}
+        refreshControl={refreshControl}
+      >
         {isLoading && <CommentLoading commentType="post" />}
         {comment && (
           <Comment

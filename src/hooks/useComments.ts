@@ -12,19 +12,19 @@ export type CommentPageable = {
 };
 
 export const useComments = () => {
-  const { postId, commentId } = useLocalSearchParams<{
-    postId?: string;
+  const { ideaId, commentId } = useLocalSearchParams<{
+    ideaId?: string;
     commentId?: string;
   }>();
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } =
     useInfiniteQuery({
-      queryKey: ["comments", { postId, commentId }],
+      queryKey: ["comments", { ideaId, commentId }],
       queryFn: async ({ pageParam }) =>
         (
           await api.get<CommentPageable>("/comment", {
             params: {
-              ideaId: postId,
-              commentId,
+              ideaId,
+              parentCommentId: commentId,
               page: pageParam,
               limit: 10
             }
@@ -32,13 +32,14 @@ export const useComments = () => {
         ).data,
       initialPageParam: 0,
       getNextPageParam: (lastPage) => lastPage?.nextPage,
-      enabled: !!postId
+      enabled: !!ideaId
     });
 
   return {
     data,
     fetchNextPage,
     hasNextPage,
-    isFetchingNextPage
+    isFetchingNextPage,
+    refetch
   };
 };

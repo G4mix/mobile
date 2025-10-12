@@ -1,4 +1,4 @@
-import { ScrollView, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { router } from "expo-router";
 import { View } from "../Themed";
 import { FloatingOptionsProvider } from "@/context/FloatingOptionsContext";
@@ -14,37 +14,36 @@ export function ProfileIdeas({ userId }: { userId: string }) {
     authorId: userId
   });
   const ideas = data?.pages?.flatMap((page) => page?.data || []) || [];
+
   return (
-    <ScrollView style={styles.scroll}>
-      <View style={styles.ideas}>
-        <FloatingOptionsProvider>
-          <ConfirmationModalProvider>
-            {ideas?.map((idea, index) => (
-              <TouchableOpacity
-                onPress={() => router.push(`/ideas/${idea!.id}`)}
-                key={`idea-${idea?.id || index}`}
-              >
-                <Idea
-                  idea={idea}
-                  // onInView={() => {
-                  //   if (idea) addVisualizedPost(idea.id);
-                  // }}
-                  // alreadyVisualized={
-                  //   idea ? alreadyVisualized.current.has(idea.id) : false
-                  // }
-                />
-              </TouchableOpacity>
+    <View style={styles.ideas}>
+      <FloatingOptionsProvider>
+        <ConfirmationModalProvider>
+          {ideas?.map((idea, index) => (
+            <TouchableOpacity
+              onPress={() => router.push(`/ideas/${idea!.id}`)}
+              key={`idea-${idea?.id || index}`}
+            >
+              <Idea
+                idea={idea}
+                // onInView={() => {
+                //   if (idea) addVisualizedPost(idea.id);
+                // }}
+                // alreadyVisualized={
+                //   idea ? alreadyVisualized.current.has(idea.id) : false
+                // }
+              />
+            </TouchableOpacity>
+          ))}
+          {isFetchingNextPage &&
+            [1, 2, 3].map((idea) => (
+              <IdeaLoading key={`idea-loading-${idea}`} />
             ))}
-            {isFetchingNextPage &&
-              [1, 2, 3].map((idea) => (
-                <IdeaLoading key={`idea-loading-${idea}`} />
-              ))}
-            {isFetchingNextPage || !hasNextPage ? null : (
-              <InView onInView={fetchNextPage} />
-            )}
-          </ConfirmationModalProvider>
-        </FloatingOptionsProvider>
-      </View>
-    </ScrollView>
+          {isFetchingNextPage || !hasNextPage ? null : (
+            <InView onInView={fetchNextPage} />
+          )}
+        </ConfirmationModalProvider>
+      </FloatingOptionsProvider>
+    </View>
   );
 }
