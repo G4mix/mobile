@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 600,
     justifyContent: "center",
+    position: "relative",
     width: "100%"
   },
   dot: {

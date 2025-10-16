@@ -3,6 +3,8 @@ import { View, StyleSheet, Dimensions } from "react-native";
 import { Colors } from "@/constants/colors";
 import { InView } from "../InView";
 import { IdeaImages } from "./IdeaImages";
+import { IdeaHeader } from "./IdeaHeader";
+import { IdeaBody } from "./IdeaBody";
 
 export type IdeaType = {
   id: string;
@@ -17,7 +19,7 @@ export type IdeaType = {
   isViewed: boolean;
   author: {
     id: string;
-    displayName: string | null;
+    displayName: string;
     autobiography: string | null;
     icon: string | null;
     backgroundImage: string | null;
@@ -49,7 +51,7 @@ type IdeaProps = {
 
 const styles = StyleSheet.create({
   ideaContainer: {
-    backgroundColor: Colors.light.white,
+    backgroundColor: "transparent",
     borderBottomWidth: 1,
     borderColor: Colors.light.periwinkle,
     display: "flex",
@@ -57,6 +59,14 @@ const styles = StyleSheet.create({
     gap: 8,
     minHeight: Dimensions.get("window").height * 0.75,
     width: "100%"
+  },
+  cardShadowWrapper: {
+    alignSelf: "center",       
+    borderRadius: 16,         
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    elevation: 4,
   }
 });
 
@@ -74,23 +84,29 @@ export function Idea({ alreadyVisualized, idea, onInView }: IdeaProps) {
         isDeleting={isDeleting}
         setIsDeleting={setIsDeleting}
       /> */}
-      <IdeaImages images={idea.images} />
-      {/* <IdeaBody
-        title={idea.title}
-        content={idea.content}
-        images={idea.images}
-      /> */}
-      {/* {idea.links.map((link) => (
-        <IdeaLink key={`link-${link}`} url={link} />
-      ))}
-      <IdeaActions
-        ideaId={idea.id}
-        likes={idea.likes}
-        comments={idea.comments}
-        views={idea.views}
-        liked={idea.isLiked}
-        viewed={false}
-      /> */}
+      <View style={styles.cardShadowWrapper}>
+        
+          <IdeaImages images={idea.images} />
+          <IdeaBody
+            author={idea.author.displayName}
+            title={idea.title}
+            content={idea.content}
+            images={idea.images}
+            tags={idea.tags}
+          />
+          {/* {idea.links.map((link) => (
+            <IdeaLink key={`link-${link}`} url={link} />
+          ))}
+          <IdeaActions
+            ideaId={idea.id}
+            likes={idea.likes}
+            comments={idea.comments}
+            views={idea.views}
+            liked={idea.isLiked}
+            viewed={false}
+          /> */}
+        
+      </View>
       {!alreadyVisualized && onInView && <InView onInView={onInView} />}
     </View>
   );
