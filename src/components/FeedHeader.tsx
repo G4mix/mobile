@@ -20,7 +20,8 @@ const styles = StyleSheet.create({
   },
   logo: {
     maxHeight: 28,
-    maxWidth: 90
+    maxWidth: 90,
+    resizeMode: "contain"
   }
 });
 

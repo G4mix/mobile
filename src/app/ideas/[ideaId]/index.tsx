@@ -50,7 +50,7 @@ export default function IdeaScreen() {
     isFetchingNextPage,
     refetch: refetchComments
   } = useComments();
-  const comments = data?.pages?.flatMap(page => page?.data || []) || [];
+  const comments = data?.pages?.flatMap((page) => page?.data || []) || [];
 
   const commentReply = async (commentId: string) => {
     router.push(`/ideas/${ideaId}/comments/${commentId}`);
@@ -85,7 +85,7 @@ export default function IdeaScreen() {
           </ConfirmationModalProvider>
         </FloatingOptionsProvider>
         <View style={{ marginBottom: 56 }}>
-          {comments.map(comment => (
+          {comments.map((comment) => (
             <View key={`comment-${comment.id}`}>
               <Comment
                 comment={comment}
@@ -96,7 +96,7 @@ export default function IdeaScreen() {
             </View>
           ))}
           {isFetchingNextPage &&
-            [0, 1, 2].map(comment => (
+            [0, 1, 2].map((comment) => (
               <CommentLoading
                 key={`comment-loading-${comment}`}
                 commentType="comment"

@@ -1,12 +1,8 @@
-import React, { useState } from "react";
-import { View, StyleSheet } from "react-native";
+import React from "react";
+import { View, StyleSheet, Dimensions } from "react-native";
 import { Colors } from "@/constants/colors";
-import { IdeaHeader } from "./IdeaHeader";
-import { IdeaBody } from "./IdeaBody";
-import { IdeaActions } from "./IdeaActions";
-import { IdeaLink } from "./IdeaLink";
 import { InView } from "../InView";
-import { IdeaLoading } from "./IdeaLoading";
+import { IdeaImages } from "./IdeaImages";
 
 export type IdeaType = {
   id: string;
@@ -59,32 +55,32 @@ const styles = StyleSheet.create({
     display: "flex",
     flex: 1,
     gap: 8,
-    padding: 16,
+    minHeight: Dimensions.get("window").height * 0.75,
     width: "100%"
   }
 });
 
 export function Idea({ alreadyVisualized, idea, onInView }: IdeaProps) {
-  const [isDeleting, setIsDeleting] = useState(false);
-  if (isDeleting) return <IdeaLoading />;
+  // const [isDeleting, setIsDeleting] = useState(false);
+  // if (isDeleting) return <IdeaLoading />;
   if (!idea) return null;
   return (
     <View style={styles.ideaContainer}>
-      <IdeaHeader
+      {/* <IdeaHeader
         ideaId={idea.id}
         author={idea.author}
         createdAt={idea.createdAt}
         updatedAt={idea.updatedAt}
         isDeleting={isDeleting}
         setIsDeleting={setIsDeleting}
-      />
-      <IdeaBody
+      /> */}
+      <IdeaImages images={idea.images} />
+      {/* <IdeaBody
         title={idea.title}
         content={idea.content}
         images={idea.images}
-        ideaId={idea.id}
-      />
-      {idea.links.map((link) => (
+      /> */}
+      {/* {idea.links.map((link) => (
         <IdeaLink key={`link-${link}`} url={link} />
       ))}
       <IdeaActions
@@ -94,7 +90,7 @@ export function Idea({ alreadyVisualized, idea, onInView }: IdeaProps) {
         views={idea.views}
         liked={idea.isLiked}
         viewed={false}
-      />
+      /> */}
       {!alreadyVisualized && onInView && <InView onInView={onInView} />}
     </View>
   );

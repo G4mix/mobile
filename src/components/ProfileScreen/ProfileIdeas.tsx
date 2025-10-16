@@ -1,4 +1,4 @@
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, StyleSheet } from "react-native";
 import { router } from "expo-router";
 import { View } from "../Themed";
 import { FloatingOptionsProvider } from "@/context/FloatingOptionsContext";
@@ -7,7 +7,17 @@ import { Idea } from "../Idea";
 import { IdeaLoading } from "../Idea/IdeaLoading";
 import { InView } from "../InView";
 import { useFeed } from "@/hooks/useFeed";
-import { styles } from "@/app/(tabs)/feed";
+
+const styles = StyleSheet.create({
+  ideas: {
+    display: "flex",
+    flexDirection: "column",
+    flex: 1,
+    gap: 8,
+    marginBottom: 56,
+    width: "100%"
+  }
+});
 
 export function ProfileIdeas({ userId }: { userId: string }) {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useFeed({

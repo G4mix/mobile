@@ -1,7 +1,6 @@
 import { StyleSheet } from "react-native";
 import { Text, View } from "../Themed";
 import { Colors } from "@/constants/colors";
-import { IdeaImages } from "./IdeaImages";
 import { IdeaType } from ".";
 
 const styles = StyleSheet.create({
@@ -21,17 +20,15 @@ const styles = StyleSheet.create({
 type IdeaBodyProps = {
   title?: string;
   content?: string;
-  ideaId: string;
   images: IdeaType["images"];
 };
 
-export function IdeaBody({ ideaId, title, content, images }: IdeaBodyProps) {
+export function IdeaBody({ title, content, images }: IdeaBodyProps) {
   if (!title && !content && (!images || images.length === 0)) return null;
   return (
     <View>
       {title && <Text style={styles.postTitle}>{title}</Text>}
       {content && <Text style={styles.postDescription}>{content}</Text>}
-      <IdeaImages images={images} ideaId={ideaId} />
     </View>
   );
 }
