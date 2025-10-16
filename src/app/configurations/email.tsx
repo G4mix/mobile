@@ -98,7 +98,7 @@ export default function EmailScreen() {
         color={Colors.light.tropicalIndigo}
         borderWidth={2}
         value={email}
-        onChangeText={(value) => setValue("email", value)}
+        onChangeText={value => setValue("email", value)}
       />
       <Button onPress={onSubmit}>
         <Text style={{ color: Colors.light.white, fontSize: 16 }}>

@@ -25,7 +25,7 @@ export const useFeed = ({ authorId }: { authorId?: string } = {}) => {
           })
         ).data,
       initialPageParam: 0,
-      getNextPageParam: (lastPage) => lastPage?.nextPage,
+      getNextPageParam: lastPage => lastPage?.nextPage,
       enabled: true
     });
   // useEffect(() => {

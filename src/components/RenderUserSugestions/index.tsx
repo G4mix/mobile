@@ -17,7 +17,7 @@ export function RenderUserSuggestions({
   const { data, fetchNextPage, isFetchingNextPage, hasNextPage } = useUsers({
     search: keyword || ""
   });
-  const users = data?.pages?.flatMap((page) => page?.data || []) || [];
+  const users = data?.pages?.flatMap(page => page?.data || []) || [];
   if (typeof keyword !== "string") return null;
 
   return (
@@ -32,7 +32,7 @@ export function RenderUserSuggestions({
         }}
       >
         <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
-          {users.map((user) => (
+          {users.map(user => (
             <Pressable
               key={user.id}
               focusable={false}
@@ -72,7 +72,7 @@ export function RenderUserSuggestions({
           ))}
           {isFetchingNextPage ||
             (!data &&
-              [0, 1, 2].map((value) => (
+              [0, 1, 2].map(value => (
                 <RenderUserSugestionsLoading
                   key={`user-suggestion-loading-${value}`}
                 />

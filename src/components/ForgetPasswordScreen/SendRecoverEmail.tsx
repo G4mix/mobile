@@ -37,7 +37,7 @@ export function SendRecoverEmail({ changePassword }: SendRecoverEmailProps) {
     }
   });
 
-  const onSubmit = handleSubmit((data) => {
+  const onSubmit = handleSubmit(data => {
     changePassword(data, true);
     setValue("email", "");
   });

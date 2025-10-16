@@ -38,7 +38,7 @@ export function ToastProvider({ children }: ToastProviderProps) {
       const id = Date.now();
       const animation = new Animated.Value(0);
 
-      setToasts((prev) => [...prev, { id, message, color, animation }]);
+      setToasts(prev => [...prev, { id, message, color, animation }]);
 
       Animated.timing(animation, {
         toValue: 1,
@@ -52,7 +52,7 @@ export function ToastProvider({ children }: ToastProviderProps) {
           duration: 300,
           useNativeDriver: true
         }).start(() => {
-          setToasts((prev) => prev.filter((toast) => toast.id !== id));
+          setToasts(prev => prev.filter(toast => toast.id !== id));
         });
       }, duration);
     },
@@ -65,7 +65,7 @@ export function ToastProvider({ children }: ToastProviderProps) {
     <ToastContext.Provider value={contextValue}>
       {children}
       <View style={styles.container}>
-        {toasts.map((toast) => (
+        {toasts.map(toast => (
           <Toast
             key={toast.id}
             message={toast.message}

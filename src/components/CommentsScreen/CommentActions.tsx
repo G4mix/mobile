@@ -59,7 +59,7 @@ export function CommentActions({
           ...oldData,
           pages: oldData.pages.map((page: CommentPageable) => ({
             ...page,
-            data: page.data.map((comment) =>
+            data: page.data.map(comment =>
               comment.id === commentId
                 ? {
                     ...comment,
@@ -105,9 +105,9 @@ export function CommentActions({
   ).current;
 
   const likeComment = async () => {
-    setIsLiked((prevValue) => {
+    setIsLiked(prevValue => {
       const newValue = !prevValue;
-      setCurrentLikesCount((prevCount) => {
+      setCurrentLikesCount(prevCount => {
         const newLikesCount = !prevValue ? prevCount + 1 : prevCount - 1;
         debouncedLikeComment(newValue, newLikesCount);
         return newLikesCount;

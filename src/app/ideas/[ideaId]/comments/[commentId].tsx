@@ -57,7 +57,7 @@ export default function RepliesScreen() {
     refetch: refetchReplies
   } = useComments();
 
-  const replies = data?.pages?.flatMap((page) => page?.data || []) || [];
+  const replies = data?.pages?.flatMap(page => page?.data || []) || [];
   const [replying, setReplying] = useState<{
     parentComment: string;
     toMark: string;
@@ -115,7 +115,7 @@ export default function RepliesScreen() {
             commentType="post"
           />
         )}
-        {replies.map((reply) => (
+        {replies.map(reply => (
           <View key={`comment-${reply.id}`}>
             <Comment
               key={`reply-${reply.id}`}
@@ -129,7 +129,7 @@ export default function RepliesScreen() {
           </View>
         ))}
         {isFetchingNextPage &&
-          [0, 1, 2].map((c) => (
+          [0, 1, 2].map(c => (
             <CommentLoading
               key={`comment-loading-${c}`}
               commentType="comment"

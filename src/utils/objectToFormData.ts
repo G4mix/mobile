@@ -16,13 +16,13 @@ export const objectToFormData = (
       } else if (Array.isArray(value)) {
         if (
           value.some(
-            (e) =>
+            e =>
               e instanceof File ||
               e instanceof Blob ||
               (typeof e === "object" && e !== null)
           )
         ) {
-          value.forEach((element) => {
+          value.forEach(element => {
             formData.append(key, element);
           });
         } else {

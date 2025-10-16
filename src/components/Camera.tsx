@@ -167,7 +167,7 @@ export function Camera({
   }
 
   const toggleCameraFacing = () => {
-    setFacing((current) => (current === "back" ? "front" : "back"));
+    setFacing(current => (current === "back" ? "front" : "back"));
   };
 
   const closeCamera = async () => {
@@ -256,7 +256,7 @@ export function Camera({
   };
 
   const changeFlash = () => {
-    setFlash((oldFlash) =>
+    setFlash(oldFlash =>
       oldFlash === "off" ? "on" : flash === "on" ? "auto" : "off"
     );
   };

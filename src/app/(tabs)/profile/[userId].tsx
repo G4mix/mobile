@@ -86,11 +86,19 @@ export default function ProfileScreen() {
 
   return (
     <ScrollView
-      style={{ backgroundColor: Colors.light.background, flex: 1 }}
+      style={{
+        backgroundColor: Colors.light.background,
+        flex: 1
+      }}
       refreshControl={refreshControl}
       {...panResponder.panHandlers}
     >
-      <View style={{ flex: 1 }}>
+      <View
+        style={{
+          flex: 1,
+          gap: 8
+        }}
+      >
         {isLoading && !data && <ProfileHeaderLoading id={userId} />}
         <ConfirmationModalProvider>
           {!isLoading && data && (

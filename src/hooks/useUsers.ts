@@ -25,7 +25,7 @@ export const useUsers = ({ search }: { search: string }) => {
           })
         ).data,
       initialPageParam: 0,
-      getNextPageParam: (lastPage) => lastPage?.nextPage,
+      getNextPageParam: lastPage => lastPage?.nextPage,
       enabled: true
     });
 

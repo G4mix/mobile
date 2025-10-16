@@ -102,7 +102,7 @@ export default function CreateScreen() {
     setValue("content", post.content);
     setValue(
       "images",
-      post.images.map((img) => {
+      post.images.map(img => {
         const extension = img.src.split(".").pop()?.split("?")[0] || "jpg";
         return {
           uri: img.src,
@@ -203,7 +203,7 @@ export default function CreateScreen() {
         links && links.length >= 5
           ? () =>
               showToast({ message: "O máximo de links é 5.", color: "warn" })
-          : () => setIsAddLinkVisible((prevValue) => !prevValue)
+          : () => setIsAddLinkVisible(prevValue => !prevValue)
     },
     {
       name: "code-bracket"
@@ -214,7 +214,7 @@ export default function CreateScreen() {
     const currentImages = images || [];
     setValue(
       "images",
-      currentImages.filter((currentImage) => currentImage.uri !== src)
+      currentImages.filter(currentImage => currentImage.uri !== src)
     );
   };
 
@@ -279,14 +279,14 @@ export default function CreateScreen() {
                 setValue("content", value.slice(0, 700))
               }
             />
-            {images?.map((img) => (
+            {images?.map(img => (
               <CreateScreenImage
                 key={`post-image-${img.uri}`}
                 src={img.uri}
                 handleDeleteImage={handleDeleteImage}
               />
             ))}
-            {links?.map((link) => (
+            {links?.map(link => (
               <CreateScreenPostLink
                 setValue={setValue as any}
                 links={links}

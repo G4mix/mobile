@@ -57,7 +57,7 @@ export const useViewIdeas = ({
   // Cleanup dos timeouts quando o componente for desmontado
   useEffect(
     () => () => {
-      timeouts.current.forEach((timeout) => clearTimeout(timeout));
+      timeouts.current.forEach(timeout => clearTimeout(timeout));
       timeouts.current.clear();
     },
     []

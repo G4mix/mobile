@@ -51,7 +51,7 @@ const userSlice = createSlice({
       state.isFollowing = action.payload.isFollowing;
       state.user = action.payload.user;
     },
-    logout: (state) => {
+    logout: state => {
       state.id = "";
       state.displayName = null;
       state.icon = null;

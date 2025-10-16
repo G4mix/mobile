@@ -16,7 +16,7 @@ export function Checkbox({ isChecked, setIsChecked }: CheckboxProps) {
       checkedColor={Colors.light.majorelleBlue}
       uncheckedColor={Colors.light.russianViolet}
       size={32}
-      onPress={() => setIsChecked((prevValue) => !prevValue)}
+      onPress={() => setIsChecked(prevValue => !prevValue)}
       iconType="material-community"
       checkedIcon="checkbox-outline"
       uncheckedIcon="checkbox-blank-outline"

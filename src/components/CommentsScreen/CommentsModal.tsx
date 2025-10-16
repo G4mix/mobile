@@ -176,11 +176,6 @@ export function CommentsModal({
 
   const createComment = async ({ content }: { content: string }) => {
     if (content.length < 3) return;
-    console.log("createComment", {
-      ideaId,
-      parentCommentId: commentId || replying.parentComment,
-      content
-    });
     const data = await handleRequest<CommentType>({
       requestFn: async () =>
         api.post("/comment", {

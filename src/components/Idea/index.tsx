@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: Colors.light.periwinkle,
     display: "flex",
+    flex: 1,
     gap: 8,
     padding: 16,
     width: "100%"

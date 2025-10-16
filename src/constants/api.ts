@@ -27,7 +27,7 @@ let failedQueue: {
 }[] = [];
 
 const processQueue = (error: any, token?: string) => {
-  failedQueue.forEach((prom) =>
+  failedQueue.forEach(prom =>
     token ? prom.resolve(token) : prom.reject(error)
   );
   failedQueue = [];
@@ -49,12 +49,12 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  error => Promise.reject(error)
 );
 
 api.interceptors.response.use(
-  (response) => response,
-  async (error) => {
+  response => response,
+  async error => {
     const originalRequest = error.config;
     const isAuthError =
       error.response?.status === 401 || error.response?.status === 403;
@@ -63,11 +63,11 @@ api.interceptors.response.use(
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         })
-          .then((token) => {
+          .then(token => {
             originalRequest.headers.Authorization = `Bearer ${token}`;
             return api(originalRequest);
           })
-          .catch((err) => Promise.reject(err));
+          .catch(err => Promise.reject(err));
       }
 
       originalRequest.retry = true;

@@ -79,9 +79,9 @@ export function IdeaActions({
   ).current;
 
   const likePost = async () => {
-    setIsLiked((prevValue) => {
+    setIsLiked(prevValue => {
       const newValue = !prevValue;
-      setCurrentLikesCount((prevCount) => {
+      setCurrentLikesCount(prevCount => {
         const newLikesCount = !prevValue ? prevCount + 1 : prevCount - 1;
         debouncedLikePost(newValue, newLikesCount);
         return newLikesCount;

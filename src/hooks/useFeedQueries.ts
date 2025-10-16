@@ -70,7 +70,7 @@ export const useFeedQueries = ({ authorId }: { authorId?: string } = {}) => {
         const updatedIdeasData = oldData.pages.map((page: any) => ({
           ...page,
           data: page.data.map((idea: IdeaType) => {
-            const updatedIdea = updatedIdeaIds.find((i) => i === idea.id);
+            const updatedIdea = updatedIdeaIds.find(i => i === idea.id);
             if (updatedIdea) {
               return {
                 ...idea,

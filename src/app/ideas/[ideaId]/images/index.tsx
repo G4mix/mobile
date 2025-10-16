@@ -37,7 +37,7 @@ export default function IdeaImageScreen() {
     <ScrollView>
       <View style={{ flexDirection: "column", gap: 32 }}>
         {(isLoading || !idea) &&
-          [0, 1, 2].map((value) => (
+          [0, 1, 2].map(value => (
             <Loading
               key={`loading-image-${value}`}
               width="100%"

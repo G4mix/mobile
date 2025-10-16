@@ -38,7 +38,7 @@ export default function ForgetPasswordScreen() {
   const { showToast } = useToast();
 
   const incrementStep = () => {
-    setActualStep((prevValue) => (prevValue === 2 ? prevValue : prevValue + 1));
+    setActualStep(prevValue => (prevValue === 2 ? prevValue : prevValue + 1));
   };
 
   const resetSteps = () => {

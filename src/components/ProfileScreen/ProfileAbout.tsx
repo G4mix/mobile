@@ -31,7 +31,7 @@ export function ProfileAbout({ user }: { user?: UserState }) {
       </ProfileAboutCard>
       {user.links.length !== 0 && (
         <ProfileAboutCard title="Links">
-          {user.links.map((link) => (
+          {user.links.map(link => (
             <IdeaLink
               url={link}
               noHorizontalPadding

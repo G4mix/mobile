@@ -22,7 +22,7 @@ export default function SearchScreen() {
     search: searchValue
   });
 
-  const users = data?.pages?.flatMap((page) => page?.data || []) || [];
+  const users = data?.pages?.flatMap(page => page?.data || []) || [];
 
   const debounceSearch = useRef(
     debounce((value: string) => {

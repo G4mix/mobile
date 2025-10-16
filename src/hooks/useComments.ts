@@ -31,7 +31,7 @@ export const useComments = () => {
           })
         ).data,
       initialPageParam: 0,
-      getNextPageParam: (lastPage) => lastPage?.nextPage,
+      getNextPageParam: lastPage => lastPage?.nextPage,
       enabled: !!ideaId
     });
 

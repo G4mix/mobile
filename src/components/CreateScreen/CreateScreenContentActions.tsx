@@ -40,7 +40,7 @@ export function CreateScreenContentActions({
 }: CreateScreenContentActionsProps) {
   return (
     <View style={[styles.postContentActions, style]}>
-      {postContentActions.map((postContentAction) =>
+      {postContentActions.map(postContentAction =>
         postContentAction.handleClick ? (
           <TouchableOpacity
             onPress={postContentAction.handleClick}

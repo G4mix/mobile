@@ -15,6 +15,7 @@ import { ConfirmationModalProvider } from "@/context/ConfirmationModalContext";
 import { IdeaLoading } from "@/components/Idea/IdeaLoading";
 import { Colors } from "@/constants/colors";
 import { usePullToRefresh } from "@/hooks/usePullToRefresh";
+import { FeedHeader } from "../../../components/FeedHeader";
 
 export const styles = StyleSheet.create({
   container: {
@@ -27,6 +28,7 @@ export const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     flex: 1,
+    gap: 8,
     width: "100%"
   },
   scroll: {
@@ -56,6 +58,7 @@ export default function FeedScreen() {
     <View style={styles.container}>
       <ScrollView style={styles.scroll} refreshControl={refreshControl}>
         <View style={styles.ideas}>
+          <FeedHeader />
           <FloatingOptionsProvider>
             <ConfirmationModalProvider>
               {ideas?.map((idea, index) => (

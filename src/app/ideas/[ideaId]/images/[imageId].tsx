@@ -70,7 +70,7 @@ export default function IdeaImageScreen() {
     return <Text style={{ color: "#fff" }}>Erro ao carregar...</Text>;
 
   const images: IdeaType["images"] = idea?.images || [];
-  const initialImageIndex = images.findIndex((img) => img.id === imageId);
+  const initialImageIndex = images.findIndex(img => img.id === imageId);
 
   const handleViewableItemsChanged = ({ viewableItems }: any) => {
     if (viewableItems[0]) {
@@ -96,7 +96,7 @@ export default function IdeaImageScreen() {
       )}
       <FlatList
         data={images}
-        keyExtractor={(item) => `idea-image-${item.id}`}
+        keyExtractor={item => `idea-image-${item.id}`}
         horizontal
         pagingEnabled
         showsHorizontalScrollIndicator={false}

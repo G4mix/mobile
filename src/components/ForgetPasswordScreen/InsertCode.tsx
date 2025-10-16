@@ -81,7 +81,7 @@ export function InsertCode({
           icon="lock-closed"
           label="Código de verificação"
           placeholder="Digite seu código de verificação aqui"
-          onChangeText={(value) => setValue("code", value.slice(0, 6))}
+          onChangeText={value => setValue("code", value.slice(0, 6))}
           value={code}
           onSubmitEditing={code.length === 6 ? onSubmit : undefined}
           returnKeyType="done"

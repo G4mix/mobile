@@ -92,13 +92,13 @@ export function ProfileHeader({
         title: "Parar de seguir",
         content: `Tem certeza de que deseja parar de seguir o usuário ${displayName || username}?`,
         handleConfirm: () => {
-          setIsFollowing((prevValue) => !prevValue);
+          setIsFollowing(prevValue => !prevValue);
           debouncedHandleFollow();
         },
         actionName: "Parar de seguir"
       });
     } else {
-      setIsFollowing((prevValue) => !prevValue);
+      setIsFollowing(prevValue => !prevValue);
       debouncedHandleFollow();
     }
   };

@@ -22,7 +22,7 @@ export function CreateScreenPostLink({
   const handleLoadLinkError = () => {
     setValue(
       "links",
-      links?.filter((l) => l !== link)
+      links?.filter(l => l !== link)
     );
     showToast({
       message:
@@ -41,7 +41,7 @@ export function CreateScreenPostLink({
         onPress={() => {
           setValue(
             "links",
-            links?.filter((l) => l !== link)
+            links?.filter(l => l !== link)
           );
         }}
         style={{

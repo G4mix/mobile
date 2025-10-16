@@ -45,7 +45,7 @@ export function SearchUsersList({ users }: { users: UserState[] }) {
       >
         <FlatList
           data={users ?? []}
-          keyExtractor={(user) => user.id}
+          keyExtractor={user => user.id}
           renderItem={renderUserItem}
           ItemSeparatorComponent={ItemSeparator}
         />

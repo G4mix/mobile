@@ -104,7 +104,7 @@ export default function UsernameScreen() {
         color={Colors.light.tropicalIndigo}
         borderWidth={2}
         value={username}
-        onChangeText={(value) => setValue("username", value)}
+        onChangeText={value => setValue("username", value)}
       />
       <Button onPress={onSubmit}>
         <Text style={{ color: Colors.light.white, fontSize: 16 }}>

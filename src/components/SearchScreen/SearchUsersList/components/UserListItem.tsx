@@ -115,7 +115,7 @@ export function UserListItem({ userId }: { userId: string }) {
 
   const handleFollow = ({ userProfileId }: { userProfileId: string }) => {
     if (!isFollowing) {
-      setIsFollowing((prevValue) => !prevValue);
+      setIsFollowing(prevValue => !prevValue);
       debouncedHandleFollow({ userProfileId });
     }
   };

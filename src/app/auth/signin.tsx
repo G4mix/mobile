@@ -97,7 +97,7 @@ export default function LoginScreen() {
       <Image source={favIcon} style={{ maxWidth: 120, maxHeight: 120 }} />
       <Text style={styles.title}>Entrar</Text>
       <View style={styles.connectionMethodsContainer}>
-        {providers.map((provider) => (
+        {providers.map(provider => (
           <OAuthLogin
             provider={provider as any}
             key={`handle-login-with-${provider}`}

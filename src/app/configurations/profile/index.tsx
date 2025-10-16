@@ -202,7 +202,7 @@ export default function ConfigProfileScreen() {
           color={Colors.light.tropicalIndigo}
           borderWidth={2}
           value={displayName}
-          onChangeText={(value) => setValue("displayName", value)}
+          onChangeText={value => setValue("displayName", value)}
         />
         <View style={{ gap: 4 }}>
           <Text
@@ -213,7 +213,7 @@ export default function ConfigProfileScreen() {
           <TextArea
             placeholder={user.autobiography || "Conte-nos um pouco sobre você"}
             value={autobiography}
-            onChangeText={(value) => setValue("autobiography", value)}
+            onChangeText={value => setValue("autobiography", value)}
             style={{ minHeight: 136, color: Colors.light.tropicalIndigo }}
           />
         </View>
@@ -228,7 +228,7 @@ export default function ConfigProfileScreen() {
               placeholder="Adicione um link"
               color={Colors.light.tropicalIndigo}
               borderWidth={2}
-              onSubmitEditing={(e) => {
+              onSubmitEditing={e => {
                 if (links && links.length >= 5) {
                   showToast({
                     message: "O limite de links é 5!",
@@ -245,7 +245,7 @@ export default function ConfigProfileScreen() {
               returnKeyType="done"
               ref={addLinkRef}
             />
-            {links?.map((link) => (
+            {links?.map(link => (
               <CreateScreenPostLink
                 setValue={setValue as any}
                 links={links}
