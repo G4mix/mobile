@@ -3,7 +3,7 @@ import React, {
   SetStateAction,
   useEffect,
   useRef,
-  useState
+  useState,
 } from "react";
 import {
   Modal,
@@ -13,7 +13,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
-  TextInput
+  TextInput,
 } from "react-native";
 import { MentionInput } from "react-native-controlled-mentions";
 import { useForm } from "react-hook-form";
@@ -41,7 +41,7 @@ export const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     flexDirection: "row",
-    gap: 10
+    gap: 10,
   },
   inputRoot: {
     alignItems: "center",
@@ -54,13 +54,13 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 16,
     position: "absolute",
-    width: "100%"
+    width: "100%",
   },
   modalContainer: {
     backgroundColor: "rgba(0, 0, 0, 0.3)",
     flex: 1,
-    justifyContent: "flex-end"
-  }
+    justifyContent: "flex-end",
+  },
 });
 
 function CloseButton({ close }: { close: () => void }) {
@@ -72,7 +72,7 @@ function CloseButton({ close }: { close: () => void }) {
         onPress={close}
         style={{
           paddingVertical: 12,
-          minWidth: "95%"
+          minWidth: "95%",
         }}
       >
         <Text style={{ color: Colors.light.background }}>Fechar</Text>
@@ -104,7 +104,7 @@ export function CommentsModal({
   setIsVisible,
   commentsCount,
   replying,
-  setReplying
+  setReplying,
 }: CommentsModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const { updateIdea } = useFeedQueries();
@@ -114,11 +114,11 @@ export function CommentsModal({
     commentId: string;
   }>();
   const lastFetchTime = useSelector(
-    (state: any) => state.comments.lastFetchTime
+    (state: any) => state.comments.lastFetchTime,
   );
   const { showToast } = useToast();
   const { watch, setValue, handleSubmit } = useForm<{ content: string }>({
-    defaultValues: { content: "" }
+    defaultValues: { content: "" },
   });
   const dispatch = useDispatch();
   const inputRef = useRef<TextInput>(null);
@@ -126,7 +126,7 @@ export function CommentsModal({
     if (replying.parentComment !== replying.toMark && replying.author) {
       setValue(
         "content",
-        `@[${replying.author.user.username}](${replying.author.id}) `
+        `@[${replying.author.user.username}](${replying.author.id}) `,
       );
     } else {
       setValue("content", "");
@@ -154,12 +154,12 @@ export function CommentsModal({
               data: updatedData,
               total: comment.parentCommentId
                 ? firstPage.total
-                : firstPage.total + 1
+                : firstPage.total + 1,
             },
-            ...oldData.pages.slice(1)
-          ]
+            ...oldData.pages.slice(1),
+          ],
         };
-      }
+      },
     );
   };
 
@@ -169,7 +169,7 @@ export function CommentsModal({
 
       return {
         ...oldData,
-        comments: commentsCount + 1
+        comments: commentsCount + 1,
       };
     });
   };
@@ -181,10 +181,10 @@ export function CommentsModal({
         api.post("/comment", {
           ideaId,
           content,
-          parentCommentId: commentId || replying.parentComment || undefined
+          parentCommentId: commentId || replying.parentComment || undefined,
         }),
       showToast,
-      setIsLoading
+      setIsLoading,
     });
     if (!data) return;
     addNewComment(data);
@@ -193,7 +193,7 @@ export function CommentsModal({
     setReplying({
       parentComment: "",
       toMark: "",
-      author: undefined
+      author: undefined,
     });
     updateIdea({ id: ideaId, comments: commentsCount + 1 });
     updateSingleIdea();
@@ -234,7 +234,7 @@ export function CommentsModal({
                     contentContainerStyle={{
                       paddingTop: 24,
                       alignItems: "center",
-                      gap: 24
+                      gap: 24,
                     }}
                     closeButton={CloseButton}
                     onEmojiSelected={(emoji) =>
@@ -254,7 +254,7 @@ export function CommentsModal({
                       borderWidth: 0,
                       padding: 0,
                       width: "100%",
-                      maxWidth: 300
+                      maxWidth: 300,
                     }}
                     placeholder="Digite seu comentário"
                     onSubmitEditing={
@@ -277,9 +277,9 @@ export function CommentsModal({
                         ),
                         textStyle: {
                           fontWeight: "bold",
-                          color: Colors.light.majorelleBlue
-                        }
-                      }
+                          color: Colors.light.majorelleBlue,
+                        },
+                      },
                     ]}
                   />
                 </View>

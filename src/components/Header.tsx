@@ -5,7 +5,7 @@ import { Colors } from "@/constants/colors";
 
 export function Header({
   title,
-  navigation
+  navigation,
 }: NativeStackHeaderProps & { title?: string }) {
   return (
     <View
@@ -17,7 +17,7 @@ export function Header({
         alignItems: "center",
         borderBottomWidth: 1,
         borderBottomColor: Colors.light.majorelleBlue,
-        position: "relative"
+        position: "relative",
       }}
     >
       <TouchableOpacity
@@ -28,7 +28,7 @@ export function Header({
           size={24}
           name="arrow-left"
           style={{
-            color: Colors.light.russianViolet
+            color: Colors.light.russianViolet,
           }}
         />
       </TouchableOpacity>
@@ -39,7 +39,7 @@ export function Header({
             fontSize: 19.2,
             width: "100%",
             textAlign: "center",
-            color: Colors.light.russianViolet
+            color: Colors.light.russianViolet,
           }}
         >
           {title}

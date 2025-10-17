@@ -15,7 +15,7 @@ export function CommentReplies({ comment }: { comment: CommentType }) {
         paddingVertical: 4,
         flexDirection: "row",
         alignItems: "center",
-        gap: 4
+        gap: 4,
       }}
     >
       <Text>

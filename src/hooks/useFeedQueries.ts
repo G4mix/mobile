@@ -19,14 +19,14 @@ export const useFeedQueries = ({ authorId }: { authorId?: string } = {}) => {
             {
               ...oldData.pages[0],
               data: [idea, ...oldData.pages[0].data],
-              total: oldData.pages[0].total + 1
+              total: oldData.pages[0].total + 1,
             },
-            ...oldData.pages.slice(1)
-          ]
+            ...oldData.pages.slice(1),
+          ],
         };
 
         return newData;
-      }
+      },
     );
   };
 
@@ -38,7 +38,7 @@ export const useFeedQueries = ({ authorId }: { authorId?: string } = {}) => {
 
         const updatedPages = oldData.pages.map((page: any) => {
           const ideaIndex = page.data.findIndex(
-            (i: IdeaType) => i.id === updatedIdea.id
+            (i: IdeaType) => i.id === updatedIdea.id,
           );
 
           if (ideaIndex !== -1) {
@@ -47,7 +47,7 @@ export const useFeedQueries = ({ authorId }: { authorId?: string } = {}) => {
 
             return {
               ...page,
-              data: newData
+              data: newData,
             };
           }
 
@@ -56,9 +56,9 @@ export const useFeedQueries = ({ authorId }: { authorId?: string } = {}) => {
 
         return {
           ...oldData,
-          pages: updatedPages
+          pages: updatedPages,
         };
-      }
+      },
     );
   };
 
@@ -70,19 +70,19 @@ export const useFeedQueries = ({ authorId }: { authorId?: string } = {}) => {
         const updatedIdeasData = oldData.pages.map((page: any) => ({
           ...page,
           data: page.data.map((idea: IdeaType) => {
-            const updatedIdea = updatedIdeaIds.find(i => i === idea.id);
+            const updatedIdea = updatedIdeaIds.find((i) => i === idea.id);
             if (updatedIdea) {
               return {
                 ...idea,
                 views: idea.isViewed ? idea.views : idea.views + 1,
-                isViewed: true
+                isViewed: true,
               };
             }
             return idea;
-          })
+          }),
         }));
         return { ...oldData, pages: updatedIdeasData };
-      }
+      },
     );
   };
 
@@ -97,7 +97,7 @@ export const useFeedQueries = ({ authorId }: { authorId?: string } = {}) => {
 
           const idsBefore = page.data.map((idea: any) => idea.id);
           const filteredData = page.data.filter(
-            (idea: any) => idea.id !== ideaId
+            (idea: any) => idea.id !== ideaId,
           );
 
           const ideaWasInThisPage = idsBefore.length !== filteredData.length;
@@ -105,15 +105,15 @@ export const useFeedQueries = ({ authorId }: { authorId?: string } = {}) => {
           return {
             ...page,
             data: filteredData,
-            total: ideaWasInThisPage ? page.total - 1 : page.total
+            total: ideaWasInThisPage ? page.total - 1 : page.total,
           };
         });
 
         return {
           ...oldData,
-          pages: updatedPages
+          pages: updatedPages,
         };
-      }
+      },
     );
   };
 
@@ -121,8 +121,8 @@ export const useFeedQueries = ({ authorId }: { authorId?: string } = {}) => {
     queryClient.invalidateQueries(
       ["ideas", { actualTab, lastFetchTime, authorId }] as any,
       {
-        cancelRefetch: true
-      }
+        cancelRefetch: true,
+      },
     );
   };
 
@@ -131,6 +131,6 @@ export const useFeedQueries = ({ authorId }: { authorId?: string } = {}) => {
     updateIdea,
     increaseViews,
     removeIdea,
-    invalidateAllIdeas
+    invalidateAllIdeas,
   };
 };

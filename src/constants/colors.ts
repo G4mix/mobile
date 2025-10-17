@@ -11,7 +11,7 @@ export const Colors = {
     tropicalIndigo: "#967FFA",
     periwinkle: "#D8CEFA",
     green: "#56D22C",
-    red: "#DF1A1A"
+    red: "#DF1A1A",
   },
   dark: {
     text: "#FFFFFF",
@@ -25,6 +25,6 @@ export const Colors = {
     tropicalIndigo: "#967FFA",
     periwinkle: "#D8CEFA",
     green: "#56D22C",
-    red: "#DF1A1A"
-  }
+    red: "#DF1A1A",
+  },
 };

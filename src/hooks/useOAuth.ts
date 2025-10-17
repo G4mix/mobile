@@ -8,7 +8,7 @@ type Providers = "google" | "linkedin" | "github";
 const getAuthUrl = ({
   provider,
   codeChallenge,
-  codeVerifier
+  codeVerifier,
 }: {
   provider: Providers;
   codeChallenge?: string;
@@ -17,7 +17,7 @@ const getAuthUrl = ({
   const providers = {
     github: `https://github.com/login/oauth/authorize?client_id=${env.EXPO_PUBLIC_GITHUB_CLIENT_ID}&scope=user&redirect_uri=https://${env.EXPO_PUBLIC_API_URL}/v1/auth/callback/github`,
     google: `https://accounts.google.com/o/oauth2/v2/auth?client_id=${env.EXPO_PUBLIC_GOOGLE_CLIENT_ID}&redirect_uri=https://${env.EXPO_PUBLIC_API_URL}/v1/auth/callback/google&response_type=code&scope=profile%20email&prompt=consent&access_type=offline&code_challenge=${codeChallenge}&code_challenge_method=S256&state=${encodeURIComponent(codeVerifier || "")}`,
-    linkedin: `https://www.linkedin.com/oauth/v2/authorization?client_id=${env.EXPO_PUBLIC_LINKEDIN_CLIENT_ID}&redirect_uri=https://${env.EXPO_PUBLIC_API_URL}/v1/auth/callback/linkedin&response_type=code&scope=openid,profile,email`
+    linkedin: `https://www.linkedin.com/oauth/v2/authorization?client_id=${env.EXPO_PUBLIC_LINKEDIN_CLIENT_ID}&redirect_uri=https://${env.EXPO_PUBLIC_API_URL}/v1/auth/callback/linkedin&response_type=code&scope=openid,profile,email`,
   };
   return providers[provider];
 };

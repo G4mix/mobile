@@ -11,14 +11,14 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 6
+    gap: 6,
   },
   tagsRoot: {
     display: "flex",
     flexDirection: "column",
     gap: 8,
-    width: "100%"
-  }
+    width: "100%",
+  },
 });
 
 type CreateScreenTagsProps = {
@@ -33,7 +33,7 @@ export function CreateScreenTags({ setValue, watch }: CreateScreenTagsProps) {
     { name: "Sound Design", visible: true },
     { name: "Arte 2D", visible: true },
     { name: "Arte 3D", visible: true },
-    { name: "Script", visible: true }
+    { name: "Script", visible: true },
   ]);
   const { showToast } = useToast();
   const tagsRef = useRef<HTMLInputElement>(null);
@@ -54,10 +54,10 @@ export function CreateScreenTags({ setValue, watch }: CreateScreenTagsProps) {
   const handlePressSelectedTag = (tag: string) => {
     setValue(
       "tags",
-      tags!.filter(t => t !== tag)
+      tags!.filter((t) => t !== tag),
     );
-    setRecommendedTags(rTags =>
-      rTags.map(rt => (rt.name === tag ? { ...rt, visible: true } : rt))
+    setRecommendedTags((rTags) =>
+      rTags.map((rt) => (rt.name === tag ? { ...rt, visible: true } : rt)),
     );
   };
 
@@ -71,10 +71,10 @@ export function CreateScreenTags({ setValue, watch }: CreateScreenTagsProps) {
     }
     const currentTags = tags || [];
     if (currentTags.includes(recommendedTag.name)) return;
-    setRecommendedTags(rTags =>
-      rTags.map(rt =>
-        rt.name === recommendedTag.name ? { ...rt, visible: false } : rt
-      )
+    setRecommendedTags((rTags) =>
+      rTags.map((rt) =>
+        rt.name === recommendedTag.name ? { ...rt, visible: false } : rt,
+      ),
     );
     setValue("tags", [...currentTags, recommendedTag.name]);
   };
@@ -91,7 +91,7 @@ export function CreateScreenTags({ setValue, watch }: CreateScreenTagsProps) {
         returnKeyType="none"
       >
         {tags &&
-          tags.map(tag => (
+          tags.map((tag) => (
             <Tag
               key={`tag-${tag}`}
               name={tag}
@@ -101,7 +101,7 @@ export function CreateScreenTags({ setValue, watch }: CreateScreenTagsProps) {
       </Tags>
       <View style={styles.recommendedTagsRoot}>
         {recommendedTags.map(
-          recommendedTag =>
+          (recommendedTag) =>
             recommendedTag.visible && (
               <Tag
                 key={`recommended-tag-${recommendedTag.name}`}
@@ -109,7 +109,7 @@ export function CreateScreenTags({ setValue, watch }: CreateScreenTagsProps) {
                 disabled={tags && tags.length >= 10}
                 onPress={() => handlePressRecommendedTag(recommendedTag)}
               />
-            )
+            ),
         )}
       </View>
     </View>

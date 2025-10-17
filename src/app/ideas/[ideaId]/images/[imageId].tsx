@@ -6,7 +6,7 @@ import {
   Dimensions,
   FlatList,
   Image,
-  Animated
+  Animated,
 } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
@@ -21,31 +21,31 @@ const { width } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   activeDot: {
-    backgroundColor: "white"
+    backgroundColor: "white",
   },
   container: {
     alignItems: "center",
     backgroundColor: "#000",
     flex: 1,
-    justifyContent: "center"
+    justifyContent: "center",
   },
   dot: {
     backgroundColor: "gray",
     borderRadius: 5,
     height: 10,
     marginHorizontal: 5,
-    width: 10
+    width: 10,
   },
   image: {
     resizeMode: "contain",
-    width
+    width,
   },
   paginationContainer: {
     alignSelf: "center",
     bottom: 20,
     flexDirection: "row",
-    position: "absolute"
-  }
+    position: "absolute",
+  },
 });
 
 export default function IdeaImageScreen() {
@@ -56,14 +56,14 @@ export default function IdeaImageScreen() {
   const {
     data: idea,
     isLoading,
-    isError
+    isError,
   } = useQuery({
     queryKey: ["idea", ideaId],
     queryFn: async () => {
       const response = await api.get(`/idea/${ideaId}`);
       return response.data;
     },
-    enabled: !!ideaId
+    enabled: !!ideaId,
   });
 
   if (isError)
@@ -88,7 +88,7 @@ export default function IdeaImageScreen() {
           style={{
             position: "relative",
             justifyContent: "center",
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           <Icon name="photo" size={64} color={Colors.light.background} />
@@ -105,7 +105,7 @@ export default function IdeaImageScreen() {
         viewabilityConfig={{ itemVisiblePercentThreshold: 50 }}
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-          { useNativeDriver: false }
+          { useNativeDriver: false },
         )}
         renderItem={({ item }) => (
           <Image
@@ -116,7 +116,7 @@ export default function IdeaImageScreen() {
         getItemLayout={(_data, index) => ({
           length: width,
           offset: width * index,
-          index
+          index,
         })}
       />
       <View style={styles.paginationContainer}>

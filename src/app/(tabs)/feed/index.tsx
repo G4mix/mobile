@@ -56,8 +56,8 @@ export default function FeedScreen() {
 
   return (
     <View style={styles.container}>
+      <FeedHeader />
       <ScrollView style={styles.scroll} refreshControl={refreshControl}>
-        <FeedHeader />
         <View style={styles.ideas}>
           <FloatingOptionsProvider>
             <ConfirmationModalProvider>

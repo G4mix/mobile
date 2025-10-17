@@ -20,13 +20,13 @@ export const useFeed = ({ authorId }: { authorId?: string } = {}) => {
             params: {
               page: pageParam,
               authorId,
-              quantity: 10
-            }
+              quantity: 10,
+            },
           })
         ).data,
       initialPageParam: 0,
-      getNextPageParam: lastPage => lastPage?.nextPage,
-      enabled: true
+      getNextPageParam: (lastPage) => lastPage?.nextPage,
+      enabled: true,
     });
   // useEffect(() => {
   //   const socket = new WebSocket(`wss://${process.env.EXPO_PUBLIC_API_URL}`);
@@ -47,6 +47,6 @@ export const useFeed = ({ authorId }: { authorId?: string } = {}) => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-    refetch
+    refetch,
   };
 };

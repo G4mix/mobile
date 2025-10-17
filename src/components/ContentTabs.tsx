@@ -5,7 +5,7 @@ import {
   StyleProp,
   StyleSheet,
   View,
-  ViewStyle
+  ViewStyle,
 } from "react-native";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -16,12 +16,12 @@ import { setActualTab } from "@/features/profile/profileSlice";
 const styles = StyleSheet.create({
   actualTab: {
     borderBottomColor: Colors.light.majorelleBlue,
-    borderBottomWidth: 3
+    borderBottomWidth: 3,
   },
   contentTabItem: {
     alignItems: "center",
     justifyContent: "center",
-    padding: Dimensions.get("screen").width >= 350 ? 24 : 12
+    padding: Dimensions.get("screen").width >= 350 ? 24 : 12,
   },
   contentTabList: {
     alignItems: "center",
@@ -33,8 +33,8 @@ const styles = StyleSheet.create({
     gap: 8,
     justifyContent: "center",
     paddingHorizontal: 24,
-    width: "100%"
-  }
+    width: "100%",
+  },
 });
 
 export type Tab<T extends string = "feed"> = {
@@ -50,7 +50,7 @@ export type Tab<T extends string = "feed"> = {
 export function ContentTabs({
   tabs,
   tabType,
-  contentTabStyles = {}
+  contentTabStyles = {},
 }: {
   tabs: Tab<any>[];
   tabType: "feed" | "profile";
@@ -72,7 +72,7 @@ export function ContentTabs({
             styles.contentTabItem,
             contentTabStyles,
             actualTab === key ? styles.actualTab : {},
-            disabled ? { opacity: 0.7 } : {}
+            disabled ? { opacity: 0.7 } : {},
           ]}
           onPress={disabled ? undefined : () => handlePress(key)}
         >
@@ -83,7 +83,7 @@ export function ContentTabs({
                   ? Colors.light.majorelleBlue
                   : Colors.light.russianViolet,
               fontWeight: "medium",
-              fontSize: actualTab === key ? 16 : 13.33
+              fontSize: actualTab === key ? 16 : 13.33,
             }}
           >
             {name}

@@ -29,8 +29,8 @@ export const styles = StyleSheet.create({
     overflowY: "auto",
     paddingLeft: 16,
     paddingRight: 16,
-    paddingTop: 16
-  }
+    paddingTop: 16,
+  },
 });
 
 export default function EmailScreen() {
@@ -42,8 +42,8 @@ export default function EmailScreen() {
   const queryClient = useQueryClient();
   const { watch, setValue, handleSubmit } = useForm<UpdateEmailFormData>({
     defaultValues: {
-      email: user.email || ""
-    }
+      email: user.email || "",
+    },
   });
   const updateUser = async ({ email }: UpdateEmailFormData) => {
     if (isLoading) return;
@@ -54,18 +54,18 @@ export default function EmailScreen() {
     }
 
     const formData = objectToFormData({
-      email
+      email,
     });
 
     const data = await handleRequest<UserState>({
       requestFn: async () =>
         api.patch("/user", formData, {
           headers: {
-            "Content-Type": "multipart/form-data"
-          }
+            "Content-Type": "multipart/form-data",
+          },
         }),
       showToast,
-      setIsLoading
+      setIsLoading,
     });
     if (!data) return;
 
@@ -98,7 +98,7 @@ export default function EmailScreen() {
         color={Colors.light.tropicalIndigo}
         borderWidth={2}
         value={email}
-        onChangeText={value => setValue("email", value)}
+        onChangeText={(value) => setValue("email", value)}
       />
       <Button onPress={onSubmit}>
         <Text style={{ color: Colors.light.white, fontSize: 16 }}>

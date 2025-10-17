@@ -4,7 +4,7 @@ import { View } from "../Themed";
 import { Icon } from "../Icon";
 
 export function IdeaLinkLoading({
-  noHorizontalPadding
+  noHorizontalPadding,
 }: {
   noHorizontalPadding?: boolean;
 }) {
@@ -24,7 +24,7 @@ export function IdeaLinkLoading({
           gap: 8,
           padding: 12,
           backgroundColor: Colors.light.white,
-          width: "100%"
+          width: "100%",
         }}
       >
         <Loading
@@ -34,7 +34,7 @@ export function IdeaLinkLoading({
           style={{
             position: "relative",
             justifyContent: "center",
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           <Icon name="photo" size={32} color={Colors.light.background} />

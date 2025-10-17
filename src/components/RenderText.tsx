@@ -23,7 +23,7 @@ export function RenderText({ content, style }: RenderTextProps) {
       parts.push(
         <Text key={`text-${lastIndex}`}>
           {content.slice(lastIndex, startIndex)}
-        </Text>
+        </Text>,
       );
     }
 
@@ -36,7 +36,7 @@ export function RenderText({ content, style }: RenderTextProps) {
         <Text style={[style, { color: Colors.light.majorelleBlue }]}>
           @{name}
         </Text>
-      </Link>
+      </Link>,
     );
 
     lastIndex = startIndex + fullMatch.length;
@@ -47,7 +47,7 @@ export function RenderText({ content, style }: RenderTextProps) {
     parts.push(
       <Text key={`text-${lastIndex}`} style={style}>
         {content.slice(lastIndex)}
-      </Text>
+      </Text>,
     );
   }
 

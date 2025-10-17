@@ -15,19 +15,19 @@ export function CreateScreenPostLink({
   setValue,
   links,
   link,
-  noHorizontalPadding = false
+  noHorizontalPadding = false,
 }: CreateScreenPostLinkProps) {
   const { showToast } = useToast();
 
   const handleLoadLinkError = () => {
     setValue(
       "links",
-      links?.filter(l => l !== link)
+      links?.filter((l) => l !== link),
     );
     showToast({
       message:
         "Houve um erro ao tentar encontrar informações sobre o link fornecido!",
-      color: "error"
+      color: "error",
     });
   };
 
@@ -41,13 +41,13 @@ export function CreateScreenPostLink({
         onPress={() => {
           setValue(
             "links",
-            links?.filter(l => l !== link)
+            links?.filter((l) => l !== link),
           );
         }}
         style={{
           position: "absolute",
           right: 12,
-          top: 12
+          top: 12,
         }}
       >
         <Icon
@@ -58,7 +58,7 @@ export function CreateScreenPostLink({
             height: 24,
             width: 24,
             display: "flex",
-            justifyContent: "center"
+            justifyContent: "center",
           }}
         />
       </TouchableOpacity>

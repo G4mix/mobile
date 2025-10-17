@@ -25,8 +25,8 @@ export const styles = StyleSheet.create({
     overflowY: "auto",
     paddingLeft: 16,
     paddingRight: 16,
-    paddingTop: 16
-  }
+    paddingTop: 16,
+  },
 });
 
 export default function PasswordScreen() {
@@ -44,9 +44,9 @@ export default function PasswordScreen() {
     {
       defaultValues: {
         password: "",
-        confirmPassword: ""
-      }
-    }
+        confirmPassword: "",
+      },
+    },
   );
   const updatePassword = async ({ password }: UpdateUserPasswordFormData) => {
     if (isLoading) return;
@@ -58,12 +58,12 @@ export default function PasswordScreen() {
           { password },
           {
             headers: {
-              "Content-Type": "application/json"
-            }
-          }
+              "Content-Type": "application/json",
+            },
+          },
         ),
       showToast,
-      setIsLoading
+      setIsLoading,
     });
     if (!data) return;
     setIsSuccessVisible(true);

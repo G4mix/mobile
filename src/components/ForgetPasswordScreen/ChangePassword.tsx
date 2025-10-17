@@ -25,8 +25,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingLeft: 16,
     paddingRight: 16,
-    width: "100%"
-  }
+    width: "100%",
+  },
 });
 
 type FormData = {
@@ -55,8 +55,8 @@ export function ChangePassword({ token }: ChangePasswordProps) {
   const { watch, setValue, handleSubmit } = useForm<FormData>({
     defaultValues: {
       confirmPassword: "",
-      password: ""
-    }
+      password: "",
+    },
   });
 
   const changePassword = async ({ password: pwd }: FormData) => {
@@ -69,13 +69,13 @@ export function ChangePassword({ token }: ChangePasswordProps) {
       requestFn: async () =>
         api.post("/auth/change-password", { password: pwd }, {
           headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
           },
-          skipAuth: true
+          skipAuth: true,
         } as any),
       showToast,
       setIsLoading,
-      successMessage: "Senha alterada com sucesso!"
+      successMessage: "Senha alterada com sucesso!",
     });
     if (!data) return;
     dispatch(setUser(data.user));

@@ -13,7 +13,7 @@ export function ProfileAbout({ user }: { user?: UserState }) {
     showToast({
       message:
         "Houve um erro ao tentar encontrar informações sobre o link fornecido!",
-      color: "error"
+      color: "error",
     });
   };
   if (!user) return null;
@@ -23,7 +23,7 @@ export function ProfileAbout({ user }: { user?: UserState }) {
         <Text
           style={{
             color: Colors.light.russianViolet,
-            fontSize: 16
+            fontSize: 16,
           }}
         >
           {user.autobiography || "Ainda não tem uma bio..."}
@@ -31,7 +31,7 @@ export function ProfileAbout({ user }: { user?: UserState }) {
       </ProfileAboutCard>
       {user.links.length !== 0 && (
         <ProfileAboutCard title="Links">
-          {user.links.map(link => (
+          {user.links.map((link) => (
             <IdeaLink
               url={link}
               noHorizontalPadding

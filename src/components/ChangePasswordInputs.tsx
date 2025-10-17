@@ -1,7 +1,7 @@
 import {
   NativeSyntheticEvent,
   StyleSheet,
-  TextInputSubmitEditingEventData
+  TextInputSubmitEditingEventData,
 } from "react-native";
 import {
   Dispatch,
@@ -10,7 +10,7 @@ import {
   useEffect,
   useImperativeHandle,
   useRef,
-  useState
+  useState,
 } from "react";
 import { UseFormSetValue, UseFormWatch } from "react-hook-form";
 import { Colors } from "@/constants/colors";
@@ -22,7 +22,7 @@ import {
   isValidPasswordLength,
   isValidPasswordNumber,
   isValidPasswordSpecialChar,
-  isValidPasswordUppercase
+  isValidPasswordUppercase,
 } from "@/constants/validations";
 
 const styles = StyleSheet.create({
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     display: "flex",
     gap: 4,
     padding: 12,
-    width: "100%"
+    width: "100%",
   },
   requirement: {
     borderColor: Colors.light.jet,
@@ -44,25 +44,25 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     gap: 4,
     minWidth: "40%",
-    padding: 4
+    padding: 4,
   },
   requirementInvalid: {
-    borderColor: Colors.light.red
+    borderColor: Colors.light.red,
   },
   requirementValid: {
-    borderColor: Colors.light.green
+    borderColor: Colors.light.green,
   },
   requirementsContainer: {
     display: "flex",
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 8,
-    width: "100%"
+    width: "100%",
   },
   root: {
     backgroundColor: "transparent",
-    gap: 16
-  }
+    gap: 16,
+  },
 });
 
 type ChangePasswordInputsProps = {
@@ -93,9 +93,9 @@ export const ChangePasswordInputs = forwardRef<
       isConfirmPasswordValid,
       isPasswordValid,
       setIsConfirmPasswordValid,
-      setIsPasswordValid
+      setIsPasswordValid,
     },
-    ref
+    ref,
   ) => {
     const [isRequirementsVisible, setIsRequirementsVisible] = useState(false);
     const [isPasswordLengthValid, setIsPasswordLengthValid] = useState<
@@ -116,9 +116,9 @@ export const ChangePasswordInputs = forwardRef<
     useImperativeHandle(
       ref,
       () => ({
-        focus: () => passwordRef.current?.focus()
+        focus: () => passwordRef.current?.focus(),
       }),
-      []
+      [],
     );
 
     const password = watch("password");
@@ -126,7 +126,7 @@ export const ChangePasswordInputs = forwardRef<
 
     const validatePasswordConfirm = (
       value?: string,
-      actualPassword?: string
+      actualPassword?: string,
     ) => {
       if (value) setValue("confirmPassword", value);
       const pwd = actualPassword || password;
@@ -154,7 +154,7 @@ export const ChangePasswordInputs = forwardRef<
       { condition: isPasswordLengthValid, text: "6 caracteres" },
       { condition: isPasswordSpecialCharValid, text: "1 caractere especial" },
       { condition: isPasswordNumberValid, text: "1 número" },
-      { condition: isPasswordUppercaseValid, text: "1 caractere maiúsculo" }
+      { condition: isPasswordUppercaseValid, text: "1 caractere maiúsculo" },
     ];
 
     const handleFocus = () => {
@@ -193,7 +193,7 @@ export const ChangePasswordInputs = forwardRef<
                   style={[
                     styles.requirement,
                     condition === "valid" ? styles.requirementValid : {},
-                    condition === "invalid" ? styles.requirementInvalid : {}
+                    condition === "invalid" ? styles.requirementInvalid : {},
                   ]}
                   key={text}
                 >
@@ -210,7 +210,7 @@ export const ChangePasswordInputs = forwardRef<
                           ? Colors.light.green
                           : condition === "invalid"
                             ? Colors.light.red
-                            : Colors.light.jet
+                            : Colors.light.jet,
                     }}
                   >
                     {text}
@@ -234,5 +234,5 @@ export const ChangePasswordInputs = forwardRef<
         />
       </View>
     );
-  }
+  },
 );

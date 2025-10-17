@@ -32,7 +32,7 @@ export function Logout() {
 
             router.replace("/auth/signin");
           },
-          actionName: "Desconectar"
+          actionName: "Desconectar",
         });
       }}
     />

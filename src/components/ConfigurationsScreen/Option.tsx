@@ -2,7 +2,7 @@
 import {
   GestureResponderEvent,
   StyleSheet,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import { Colors } from "@/constants/colors";
 import { Text, View } from "../Themed";
@@ -13,20 +13,20 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     flex: 1,
-    justifyContent: "flex-end"
+    justifyContent: "flex-end",
   },
   end: {
     borderBottomLeftRadius: 8,
     borderBottomRightRadius: 8,
-    borderTopWidth: 0
+    borderTopWidth: 0,
   },
   full: {
-    borderRadius: 8
+    borderRadius: 8,
   },
   middle: {
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
-    borderBottomWidth: 1
+    borderBottomWidth: 1,
   },
   root: {
     alignItems: "center",
@@ -35,19 +35,19 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 10,
     paddingHorizontal: 16,
-    paddingVertical: 24
+    paddingVertical: 24,
   },
   start: {
     borderTopLeftRadius: 8,
-    borderTopRightRadius: 8
-  }
+    borderTopRightRadius: 8,
+  },
 });
 export function Option({
   name,
   position,
   onPress,
   color = "russianViolet",
-  icon = "undefined"
+  icon = "undefined",
 }: {
   name: string;
   position: "start" | "middle" | "end" | "full";
@@ -61,9 +61,9 @@ export function Option({
         style={[
           {
             ...styles.root,
-            borderColor: Colors.light[color === "red" ? "red" : "periwinkle"]
+            borderColor: Colors.light[color === "red" ? "red" : "periwinkle"],
           },
-          styles[position]
+          styles[position],
         ]}
       >
         {icon !== "undefined" && (

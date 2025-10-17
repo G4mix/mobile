@@ -4,7 +4,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  View
+  View,
 } from "react-native";
 import { Icon, IconName } from "./Icon";
 import { Text } from "./Themed";
@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
   option: {
     flexDirection: "row",
     gap: 16,
-    width: "100%"
+    width: "100%",
   },
   optionsRoot: {
     backgroundColor: Colors.light.background,
@@ -32,11 +32,11 @@ const styles = StyleSheet.create({
     shadowColor: Colors.dark.background,
     shadowOffset: {
       width: 0,
-      height: -2
+      height: -2,
     },
     shadowOpacity: 0.25,
-    shadowRadius: 20
-  }
+    shadowRadius: 20,
+  },
 });
 
 type FloatingOptionsProps = {
@@ -54,7 +54,7 @@ export function FloatingOptions({
   isVisible,
   setIsVisible,
   options,
-  optionProps
+  optionProps,
 }: FloatingOptionsProps) {
   return (
     <Modal
@@ -86,7 +86,7 @@ export function FloatingOptions({
                     style={{
                       color: Colors.light.majorelleBlue,
                       fontWeight: "600",
-                      fontSize: 16
+                      fontSize: 16,
                     }}
                   >
                     {name}

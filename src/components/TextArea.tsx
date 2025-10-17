@@ -6,7 +6,7 @@ import {
   TextInput,
   TextInputFocusEventData,
   TextInputSubmitEditingEventData,
-  TextStyle
+  TextStyle,
 } from "react-native";
 import { forwardRef } from "react";
 import { Colors } from "@/constants/colors";
@@ -18,7 +18,7 @@ type TextAreaProps = {
   onFocus?: (e?: NativeSyntheticEvent<TextInputFocusEventData>) => void;
   onBlur?: (e?: NativeSyntheticEvent<TextInputFocusEventData>) => void;
   onSubmitEditing?: (
-    e: NativeSyntheticEvent<TextInputSubmitEditingEventData>
+    e: NativeSyntheticEvent<TextInputSubmitEditingEventData>,
   ) => void;
   returnKeyType?: ReturnKeyTypeOptions;
   style?: StyleProp<TextStyle>;
@@ -36,16 +36,16 @@ const styles = StyleSheet.create({
     padding: 16,
     textAlign: "justify",
     textAlignVertical: "top",
-    width: "100%"
+    width: "100%",
   },
   invalid: {
     borderColor: "red",
-    color: "red"
+    color: "red",
   },
   valid: {
     borderColor: "green",
-    color: "green"
-  }
+    color: "green",
+  },
 });
 
 export const TextArea = forwardRef<HTMLInputElement, TextAreaProps>(
@@ -59,9 +59,9 @@ export const TextArea = forwardRef<HTMLInputElement, TextAreaProps>(
       value,
       onSubmitEditing,
       returnKeyType = "default",
-      style = {}
+      style = {},
     },
-    ref
+    ref,
   ) => (
     <TextInput
       placeholder={placeholder}
@@ -69,7 +69,7 @@ export const TextArea = forwardRef<HTMLInputElement, TextAreaProps>(
         styles.input,
         style,
         isValid === "valid" ? styles.valid : {},
-        isValid === "invalid" ? styles.invalid : {}
+        isValid === "invalid" ? styles.invalid : {},
       ]}
       value={value}
       ref={ref as any}
@@ -81,5 +81,5 @@ export const TextArea = forwardRef<HTMLInputElement, TextAreaProps>(
       onSubmitEditing={onSubmitEditing}
       multiline
     />
-  )
+  ),
 );

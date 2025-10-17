@@ -14,7 +14,7 @@ export default function ConfigurationsScreen() {
           position: "relative",
           paddingHorizontal: 16,
           paddingVertical: 24,
-          gap: 16
+          gap: 16,
         }}
       >
         <View>

@@ -11,30 +11,30 @@ const styles = StyleSheet.create({
   imageProfile: {
     ...postHeaderStyles.imageProfile,
     height: 24,
-    width: 24
+    width: 24,
   },
   postUserIcon: {
     left: "50%",
     position: "absolute",
     top: "50%",
-    transform: [{ translateX: -12 }, { translateY: -12 }] as any
+    transform: [{ translateX: -12 }, { translateY: -12 }] as any,
   },
   postUserIconCircle: {
     left: "50%",
     position: "absolute",
     top: "50%",
-    transform: [{ translateX: -9 }, { translateY: -9 }] as any
+    transform: [{ translateX: -9 }, { translateY: -9 }] as any,
   },
   postUserInformation: {
     ...postHeaderStyles.postUserInformation,
-    justifyContent: "flex-start"
+    justifyContent: "flex-start",
   },
   userName: {
     ...postHeaderStyles.userName,
     color: Colors.light.majorelleBlue,
     fontSize: 12,
-    fontWeight: "bold"
-  }
+    fontWeight: "bold",
+  },
 });
 
 export function CreateScreenAuthor() {
@@ -57,8 +57,8 @@ export function CreateScreenAuthor() {
               styles.postUserIcon,
               {
                 zIndex: 1,
-                borderRadius: 9999
-              }
+                borderRadius: 9999,
+              },
             ]}
           />
           <View
@@ -68,8 +68,8 @@ export function CreateScreenAuthor() {
                 width: 18,
                 height: 18,
                 borderRadius: 9999,
-                backgroundColor: Colors.light.majorelleBlue
-              }
+                backgroundColor: Colors.light.majorelleBlue,
+              },
             ]}
           />
         </View>

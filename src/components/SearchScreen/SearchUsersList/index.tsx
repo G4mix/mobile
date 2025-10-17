@@ -5,8 +5,8 @@ import { UserListItem } from "./components/UserListItem";
 
 const styles = StyleSheet.create({
   listWrapper: {
-    width: "100%"
-  }
+    width: "100%",
+  },
 });
 
 function ItemSeparator() {
@@ -15,7 +15,7 @@ function ItemSeparator() {
       style={{
         width: "100%",
         height: 1,
-        backgroundColor: Colors.light.periwinkle
+        backgroundColor: Colors.light.periwinkle,
       }}
     />
   );
@@ -33,19 +33,19 @@ export function SearchUsersList({ users }: { users: UserState[] }) {
           fontSize: 20,
           fontWeight: "bold",
           paddingInline: 18,
-          marginBottom: 6
+          marginBottom: 6,
         }}
       >
         Usuários
       </Text>
       <View
         style={{
-          marginBottom: 165
+          marginBottom: 165,
         }}
       >
         <FlatList
           data={users ?? []}
-          keyExtractor={user => user.id}
+          keyExtractor={(user) => user.id}
           renderItem={renderUserItem}
           ItemSeparatorComponent={ItemSeparator}
         />

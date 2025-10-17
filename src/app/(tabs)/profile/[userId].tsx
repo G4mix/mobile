@@ -24,28 +24,28 @@ export default function ProfileScreen() {
     data,
     isLoading,
     isError,
-    refetch: refetchUser
+    refetch: refetchUser,
   } = useQuery({
     queryKey: ["user", userId],
     queryFn: async () => {
       const response = await api.get<UserState>(`/user/${userId}`);
       return response.data;
     },
-    enabled: !!userId
+    enabled: !!userId,
   });
   if (isError) router.push("/feed");
 
   const actualTab = useSelector(
-    (state: any) => state.profile.actualTab
+    (state: any) => state.profile.actualTab,
   ) as Tab<"profile">["key"];
   const tabs: Tab<"profile">[] = [
     { name: "Ideias", key: "ideas" },
-    { name: "Sobre", key: "about" }
+    { name: "Sobre", key: "about" },
   ];
 
   const tabComponents = {
     ideas: ProfileIdeas,
-    about: ProfileAbout
+    about: ProfileAbout,
   };
 
   const tabKeys = tabs.map((tab) => tab.key);
@@ -66,20 +66,20 @@ export default function ProfileScreen() {
         } else if (gestureState.dx > 50 && currentIndex > 0) {
           dispatch(setActualTab(tabKeys[currentIndex - 1]));
         }
-      }
-    })
+      },
+    }),
   ).current;
 
   const handleRefresh = async () => {
     await queryClient.invalidateQueries({ queryKey: ["user", userId] });
     await queryClient.invalidateQueries({
-      queryKey: ["ideas", { authorId: userId }]
+      queryKey: ["ideas", { authorId: userId }],
     });
     await refetchUser();
   };
 
   const { refreshControl } = usePullToRefresh({
-    onRefresh: handleRefresh
+    onRefresh: handleRefresh,
   });
 
   const ActualTab = tabComponents[actualTab];
@@ -88,7 +88,7 @@ export default function ProfileScreen() {
     <ScrollView
       style={{
         backgroundColor: Colors.light.background,
-        flex: 1
+        flex: 1,
       }}
       refreshControl={refreshControl}
       {...panResponder.panHandlers}
@@ -96,7 +96,7 @@ export default function ProfileScreen() {
       <View
         style={{
           flex: 1,
-          gap: 8
+          gap: 8,
         }}
       >
         {isLoading && !data && <ProfileHeaderLoading id={userId} />}

@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     gap: 8,
     padding: 16,
     position: "relative",
-    width: "100%"
+    width: "100%",
   },
   leftBar: {
     backgroundColor: "#6B3FA0",
@@ -50,15 +50,15 @@ const styles = StyleSheet.create({
     left: 0,
     position: "absolute",
     top: 0,
-    width: 5
-  }
+    width: 5,
+  },
 });
 
 export function Comment({
   comment,
   replying,
   commentReply,
-  commentType
+  commentType,
 }: CommentProps) {
   const { commentId } = useLocalSearchParams<{ commentId: string }>();
   if (!comment) return null;
@@ -68,8 +68,8 @@ export function Comment({
       style={[
         styles.commentContainer,
         {
-          paddingLeft: commentType === "post" ? 16 : 32
-        }
+          paddingLeft: commentType === "post" ? 16 : 32,
+        },
       ]}
       onPress={() => {
         if (commentId) {

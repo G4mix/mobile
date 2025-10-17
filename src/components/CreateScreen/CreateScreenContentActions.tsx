@@ -2,7 +2,7 @@ import {
   StyleProp,
   StyleSheet,
   TouchableOpacity,
-  ViewStyle
+  ViewStyle,
 } from "react-native";
 import { View } from "../Themed";
 import { Icon, IconName } from "../Icon";
@@ -10,7 +10,7 @@ import { Colors } from "@/constants/colors";
 
 const styles = StyleSheet.create({
   postContentActionDisabled: {
-    opacity: 0.4
+    opacity: 0.4,
   },
   postContentActions: {
     alignContent: "center",
@@ -25,8 +25,8 @@ const styles = StyleSheet.create({
     gap: 20,
     justifyContent: "center",
     padding: 16,
-    width: "100%"
-  }
+    width: "100%",
+  },
 });
 
 type CreateScreenContentActionsProps = {
@@ -36,11 +36,11 @@ type CreateScreenContentActionsProps = {
 
 export function CreateScreenContentActions({
   postContentActions,
-  style = {}
+  style = {},
 }: CreateScreenContentActionsProps) {
   return (
     <View style={[styles.postContentActions, style]}>
-      {postContentActions.map(postContentAction =>
+      {postContentActions.map((postContentAction) =>
         postContentAction.handleClick ? (
           <TouchableOpacity
             onPress={postContentAction.handleClick}
@@ -56,7 +56,7 @@ export function CreateScreenContentActions({
             color="white"
             style={styles.postContentActionDisabled}
           />
-        )
+        ),
       )}
     </View>
   );

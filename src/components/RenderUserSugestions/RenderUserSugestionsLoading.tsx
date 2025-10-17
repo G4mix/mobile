@@ -12,7 +12,7 @@ export function RenderUserSugestionsLoading() {
         display: "flex",
         gap: 8,
         padding: 12,
-        width: "100%"
+        width: "100%",
       }}
     >
       <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>

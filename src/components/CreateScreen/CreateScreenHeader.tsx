@@ -18,24 +18,24 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "100%"
+    width: "100%",
   },
   publishButton: {
     minWidth: 0,
     paddingBottom: 14,
-    paddingTop: 14
+    paddingTop: 14,
   },
   title: {
     fontSize: 20,
-    fontWeight: "bold"
-  }
+    fontWeight: "bold",
+  },
 });
 
 export function CreateScreenHeader({
   isLoading,
   onSubmit,
   data: { title, content, images, links },
-  post
+  post,
 }: CreateScreenHeaderProps) {
   const isReadyToSubmit = !!(
     isValidPostTitle(title) === "valid" ||

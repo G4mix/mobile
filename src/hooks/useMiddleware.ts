@@ -16,7 +16,7 @@ export function useMiddleware() {
     "/auth/signup",
     "/auth/forget-password",
     "/auth/loading",
-    "/"
+    "/",
   ];
 
   const checkAuth = async () => {

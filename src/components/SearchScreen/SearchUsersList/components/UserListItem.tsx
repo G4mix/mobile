@@ -16,33 +16,33 @@ import { handleRequest } from "@/utils/handleRequest";
 const styles = StyleSheet.create({
   followers: {
     fontSize: 10,
-    marginTop: 8
+    marginTop: 8,
   },
   imageProfile: {
     borderRadius: 9999,
     height: 30,
-    width: 30
+    width: 30,
   },
   leftSide: {
     alignItems: "center",
     display: "flex",
     flexDirection: "row",
-    gap: 4
+    gap: 4,
   },
   postUserInformation: {
     alignItems: "center",
     display: "flex",
     flexDirection: "row",
     gap: 8,
-    justifyContent: "center"
+    justifyContent: "center",
   },
   userName: {
     fontSize: 14,
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   usersListItem: {
-    width: "100%"
-  }
+    width: "100%",
+  },
 });
 
 export function UserListItem({ userId }: { userId: string }) {
@@ -59,7 +59,7 @@ export function UserListItem({ userId }: { userId: string }) {
       const response = await api.get<UserState>(`/user/${userId}`);
       return response.data;
     },
-    enabled: !!userId
+    enabled: !!userId,
   });
 
   useEffect(() => {
@@ -71,7 +71,7 @@ export function UserListItem({ userId }: { userId: string }) {
   }, [isSuccess]);
 
   const executeFollow = async ({
-    userProfileId
+    userProfileId,
   }: {
     userProfileId: string;
   }) => {
@@ -86,10 +86,10 @@ export function UserListItem({ userId }: { userId: string }) {
     }>({
       requestFn: () =>
         api.post("/follow", {
-          targetUserId: userProfileId
+          targetUserId: userProfileId,
         }),
       showToast,
-      setIsLoading
+      setIsLoading,
     });
 
     if (!res) {
@@ -109,13 +109,13 @@ export function UserListItem({ userId }: { userId: string }) {
     debounce(
       ({ userProfileId }: { userProfileId: string }) =>
         executeFollow({ userProfileId }),
-      1000
-    )
+      1000,
+    ),
   ).current;
 
   const handleFollow = ({ userProfileId }: { userProfileId: string }) => {
     if (!isFollowing) {
-      setIsFollowing(prevValue => !prevValue);
+      setIsFollowing((prevValue) => !prevValue);
       debouncedHandleFollow({ userProfileId });
     }
   };
@@ -132,7 +132,7 @@ export function UserListItem({ userId }: { userId: string }) {
           alignItems: "center",
           gap: 16,
           paddingBlock: 10,
-          paddingInline: 18
+          paddingInline: 18,
         }}
       >
         <View>
@@ -144,7 +144,7 @@ export function UserListItem({ userId }: { userId: string }) {
               {data.icon ? (
                 <Image
                   source={{
-                    uri: getImgWithTimestamp(data.icon)
+                    uri: getImgWithTimestamp(data.icon),
                   }}
                   style={styles.imageProfile}
                 />
@@ -168,11 +168,11 @@ export function UserListItem({ userId }: { userId: string }) {
           style={{
             minWidth: "auto",
             paddingHorizontal: 14,
-            paddingVertical: 8
+            paddingVertical: 8,
           }}
           onPress={() =>
             handleFollow({
-              userProfileId: data.id
+              userProfileId: data.id,
             })
           }
         >

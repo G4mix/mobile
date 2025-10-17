@@ -3,7 +3,7 @@ import { Loading } from "../Loading";
 import { View } from "../Themed";
 
 export function CommentLoading({
-  commentType
+  commentType,
 }: {
   commentType: "post" | "comment";
 }) {
@@ -17,7 +17,7 @@ export function CommentLoading({
         gap: 8,
         paddingVertical: 16,
         paddingHorizontal: commentType === "post" ? 16 : 36,
-        width: "100%"
+        width: "100%",
       }}
     >
       <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
@@ -33,7 +33,7 @@ export function CommentLoading({
         style={{
           flexDirection: "row",
           alignItems: "center",
-          gap: 8
+          gap: 8,
         }}
       >
         <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>

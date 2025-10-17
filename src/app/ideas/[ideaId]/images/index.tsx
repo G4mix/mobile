@@ -11,8 +11,8 @@ import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
 const styles = StyleSheet.create({
   ideaImage: {
     objectFit: "cover",
-    width: "100%"
-  }
+    width: "100%",
+  },
 });
 
 export default function IdeaImageScreen() {
@@ -21,14 +21,14 @@ export default function IdeaImageScreen() {
   const {
     data: idea,
     isLoading,
-    isError
+    isError,
   } = useQuery({
     queryKey: ["idea", ideaId],
     queryFn: async () => {
       const response = await api.get<IdeaType>(`/idea/${ideaId}`);
       return response.data;
     },
-    enabled: !!ideaId
+    enabled: !!ideaId,
   });
 
   if (isError) router.push("/feed");
@@ -46,7 +46,7 @@ export default function IdeaImageScreen() {
               style={{
                 position: "relative",
                 justifyContent: "center",
-                alignItems: "center"
+                alignItems: "center",
               }}
             >
               <Icon name="photo" size={64} color={Colors.light.background} />
@@ -56,7 +56,7 @@ export default function IdeaImageScreen() {
           <Link
             href={{
               pathname: "/ideas/[ideaId]/images/[imageId]",
-              params: { ideaId, imageId }
+              params: { ideaId, imageId },
             }}
             key={`idea-image-${imageId}`}
           >

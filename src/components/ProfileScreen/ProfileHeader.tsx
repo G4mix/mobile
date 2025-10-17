@@ -28,7 +28,7 @@ export function ProfileHeader({
   onPressBackground,
   onPressIcon,
   followingCount,
-  followersCount
+  followersCount,
 }: {
   id: string;
   userProfileId?: string;
@@ -60,10 +60,10 @@ export function ProfileHeader({
     }>({
       requestFn: async () =>
         api.post("/follow", {
-          targetUserId: userProfileId!
+          targetUserId: userProfileId!,
         }),
       showToast,
-      setIsLoading
+      setIsLoading,
     });
     if (!data) return;
 
@@ -76,14 +76,14 @@ export function ProfileHeader({
           ...oldData.userProfile,
           isFollowing: data.following,
           followers: data.followersCount,
-          following: data.followingCount
-        }
+          following: data.followingCount,
+        },
       };
     });
   };
 
   const debouncedHandleFollow = useRef(
-    debounce(() => executeFollow(), 700)
+    debounce(() => executeFollow(), 700),
   ).current;
 
   const handleFollow = () => {
@@ -92,13 +92,13 @@ export function ProfileHeader({
         title: "Parar de seguir",
         content: `Tem certeza de que deseja parar de seguir o usuário ${displayName || username}?`,
         handleConfirm: () => {
-          setIsFollowing(prevValue => !prevValue);
+          setIsFollowing((prevValue) => !prevValue);
           debouncedHandleFollow();
         },
-        actionName: "Parar de seguir"
+        actionName: "Parar de seguir",
       });
     } else {
-      setIsFollowing(prevValue => !prevValue);
+      setIsFollowing((prevValue) => !prevValue);
       debouncedHandleFollow();
     }
   };
@@ -109,7 +109,7 @@ export function ProfileHeader({
         width: "100%",
         position: "relative",
         gap: 28,
-        marginBottom: !onlyView ? 12 : 0
+        marginBottom: !onlyView ? 12 : 0,
       }}
     >
       <EditableComponent
@@ -117,7 +117,7 @@ export function ProfileHeader({
           width: "100%",
           height: 100,
           backgroundColor: !backgroundImage ? "#353535" : undefined,
-          borderRadius: !onlyView ? 16 : 0
+          borderRadius: !onlyView ? 16 : 0,
         }}
         onPress={!onlyView ? onPressBackground : undefined}
       >
@@ -135,7 +135,7 @@ export function ProfileHeader({
             style={{
               width: "100%",
               height: 100,
-              borderRadius: !onlyView ? 16 : 0
+              borderRadius: !onlyView ? 16 : 0,
             }}
             resizeMode="cover"
           />
@@ -152,14 +152,14 @@ export function ProfileHeader({
               top: 114,
               width: "100%",
               alignItems: "center",
-              zIndex: 2
+              zIndex: 2,
             }}
           >
             <Button
               style={{
                 minWidth: "auto",
                 paddingHorizontal: 14,
-                paddingVertical: 8
+                paddingVertical: 8,
               }}
               onPress={() => router.push("/configurations/profile")}
             >
@@ -172,7 +172,7 @@ export function ProfileHeader({
                 color={Colors.light.russianViolet}
                 style={{
                   width: 24,
-                  height: 24
+                  height: 24,
                 }}
               />
             </TouchableOpacity>
@@ -188,14 +188,14 @@ export function ProfileHeader({
               width: "100%",
               alignItems: "center",
               zIndex: 2,
-              gap: 4
+              gap: 4,
             }}
           >
             <Button
               style={{
                 minWidth: "auto",
                 paddingHorizontal: 14,
-                paddingVertical: 8
+                paddingVertical: 8,
               }}
               onPress={handleFollow}
             >
@@ -210,7 +210,7 @@ export function ProfileHeader({
               style={{
                 width: 24,
                 height: 24,
-                opacity: 0.7
+                opacity: 0.7,
               }}
             />
           </View>
@@ -223,11 +223,11 @@ export function ProfileHeader({
                 color: Colors.light.russianViolet,
                 fontSize: 16,
                 fontWeight: "bold",
-                zIndex: 3
+                zIndex: 3,
               },
               user.id === id
                 ? { textAlign: "center" }
-                : { textAlign: "left", paddingLeft: 16 }
+                : { textAlign: "left", paddingLeft: 16 },
             ]}
           >
             {displayName || username}
@@ -239,11 +239,11 @@ export function ProfileHeader({
               {
                 alignItems: "center",
                 flexDirection: "row",
-                gap: 16
+                gap: 16,
               },
               user.id === id
                 ? { justifyContent: "center" }
-                : { paddingLeft: 16 }
+                : { paddingLeft: 16 },
             ]}
           >
             <View style={{ gap: 4, flexDirection: "row" }}>
@@ -252,7 +252,7 @@ export function ProfileHeader({
                   color: Colors.light.russianViolet,
                   fontSize: 16,
                   fontWeight: "bold",
-                  zIndex: 3
+                  zIndex: 3,
                 }}
               >
                 {followersCount}
@@ -261,7 +261,7 @@ export function ProfileHeader({
                 style={{
                   color: Colors.light.russianViolet,
                   fontSize: 16,
-                  zIndex: 3
+                  zIndex: 3,
                 }}
               >
                 seguidores
@@ -273,7 +273,7 @@ export function ProfileHeader({
                   color: Colors.light.russianViolet,
                   fontSize: 16,
                   fontWeight: "bold",
-                  zIndex: 3
+                  zIndex: 3,
                 }}
               >
                 {followingCount}
@@ -282,7 +282,7 @@ export function ProfileHeader({
                 style={{
                   color: Colors.light.russianViolet,
                   fontSize: 16,
-                  zIndex: 3
+                  zIndex: 3,
                 }}
               >
                 seguindo
@@ -303,11 +303,11 @@ export function ProfileHeader({
               alignItems: "center",
               justifyContent: "center",
               backgroundColor: Colors.light.background,
-              borderRadius: 9999
+              borderRadius: 9999,
             },
             user.id === id
               ? { left: "50%", transform: [{ translateX: -42 }] as any }
-              : { left: 16 }
+              : { left: 16 },
           ]}
           onPress={!onlyView ? onPressIcon : undefined}
         >
@@ -316,7 +316,7 @@ export function ProfileHeader({
             style={{
               ...styles.imageProfile,
               width: 80,
-              height: 80
+              height: 80,
             }}
           />
         </EditableComponent>
@@ -332,11 +332,11 @@ export function ProfileHeader({
               height: 72,
               alignItems: "center",
               justifyContent: "center",
-              backgroundColor: Colors.light.background
+              backgroundColor: Colors.light.background,
             },
             user.id === id
               ? { left: "50%", transform: [{ translateX: -42 }] as any }
-              : { left: 16 }
+              : { left: 16 },
           ]}
           onPress={!onlyView ? onPressIcon : undefined}
         >
@@ -346,7 +346,7 @@ export function ProfileHeader({
             color={Colors.light.majorelleBlue}
             style={{
               width: 80,
-              height: 80
+              height: 80,
             }}
           />
         </EditableComponent>

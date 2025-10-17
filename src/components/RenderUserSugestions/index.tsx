@@ -12,12 +12,12 @@ import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
 
 export function RenderUserSuggestions({
   keyword,
-  onSuggestionPress
+  onSuggestionPress,
 }: MentionSuggestionsProps) {
   const { data, fetchNextPage, isFetchingNextPage, hasNextPage } = useUsers({
-    search: keyword || ""
+    search: keyword || "",
   });
-  const users = data?.pages?.flatMap(page => page?.data || []) || [];
+  const users = data?.pages?.flatMap((page) => page?.data || []) || [];
   if (typeof keyword !== "string") return null;
 
   return (
@@ -28,18 +28,18 @@ export function RenderUserSuggestions({
           position: "absolute",
           width: "100%",
           borderTopWidth: 1,
-          borderColor: Colors.light.russianViolet
+          borderColor: Colors.light.russianViolet,
         }}
       >
         <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
-          {users.map(user => (
+          {users.map((user) => (
             <Pressable
               key={user.id}
               focusable={false}
               onPress={() =>
                 onSuggestionPress({
                   id: user.id,
-                  name: user.user.username
+                  name: user.user.username,
                 })
               }
               style={{
@@ -47,7 +47,7 @@ export function RenderUserSuggestions({
                 flexDirection: "row",
                 gap: 4,
                 borderBottomWidth: 1,
-                borderColor: Colors.light.periwinkle
+                borderColor: Colors.light.periwinkle,
               }}
             >
               {user.icon ? (
@@ -72,7 +72,7 @@ export function RenderUserSuggestions({
           ))}
           {isFetchingNextPage ||
             (!data &&
-              [0, 1, 2].map(value => (
+              [0, 1, 2].map((value) => (
                 <RenderUserSugestionsLoading
                   key={`user-suggestion-loading-${value}`}
                 />

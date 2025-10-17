@@ -8,8 +8,8 @@ const styles = StyleSheet.create({
     color: Colors.light.russianViolet,
     fontSize: 13.33,
     marginVertical: 8,
-    textAlign: "justify"
-  }
+    textAlign: "justify",
+  },
 });
 
 type PostBodyProps = {

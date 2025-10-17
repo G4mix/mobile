@@ -5,7 +5,7 @@ import { api } from "@/constants/api";
 import { useFeedQueries } from "./useFeedQueries";
 
 export const useViewIdeas = ({
-  initialViewedIdeaIds = []
+  initialViewedIdeaIds = [],
 }: {
   initialViewedIdeaIds: string[];
 }) => {
@@ -14,7 +14,7 @@ export const useViewIdeas = ({
   const alreadyVisualized = useRef<Set<string>>(new Set(initialViewedIdeaIds));
   const { increaseViews } = useFeedQueries();
   const timeouts = useRef<Map<string, ReturnType<typeof setTimeout>>>(
-    new Map()
+    new Map(),
   );
 
   const saveVisualizedIdeaReq = async (ideaId: string) => {
@@ -22,7 +22,7 @@ export const useViewIdeas = ({
     await handleRequest({
       requestFn: async () => api.post("/view", { targetIdeaId: ideaId }),
       showToast,
-      setIsLoading: setIsSavingIdea
+      setIsLoading: setIsSavingIdea,
     });
     increaseViews([ideaId]);
   };
@@ -57,15 +57,15 @@ export const useViewIdeas = ({
   // Cleanup dos timeouts quando o componente for desmontado
   useEffect(
     () => () => {
-      timeouts.current.forEach(timeout => clearTimeout(timeout));
+      timeouts.current.forEach((timeout) => clearTimeout(timeout));
       timeouts.current.clear();
     },
-    []
+    [],
   );
 
   return {
     alreadyVisualized,
     addVisualizedIdea,
-    removeVisualizedIdea
+    removeVisualizedIdea,
   };
 };

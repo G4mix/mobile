@@ -13,7 +13,7 @@ export function IdeaLoading() {
         display: "flex",
         gap: 8,
         padding: 16,
-        width: "100%"
+        width: "100%",
       }}
     >
       <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
@@ -30,7 +30,7 @@ export function IdeaLoading() {
           style={{
             position: "relative",
             justifyContent: "center",
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           <Icon name="photo" size={64} color={Colors.light.background} />
@@ -40,7 +40,7 @@ export function IdeaLoading() {
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
-          alignItems: "center"
+          alignItems: "center",
         }}
       >
         <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>

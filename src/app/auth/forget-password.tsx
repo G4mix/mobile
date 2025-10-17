@@ -19,13 +19,13 @@ const styles = StyleSheet.create({
     gap: 16,
     justifyContent: "center",
     paddingLeft: 16,
-    paddingRight: 16
+    paddingRight: 16,
   },
   title: {
     color: Colors.light.russianViolet,
     fontSize: 20,
-    fontWeight: "bold"
-  }
+    fontWeight: "bold",
+  },
 });
 
 export default function ForgetPasswordScreen() {
@@ -38,7 +38,7 @@ export default function ForgetPasswordScreen() {
   const { showToast } = useToast();
 
   const incrementStep = () => {
-    setActualStep(prevValue => (prevValue === 2 ? prevValue : prevValue + 1));
+    setActualStep((prevValue) => (prevValue === 2 ? prevValue : prevValue + 1));
   };
 
   const resetSteps = () => {
@@ -47,21 +47,21 @@ export default function ForgetPasswordScreen() {
 
   const changePassword = async (
     {
-      email: e
+      email: e,
     }: {
       email: string;
     },
-    increment: boolean
+    increment: boolean,
   ) => {
     if (isLoading) return;
     const data = await handleRequest<{ email: string }>({
       requestFn: async () =>
         api.post("/auth/send-recover-email", { email: e }, {
-          skipAuth: true
+          skipAuth: true,
         } as any),
       showToast,
       setIsLoading,
-      successMessage: "E-mail de recuperação enviado com sucesso!"
+      successMessage: "E-mail de recuperação enviado com sucesso!",
     });
     if (!data) return;
     if (increment) {

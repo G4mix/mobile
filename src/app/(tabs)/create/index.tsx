@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 18,
     minHeight: Dimensions.get("window").height - 60,
-    padding: 20
+    padding: 20,
   },
   postContent: {
     alignItems: "center",
@@ -50,19 +50,19 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     minHeight: 230,
     paddingBottom: 16,
-    position: "relative"
+    position: "relative",
   },
   postContentRoot: {
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
   },
   scroll: {
     flex: 1,
-    marginBottom: 60
+    marginBottom: 60,
   },
   textArea: {
-    borderWidth: 0
-  }
+    borderWidth: 0,
+  },
 });
 
 export type CreateScreenFormData = {
@@ -93,7 +93,7 @@ export default function CreateScreen() {
       const response = await api.get<IdeaType>(`/idea/${ideaId}`);
       return response.data;
     },
-    enabled: !!ideaId
+    enabled: !!ideaId,
   });
 
   const getPost = () => {
@@ -102,14 +102,14 @@ export default function CreateScreen() {
     setValue("content", post.content);
     setValue(
       "images",
-      post.images.map(img => {
+      post.images.map((img) => {
         const extension = img.src.split(".").pop()?.split("?")[0] || "jpg";
         return {
           uri: img.src,
           name: img.id,
-          type: `image/${extension === "jpg" ? "jpeg" : extension}`
+          type: `image/${extension === "jpg" ? "jpeg" : extension}`,
         };
-      })
+      }),
     );
     setValue("links", post.links);
     setValue("tags", post.tags);
@@ -135,7 +135,7 @@ export default function CreateScreen() {
     content,
     images,
     links,
-    tags
+    tags,
   }: CreateScreenFormData) => {
     if (isLoading) return;
     if (!title && !content && !images && !links) {
@@ -148,7 +148,7 @@ export default function CreateScreen() {
       content,
       images,
       links,
-      tags
+      tags,
     });
 
     const data = await handleRequest<IdeaType>({
@@ -158,12 +158,12 @@ export default function CreateScreen() {
           formData,
           {
             headers: {
-              "Content-Type": "multipart/form-data"
-            }
-          }
+              "Content-Type": "multipart/form-data",
+            },
+          },
         ),
       showToast,
-      setIsLoading
+      setIsLoading,
     });
     if (!data) return;
     if (post && ideaId) {
@@ -192,10 +192,10 @@ export default function CreateScreen() {
         images && images.length >= 8
           ? () =>
               showToast({ message: "O máximo de imagens é 5.", color: "warn" })
-          : () => setIsCameraVisible(true)
+          : () => setIsCameraVisible(true),
     },
     {
-      name: "chart-bar"
+      name: "chart-bar",
     },
     {
       name: "link",
@@ -203,18 +203,18 @@ export default function CreateScreen() {
         links && links.length >= 5
           ? () =>
               showToast({ message: "O máximo de links é 5.", color: "warn" })
-          : () => setIsAddLinkVisible(prevValue => !prevValue)
+          : () => setIsAddLinkVisible((prevValue) => !prevValue),
     },
     {
-      name: "code-bracket"
-    }
+      name: "code-bracket",
+    },
   ];
 
   const handleDeleteImage = (src: string) => {
     const currentImages = images || [];
     setValue(
       "images",
-      currentImages.filter(currentImage => currentImage.uri !== src)
+      currentImages.filter((currentImage) => currentImage.uri !== src),
     );
   };
 
@@ -239,7 +239,7 @@ export default function CreateScreen() {
             title,
             content,
             images,
-            links
+            links,
           }}
           post={post}
         />
@@ -263,7 +263,7 @@ export default function CreateScreen() {
               styles.postContent,
               isValidPostContent(content) === "invalid"
                 ? { borderColor: "red" }
-                : {}
+                : {},
             ]}
           >
             <TextArea
@@ -272,21 +272,21 @@ export default function CreateScreen() {
                 styles.textArea,
                 isValidPostContent(content) === "invalid"
                   ? { color: "red" }
-                  : {}
+                  : {},
               ]}
               ref={contentRef}
               onChangeText={(value: string) =>
                 setValue("content", value.slice(0, 700))
               }
             />
-            {images?.map(img => (
+            {images?.map((img) => (
               <CreateScreenImage
                 key={`post-image-${img.uri}`}
                 src={img.uri}
                 handleDeleteImage={handleDeleteImage}
               />
             ))}
-            {links?.map(link => (
+            {links?.map((link) => (
               <CreateScreenPostLink
                 setValue={setValue as any}
                 links={links}

@@ -26,13 +26,13 @@ export const useComments = () => {
               ideaId,
               parentCommentId: commentId,
               page: pageParam,
-              limit: 10
-            }
+              limit: 10,
+            },
           })
         ).data,
       initialPageParam: 0,
-      getNextPageParam: lastPage => lastPage?.nextPage,
-      enabled: !!ideaId
+      getNextPageParam: (lastPage) => lastPage?.nextPage,
+      enabled: !!ideaId,
     });
 
   return {
@@ -40,6 +40,6 @@ export const useComments = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-    refetch
+    refetch,
   };
 };

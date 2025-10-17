@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
   actions: {
     alignItems: "center",
     flexDirection: "row",
-    gap: 16
+    gap: 16,
   },
   container: {
     alignItems: "center",
@@ -16,13 +16,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 16,
-    paddingVertical: 20
+    paddingVertical: 20,
+    width: "100%",
   },
   logo: {
     maxHeight: 28,
     maxWidth: 90,
-    resizeMode: "contain"
-  }
+    resizeMode: "contain",
+  },
 });
 
 export function FeedHeader() {

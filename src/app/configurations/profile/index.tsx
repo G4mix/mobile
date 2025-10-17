@@ -31,15 +31,15 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     minWidth: "auto",
     paddingHorizontal: 16,
-    paddingVertical: 14
+    paddingVertical: 14,
   },
   header: {
     alignItems: "center",
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "100%"
-  }
+    width: "100%",
+  },
 });
 
 export type UpdateUserFormData = {
@@ -79,7 +79,7 @@ export default function ConfigProfileScreen() {
         ? {
             uri: user.backgroundImage,
             name: `backgroundImage-${date}.${user.backgroundImage.split(".").pop()?.split("?")[0] || "png"}`,
-            type: `image/${user.backgroundImage.split(".").pop()?.split("?")[0] || "png"}`
+            type: `image/${user.backgroundImage.split(".").pop()?.split("?")[0] || "png"}`,
           }
         : null,
 
@@ -87,11 +87,11 @@ export default function ConfigProfileScreen() {
         ? {
             uri: user.icon,
             name: `user-icon-${date}.${user.icon.split(".").pop()?.split("?")[0] || "png"}`,
-            type: `image/${user.icon.split(".").pop()?.split("?")[0] || "png"}`
+            type: `image/${user.icon.split(".").pop()?.split("?")[0] || "png"}`,
           }
         : null,
-      links: user.links
-    }
+      links: user.links,
+    },
   });
 
   const updateUser = async ({
@@ -99,7 +99,7 @@ export default function ConfigProfileScreen() {
     backgroundImage,
     displayName,
     icon,
-    links
+    links,
   }: UpdateUserFormData) => {
     if (isLoading) return;
     if (
@@ -119,18 +119,18 @@ export default function ConfigProfileScreen() {
       backgroundImage,
       displayName,
       icon,
-      links
+      links,
     });
 
     const data = await handleRequest<UserState>({
       requestFn: async () =>
         api.patch("/user", formData, {
           headers: {
-            "Content-Type": "multipart/form-data"
-          }
+            "Content-Type": "multipart/form-data",
+          },
         }),
       showToast,
-      setIsLoading
+      setIsLoading,
     });
     if (!data) return;
 
@@ -173,7 +173,7 @@ export default function ConfigProfileScreen() {
           position: "relative",
           paddingHorizontal: 16,
           paddingVertical: 24,
-          gap: 12
+          gap: 12,
         }}
       >
         <View style={styles.header}>
@@ -202,7 +202,7 @@ export default function ConfigProfileScreen() {
           color={Colors.light.tropicalIndigo}
           borderWidth={2}
           value={displayName}
-          onChangeText={value => setValue("displayName", value)}
+          onChangeText={(value) => setValue("displayName", value)}
         />
         <View style={{ gap: 4 }}>
           <Text
@@ -213,7 +213,7 @@ export default function ConfigProfileScreen() {
           <TextArea
             placeholder={user.autobiography || "Conte-nos um pouco sobre você"}
             value={autobiography}
-            onChangeText={value => setValue("autobiography", value)}
+            onChangeText={(value) => setValue("autobiography", value)}
             style={{ minHeight: 136, color: Colors.light.tropicalIndigo }}
           />
         </View>
@@ -228,11 +228,11 @@ export default function ConfigProfileScreen() {
               placeholder="Adicione um link"
               color={Colors.light.tropicalIndigo}
               borderWidth={2}
-              onSubmitEditing={e => {
+              onSubmitEditing={(e) => {
                 if (links && links.length >= 5) {
                   showToast({
                     message: "O limite de links é 5!",
-                    color: "warn"
+                    color: "warn",
                   });
                   return;
                 }
@@ -245,7 +245,7 @@ export default function ConfigProfileScreen() {
               returnKeyType="done"
               ref={addLinkRef}
             />
-            {links?.map(link => (
+            {links?.map((link) => (
               <CreateScreenPostLink
                 setValue={setValue as any}
                 links={links}

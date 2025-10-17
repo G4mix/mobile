@@ -7,11 +7,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     height: "100%",
     objectFit: "cover",
-    width: "100%"
+    width: "100%",
   },
   postContentImageCancel: {
     height: 24,
-    width: 24
+    width: 24,
   },
   postContentImageCancelRoot: {
     color: "white",
@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 24,
     top: 8,
-    width: 24
+    width: 24,
   },
   postContentImageRoot: {
     borderRadius: 8,
@@ -27,8 +27,8 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
     paddingRight: 16,
     position: "relative",
-    width: "100%"
-  }
+    width: "100%",
+  },
 });
 
 type CreateScreenImageProps = {
@@ -38,7 +38,7 @@ type CreateScreenImageProps = {
 
 export function CreateScreenImage({
   src,
-  handleDeleteImage
+  handleDeleteImage,
 }: CreateScreenImageProps) {
   return (
     <View style={styles.postContentImageRoot}>
@@ -61,8 +61,8 @@ export function CreateScreenImage({
             {
               textShadowColor: "rgba(0, 0, 0, 0.8)",
               textShadowOffset: { width: 1, height: 1 },
-              textShadowRadius: 5.7
-            }
+              textShadowRadius: 5.7,
+            },
           ]}
         />
       </TouchableOpacity>

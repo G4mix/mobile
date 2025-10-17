@@ -17,20 +17,20 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 8,
     padding: 12,
-    position: "relative"
+    position: "relative",
   },
   linkImage: {
     borderRadius: 8,
     height: 66,
     objectFit: "cover",
-    width: 66
+    width: 66,
   },
   linkInformations: {
     display: "flex",
     flexDirection: "column",
     flex: 1,
-    gap: 8
-  }
+    gap: 8,
+  },
 });
 
 type IdeaLinkProps = {
@@ -54,14 +54,14 @@ export function IdeaLink({
   url = "",
   handleError,
   children,
-  noHorizontalPadding
+  noHorizontalPadding,
 }: IdeaLinkProps) {
   const [data, setData] = useState<DataType | null>(null);
 
   const fetchData = useCallback(async () => {
     try {
       const response = await fetch(
-        `https://api.microlink.io?url=${encodeURIComponent(url)}`
+        `https://api.microlink.io?url=${encodeURIComponent(url)}`,
       );
       const { data: jsonData } = await response.json();
 
@@ -71,8 +71,8 @@ export function IdeaLink({
         icon: {
           url: jsonData.logo.url,
           width: jsonData.logo.width,
-          height: jsonData.logo.height
-        }
+          height: jsonData.logo.height,
+        },
       });
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
@@ -92,7 +92,7 @@ export function IdeaLink({
     <ExternalLink
       style={{
         width: "100%",
-        paddingHorizontal: noHorizontalPadding ? 0 : 16
+        paddingHorizontal: noHorizontalPadding ? 0 : 16,
       }}
       href={url}
       aria-label={`Link para o site: ${data.title}`}
@@ -111,7 +111,7 @@ export function IdeaLink({
             style={{
               fontWeight: "medium",
               color: Colors.light.majorelleBlue,
-              fontSize: 12
+              fontSize: 12,
             }}
           >
             {data.title.slice(0, 32)}...
@@ -121,7 +121,7 @@ export function IdeaLink({
               fontWeight: "regular",
               textAlign: "justify",
               color: Colors.light.majorelleBlue,
-              fontSize: 12
+              fontSize: 12,
             }}
           >
             {data.description.slice(0, 90)}...

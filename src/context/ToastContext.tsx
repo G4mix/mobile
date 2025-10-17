@@ -13,7 +13,7 @@ export type ToastContextType = {
 };
 
 export const ToastContext = createContext<ToastContextType | undefined>(
-  undefined
+  undefined,
 );
 
 const styles = StyleSheet.create({
@@ -24,8 +24,8 @@ const styles = StyleSheet.create({
     left: 0,
     position: "absolute",
     right: 0,
-    zIndex: 999
-  }
+    zIndex: 999,
+  },
 });
 
 type ToastProviderProps = { children: React.ReactNode };
@@ -38,25 +38,25 @@ export function ToastProvider({ children }: ToastProviderProps) {
       const id = Date.now();
       const animation = new Animated.Value(0);
 
-      setToasts(prev => [...prev, { id, message, color, animation }]);
+      setToasts((prev) => [...prev, { id, message, color, animation }]);
 
       Animated.timing(animation, {
         toValue: 1,
         duration: 300,
-        useNativeDriver: true
+        useNativeDriver: true,
       }).start();
 
       setTimeout(() => {
         Animated.timing(animation, {
           toValue: 0,
           duration: 300,
-          useNativeDriver: true
+          useNativeDriver: true,
         }).start(() => {
-          setToasts(prev => prev.filter(toast => toast.id !== id));
+          setToasts((prev) => prev.filter((toast) => toast.id !== id));
         });
       }, duration);
     },
-    []
+    [],
   );
 
   const contextValue = useMemo(() => ({ showToast }), [showToast]);
@@ -65,7 +65,7 @@ export function ToastProvider({ children }: ToastProviderProps) {
     <ToastContext.Provider value={contextValue}>
       {children}
       <View style={styles.container}>
-        {toasts.map(toast => (
+        {toasts.map((toast) => (
           <Toast
             key={toast.id}
             message={toast.message}

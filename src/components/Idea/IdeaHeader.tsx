@@ -23,30 +23,30 @@ export const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     gap: 4,
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
   imageProfile: {
     borderRadius: 9999,
     height: 18,
-    width: 18
+    width: 18,
   },
   leftSide: {
     alignItems: "center",
     display: "flex",
     flexDirection: "row",
-    gap: 4
+    gap: 4,
   },
   postUserInformation: {
     alignItems: "center",
     display: "flex",
     flexDirection: "row",
     gap: 8,
-    justifyContent: "center"
+    justifyContent: "center",
   },
   userName: {
     fontSize: 13.33,
-    fontWeight: "medium"
-  }
+    fontWeight: "medium",
+  },
 });
 
 type IdeaHeaderProps = {
@@ -64,10 +64,10 @@ export function IdeaHeader({
   createdAt,
   updatedAt,
   isDeleting,
-  setIsDeleting
+  setIsDeleting,
 }: IdeaHeaderProps) {
   const userProfileId = useSelector(
-    (state: { user: UserState }) => state.user.id
+    (state: { user: UserState }) => state.user.id,
   );
   const { showConfirmationModal } = useConfirmationModal();
   const { showFloatingOptions } = useFloatingOptions();
@@ -81,7 +81,7 @@ export function IdeaHeader({
       iconName: "pencil",
       onPress: ({ selectedPost }: any) => {
         router.push(`/create?ideaId=${selectedPost}`);
-      }
+      },
     },
     {
       name: "Deletar",
@@ -92,7 +92,7 @@ export function IdeaHeader({
           handleRequest({
             requestFn: async () => api.delete(`/idea/${selectedPost}`),
             showToast,
-            setIsLoading: setIsDeleting
+            setIsLoading: setIsDeleting,
           });
 
           if (pathname.startsWith("/ideas")) {
@@ -109,10 +109,10 @@ export function IdeaHeader({
           title: "Você realmente deseja apagar a publicação?",
           content:
             "Esta ação não pode ser revertida, certifique-se que realmente deseja excluir a publicação.",
-          handleConfirm
+          handleConfirm,
         });
-      }
-    }
+      },
+    },
   ];
 
   if (!author) return null;
@@ -141,7 +141,7 @@ export function IdeaHeader({
           onPress={() =>
             showFloatingOptions({
               optionProps: { selectedPost: ideaId },
-              options
+              options,
             })
           }
         >

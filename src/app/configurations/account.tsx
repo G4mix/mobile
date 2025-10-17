@@ -16,7 +16,7 @@ export default function AccountScreen() {
       const response = await api.get<UserState>(`/user/${user.id}`);
       return response.data;
     },
-    enabled: !!user.id
+    enabled: !!user.id,
   });
   if (isError) router.push("/configurations");
 
@@ -28,7 +28,7 @@ export default function AccountScreen() {
           position: "relative",
           paddingHorizontal: 16,
           paddingVertical: 24,
-          gap: 16
+          gap: 16,
         }}
       >
         {isLoading && !data && <Text>Carregando...</Text>}

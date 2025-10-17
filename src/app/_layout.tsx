@@ -1,7 +1,7 @@
 import {
   DarkTheme,
   DefaultTheme,
-  ThemeProvider
+  ThemeProvider,
 } from "@react-navigation/native";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -45,7 +45,7 @@ function RootLayoutNav() {
                 options={{
                   presentation: "modal",
                   headerShown: true,
-                  header: customHeader("Comentários")
+                  header: customHeader("Comentários"),
                 }}
               />
               <Stack.Screen
@@ -53,7 +53,7 @@ function RootLayoutNav() {
                 options={{
                   presentation: "modal",
                   headerShown: true,
-                  header: customHeader("Respostas")
+                  header: customHeader("Respostas"),
                 }}
               />
               <Stack.Screen
@@ -61,7 +61,7 @@ function RootLayoutNav() {
                 options={{
                   presentation: "modal",
                   headerShown: true,
-                  header: customHeader()
+                  header: customHeader(),
                 }}
               />
               <Stack.Screen
@@ -69,7 +69,7 @@ function RootLayoutNav() {
                 options={{
                   presentation: "modal",
                   headerShown: true,
-                  header: customHeader()
+                  header: customHeader(),
                 }}
               />
               <Stack.Screen
@@ -77,7 +77,7 @@ function RootLayoutNav() {
                 options={{
                   presentation: "modal",
                   headerShown: true,
-                  header: customHeader("Configurações")
+                  header: customHeader("Configurações"),
                 }}
               />
               <Stack.Screen
@@ -85,7 +85,7 @@ function RootLayoutNav() {
                 options={{
                   presentation: "modal",
                   headerShown: true,
-                  header: customHeader("Privacidade e segurança")
+                  header: customHeader("Privacidade e segurança"),
                 }}
               />
               <Stack.Screen
@@ -93,7 +93,7 @@ function RootLayoutNav() {
                 options={{
                   presentation: "modal",
                   headerShown: true,
-                  header: customHeader("Informações da conta")
+                  header: customHeader("Informações da conta"),
                 }}
               />
               <Stack.Screen
@@ -101,7 +101,7 @@ function RootLayoutNav() {
                 options={{
                   presentation: "modal",
                   headerShown: true,
-                  header: customHeader("Atualize seu E-mail")
+                  header: customHeader("Atualize seu E-mail"),
                 }}
               />
               <Stack.Screen
@@ -109,7 +109,7 @@ function RootLayoutNav() {
                 options={{
                   presentation: "modal",
                   headerShown: true,
-                  header: customHeader("Atualize seu nome")
+                  header: customHeader("Atualize seu nome"),
                 }}
               />
               <Stack.Screen
@@ -117,7 +117,7 @@ function RootLayoutNav() {
                 options={{
                   presentation: "modal",
                   headerShown: true,
-                  header: customHeader("Atualize sua Senha")
+                  header: customHeader("Atualize sua Senha"),
                 }}
               />
               <Stack.Screen
@@ -134,7 +134,7 @@ function RootLayoutNav() {
                 options={{
                   presentation: "modal",
                   headerShown: true,
-                  header: customHeader("")
+                  header: customHeader(""),
                 }}
               />
               <Stack.Screen
@@ -142,7 +142,7 @@ function RootLayoutNav() {
                 options={{
                   presentation: "modal",
                   headerShown: true,
-                  header: customHeader("")
+                  header: customHeader(""),
                 }}
               />
             </Stack>
@@ -156,7 +156,7 @@ function RootLayoutNav() {
 export default function RootLayout() {
   const [loaded, error] = useFonts({
     heroicons: require("../assets/heroicons/heroicons.ttf"),
-    roboto: require("../assets/fonts/roboto.ttf")
+    roboto: require("../assets/fonts/roboto.ttf"),
   });
 
   useEffect(() => {

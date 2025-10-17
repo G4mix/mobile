@@ -9,8 +9,8 @@ export const reduxStore = configureStore({
     comments: commentsReducer,
     profile: profileReducer,
     feed: feedReducer,
-    user: userReducer
-  }
+    user: userReducer,
+  },
 });
 
 export type RootState = ReturnType<typeof reduxStore.getState>;

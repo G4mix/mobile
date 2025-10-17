@@ -31,8 +31,8 @@ const initialState: UserState = {
     id: "",
     username: "",
     verified: false,
-    email: ""
-  }
+    email: "",
+  },
 };
 
 const userSlice = createSlice({
@@ -51,7 +51,7 @@ const userSlice = createSlice({
       state.isFollowing = action.payload.isFollowing;
       state.user = action.payload.user;
     },
-    logout: state => {
+    logout: (state) => {
       state.id = "";
       state.displayName = null;
       state.icon = null;
@@ -66,10 +66,10 @@ const userSlice = createSlice({
         id: "",
         email: "",
         username: "",
-        verified: false
+        verified: false,
       };
-    }
-  }
+    },
+  },
 });
 
 export const { setUser, logout } = userSlice.actions;

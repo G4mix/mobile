@@ -36,17 +36,17 @@ export const styles = StyleSheet.create({
     overflowY: "auto",
     paddingLeft: 16,
     paddingRight: 16,
-    paddingTop: 16
+    paddingTop: 16,
   },
   termsContainer: {
     alignItems: "center",
     display: "flex",
-    flexDirection: "row"
+    flexDirection: "row",
   },
   title: {
     fontSize: 20,
-    fontWeight: "bold"
-  }
+    fontWeight: "bold",
+  },
 });
 
 export default function RegisterScreen() {
@@ -56,7 +56,7 @@ export default function RegisterScreen() {
     "valid" | "invalid" | null
   >(null);
   const [isEmailValid, setIsEmailValid] = useState<"valid" | "invalid" | null>(
-    null
+    null,
   );
   const [isChecked, setIsChecked] = useState(false);
   const [isConfirmPasswordValid, setIsConfirmPasswordValid] = useState<
@@ -85,8 +85,8 @@ export default function RegisterScreen() {
       confirmPassword: "",
       password: "",
       email: "",
-      username: ""
-    }
+      username: "",
+    },
   });
 
   const findByEmail = async ({ email }: { email: string }) => {
@@ -101,7 +101,7 @@ export default function RegisterScreen() {
         api.get(`/user/exists/${email}`, { skipAuth: true } as any),
       showToast,
       setIsLoading: setIsLoadingUser,
-      ignoreErrors: true
+      ignoreErrors: true,
     });
   };
 
@@ -114,11 +114,11 @@ export default function RegisterScreen() {
     }>({
       requestFn: async () =>
         api.post("/auth/signup", { username, password: pwd, email }, {
-          skipAuth: true
+          skipAuth: true,
         } as any),
       showToast,
       setIsLoading,
-      successMessage: "Registro concluído com sucesso!"
+      successMessage: "Registro concluído com sucesso!",
     });
     if (!data) return;
     dispatch(setUser(data.userProfile));

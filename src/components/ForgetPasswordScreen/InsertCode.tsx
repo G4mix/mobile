@@ -13,7 +13,7 @@ import { SpinLoading } from "../SpinLoading";
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    gap: 4
+    gap: 4,
   },
   root: {
     alignItems: "center",
@@ -21,8 +21,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingLeft: 16,
     paddingRight: 16,
-    width: "100%"
-  }
+    width: "100%",
+  },
 });
 
 type FormData = {
@@ -42,15 +42,15 @@ export function InsertCode({
   resetSteps,
   email,
   setToken,
-  changePassword
+  changePassword,
 }: InsertCodeProps) {
   const [isLoading, setIsLoading] = useState(false);
   const { showToast } = useToast();
 
   const { watch, setValue, handleSubmit } = useForm<FormData>({
     defaultValues: {
-      code: ""
-    }
+      code: "",
+    },
   });
 
   const verifyCode = async ({ code }: FormData) => {
@@ -58,11 +58,11 @@ export function InsertCode({
     const data = await handleRequest<{ accessToken: string }>({
       requestFn: async () =>
         api.post("/auth/verify-email-code", { code, email }, {
-          skipAuth: true
+          skipAuth: true,
         } as any),
       showToast,
       setIsLoading,
-      successMessage: "Código válido!"
+      successMessage: "Código válido!",
     });
     if (!data) return;
     setToken(data.accessToken);
@@ -81,7 +81,7 @@ export function InsertCode({
           icon="lock-closed"
           label="Código de verificação"
           placeholder="Digite seu código de verificação aqui"
-          onChangeText={value => setValue("code", value.slice(0, 6))}
+          onChangeText={(value) => setValue("code", value.slice(0, 6))}
           value={code}
           onSubmitEditing={code.length === 6 ? onSubmit : undefined}
           returnKeyType="done"

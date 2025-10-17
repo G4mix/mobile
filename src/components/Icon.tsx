@@ -46,7 +46,7 @@ export type IconName =
 export const Icon = createIconSetFromIcoMoon(
   icoMoonConfig,
   "heroicons",
-  "heroicons.ttf"
+  "heroicons.ttf",
 ) as React.ComponentType<{
   name: IconName;
   size?: number;

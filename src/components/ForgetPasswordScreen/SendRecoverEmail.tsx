@@ -14,8 +14,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingLeft: 16,
     paddingRight: 16,
-    width: "100%"
-  }
+    width: "100%",
+  },
 });
 
 type FormData = {
@@ -28,16 +28,16 @@ type SendRecoverEmailProps = {
 
 export function SendRecoverEmail({ changePassword }: SendRecoverEmailProps) {
   const [isEmailValid, setIsEmailValid] = useState<"valid" | "invalid" | null>(
-    null
+    null,
   );
 
   const { watch, setValue, handleSubmit } = useForm<FormData>({
     defaultValues: {
-      email: ""
-    }
+      email: "",
+    },
   });
 
-  const onSubmit = handleSubmit(data => {
+  const onSubmit = handleSubmit((data) => {
     changePassword(data, true);
     setValue("email", "");
   });

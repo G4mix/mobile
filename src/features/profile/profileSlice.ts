@@ -4,7 +4,7 @@ const profileSlice = createSlice({
   name: "profile",
   initialState: {
     lastFetchTime: new Date().toISOString(),
-    actualTab: "ideas"
+    actualTab: "ideas",
   },
   reducers: {
     setActualTab: (state, action) => {
@@ -12,8 +12,8 @@ const profileSlice = createSlice({
     },
     setLastFetchTime: (state, action) => {
       state.lastFetchTime = action.payload;
-    }
-  }
+    },
+  },
 });
 
 export const { setLastFetchTime, setActualTab } = profileSlice.actions;

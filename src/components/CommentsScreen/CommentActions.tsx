@@ -15,14 +15,14 @@ import { CommentPageable } from "@/hooks/useComments";
 const styles = StyleSheet.create({
   actionContainer: {
     flexDirection: "row",
-    gap: 10
+    gap: 10,
   },
   actionOption: {
     alignItems: "center",
     display: "flex",
     flexDirection: "row",
-    gap: 4
-  }
+    gap: 4,
+  },
 });
 
 type CommentActionsProps = {
@@ -38,14 +38,14 @@ export function CommentActions({
   commentId,
   ideaId,
   liked,
-  likesCount
+  likesCount,
 }: CommentActionsProps) {
   const { showToast } = useToast();
   const [isLiked, setIsLiked] = useState(liked);
   const [currentLikesCount, setCurrentLikesCount] = useState(likesCount);
   const [isLoading, setIsLoading] = useState(false);
   const lastFetchTime = useSelector(
-    (state: any) => state.comments.lastFetchTime
+    (state: any) => state.comments.lastFetchTime,
   );
   const queryClient = useQueryClient();
 
@@ -59,40 +59,40 @@ export function CommentActions({
           ...oldData,
           pages: oldData.pages.map((page: CommentPageable) => ({
             ...page,
-            data: page.data.map(comment =>
+            data: page.data.map((comment) =>
               comment.id === commentId
                 ? {
                     ...comment,
                     isLiked: data.isLiked,
-                    likesCount: data.likesCount
+                    likesCount: data.likesCount,
                   }
-                : comment
-            )
-          }))
+                : comment,
+            ),
+          })),
         };
-      }
+      },
     );
   };
 
   const likeCommentRequest = async (
     newIsLiked: boolean,
-    newLikesCount: number
+    newLikesCount: number,
   ) => {
     if (isLoading) return;
     const data = await handleRequest({
       requestFn: async () =>
         api.post("/like", {
           targetLikeId: commentId,
-          likeType: "Comment"
+          likeType: "Comment",
         }),
       showToast,
       setIsLoading,
-      ignoreErrors: true
+      ignoreErrors: true,
     });
     if (!data) return;
     addLikeCount({
       isLiked: newIsLiked,
-      likesCount: newLikesCount
+      likesCount: newLikesCount,
     });
   };
 
@@ -100,14 +100,14 @@ export function CommentActions({
     debounce(
       (newIsLiked: boolean, newLikesCount: number) =>
         likeCommentRequest(newIsLiked, newLikesCount),
-      700
-    )
+      700,
+    ),
   ).current;
 
   const likeComment = async () => {
-    setIsLiked(prevValue => {
+    setIsLiked((prevValue) => {
       const newValue = !prevValue;
-      setCurrentLikesCount(prevCount => {
+      setCurrentLikesCount((prevCount) => {
         const newLikesCount = !prevValue ? prevCount + 1 : prevCount - 1;
         debouncedLikeComment(newValue, newLikesCount);
         return newLikesCount;
@@ -126,8 +126,8 @@ export function CommentActions({
       icon: "hand-thumb-up",
       color: isLiked ? Colors.light.majorelleBlue : Colors.light.russianViolet,
       content: abbreviateNumber(currentLikesCount),
-      handlePress: likeComment
-    }
+      handlePress: likeComment,
+    },
   ];
 
   return (
@@ -144,7 +144,7 @@ export function CommentActions({
               style={{
                 fontSize: 12,
                 color,
-                fontWeight: "medium"
+                fontWeight: "medium",
               }}
             >
               {content}

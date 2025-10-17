@@ -23,7 +23,7 @@ export default function IdeaScreen() {
   }>({
     parentComment: "",
     toMark: "",
-    author: undefined
+    author: undefined,
   });
   const [isVisible, setIsVisible] = useState(false);
 
@@ -33,14 +33,14 @@ export default function IdeaScreen() {
     data: idea,
     isLoading,
     isError,
-    refetch: refetchIdea
+    refetch: refetchIdea,
   } = useQuery({
     queryKey: ["idea", ideaId],
     queryFn: async () => {
       const response = await api.get<IdeaType>(`/idea/${ideaId}`);
       return response.data;
     },
-    enabled: !!ideaId
+    enabled: !!ideaId,
   });
 
   const {
@@ -48,7 +48,7 @@ export default function IdeaScreen() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-    refetch: refetchComments
+    refetch: refetchComments,
   } = useComments();
   const comments = data?.pages?.flatMap((page) => page?.data || []) || [];
 
@@ -60,14 +60,14 @@ export default function IdeaScreen() {
     // Invalidar e refazer fetch da idea e seus comentários
     await queryClient.invalidateQueries({ queryKey: ["idea", ideaId] });
     await queryClient.invalidateQueries({
-      queryKey: ["comments", { postId: ideaId }]
+      queryKey: ["comments", { postId: ideaId }],
     });
     await refetchIdea();
     await refetchComments();
   };
 
   const { refreshControl } = usePullToRefresh({
-    onRefresh: handleRefresh
+    onRefresh: handleRefresh,
   });
 
   if (isError) router.push("/feed");

@@ -8,7 +8,7 @@ interface UsePullToRefreshProps {
 
 export const usePullToRefresh = ({
   onRefresh,
-  refreshing: externalRefreshing
+  refreshing: externalRefreshing,
 }: UsePullToRefreshProps) => {
   const [internalRefreshing, setInternalRefreshing] = useState(false);
 
@@ -38,6 +38,6 @@ export const usePullToRefresh = ({
   return {
     refreshControl,
     refreshing,
-    handleRefresh
+    handleRefresh,
   };
 };

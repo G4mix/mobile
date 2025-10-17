@@ -16,7 +16,7 @@ export function ProfileHeaderLoading({ id }: { id?: string }) {
         position: "relative",
         gap: 28,
         width: "100%",
-        marginBottom: 12
+        marginBottom: 12,
       }}
     >
       {isOwnProfile ? (
@@ -29,7 +29,7 @@ export function ProfileHeaderLoading({ id }: { id?: string }) {
             top: 114,
             width: "100%",
             alignItems: "center",
-            zIndex: 2
+            zIndex: 2,
           }}
         >
           <Button
@@ -37,7 +37,7 @@ export function ProfileHeaderLoading({ id }: { id?: string }) {
               minWidth: "auto",
               paddingHorizontal: 14,
               paddingVertical: 8,
-              opacity: 0.7
+              opacity: 0.7,
             }}
           >
             <Text style={{ color: Colors.light.white }}>Editar</Text>
@@ -49,7 +49,7 @@ export function ProfileHeaderLoading({ id }: { id?: string }) {
             style={{
               width: 24,
               height: 24,
-              opacity: 0.7
+              opacity: 0.7,
             }}
           />
         </View>
@@ -64,7 +64,7 @@ export function ProfileHeaderLoading({ id }: { id?: string }) {
             width: "100%",
             alignItems: "center",
             zIndex: 2,
-            gap: 4
+            gap: 4,
           }}
         >
           <Loading width={70} height={30} borderRadius={4} />
@@ -75,7 +75,7 @@ export function ProfileHeaderLoading({ id }: { id?: string }) {
             style={{
               width: 24,
               height: 24,
-              opacity: 0.7
+              opacity: 0.7,
             }}
           />
         </View>
@@ -86,16 +86,16 @@ export function ProfileHeaderLoading({ id }: { id?: string }) {
       <View
         style={{
           gap: 12,
-          width: "100%"
+          width: "100%",
         }}
       >
         <View
           style={[
             {
               zIndex: 3,
-              backgroundColor: "transparent"
+              backgroundColor: "transparent",
             },
-            isOwnProfile ? { alignItems: "center" } : { paddingLeft: 16 }
+            isOwnProfile ? { alignItems: "center" } : { paddingLeft: 16 },
           ]}
         >
           <Loading width={70} height={16} borderRadius={4} />
@@ -105,9 +105,9 @@ export function ProfileHeaderLoading({ id }: { id?: string }) {
             {
               alignItems: "center",
               flexDirection: "row",
-              gap: 16
+              gap: 16,
             },
-            isOwnProfile ? { justifyContent: "center" } : { paddingLeft: 16 }
+            isOwnProfile ? { justifyContent: "center" } : { paddingLeft: 16 },
           ]}
         >
           <View style={{ gap: 4, flexDirection: "row", alignItems: "center" }}>
@@ -116,7 +116,7 @@ export function ProfileHeaderLoading({ id }: { id?: string }) {
               style={{
                 color: Colors.light.russianViolet,
                 fontSize: 16,
-                zIndex: 3
+                zIndex: 3,
               }}
             >
               seguidores
@@ -128,7 +128,7 @@ export function ProfileHeaderLoading({ id }: { id?: string }) {
               style={{
                 color: Colors.light.russianViolet,
                 fontSize: 16,
-                zIndex: 3
+                zIndex: 3,
               }}
             >
               seguindo
@@ -146,11 +146,11 @@ export function ProfileHeaderLoading({ id }: { id?: string }) {
             width: 72,
             height: 72,
             alignItems: "center",
-            justifyContent: "center"
+            justifyContent: "center",
           },
           isOwnProfile
             ? { left: "50%", transform: [{ translateX: -36 }] as any }
-            : { left: 16 }
+            : { left: 16 },
         ]}
       >
         <Loading
@@ -160,7 +160,7 @@ export function ProfileHeaderLoading({ id }: { id?: string }) {
           style={{
             position: "relative",
             justifyContent: "center",
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           <Icon name="photo" size={32} color={Colors.light.background} />

@@ -13,17 +13,17 @@ const styles = StyleSheet.create({
     gap: 8,
     marginHorizontal: 16,
     marginVertical: 10,
-    padding: 16
+    padding: 16,
   },
   title: {
     color: Colors.light.russianViolet,
     fontSize: 16,
-    fontWeight: "bold"
-  }
+    fontWeight: "bold",
+  },
 });
 export function ProfileAboutCard({
   title,
-  children
+  children,
 }: {
   title: string;
   children: ReactNode;

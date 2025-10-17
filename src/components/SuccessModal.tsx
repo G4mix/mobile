@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     height: 100,
     justifyContent: "center",
     position: "fixed",
-    width: "100%"
+    width: "100%",
   },
   icon: {
     alignItems: "center",
@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     borderWidth: 6,
     height: 96,
     justifyContent: "center",
-    width: 96
+    width: 96,
   },
   root: {
     alignItems: "center",
@@ -28,13 +28,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     position: "fixed",
     width: "100%",
-    zIndex: 9999
+    zIndex: 9999,
   },
   title: {
     color: Colors.light.majorelleBlue,
     fontSize: 20,
-    fontWeight: "bold"
-  }
+    fontWeight: "bold",
+  },
 });
 
 export function SuccessModal({ message = "Sucesso!" }: { message?: string }) {
@@ -49,7 +49,7 @@ export function SuccessModal({ message = "Sucesso!" }: { message?: string }) {
               color={Colors.light.majorelleBlue}
               style={{
                 textShadowOffset: { width: 1, height: 1 },
-                textShadowRadius: 1
+                textShadowRadius: 1,
               }}
             />
           </View>

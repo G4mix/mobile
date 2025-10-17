@@ -47,5 +47,5 @@ export const messages: Record<ApiErrorCode, string> = {
   CONFLICT: "Conflito de dados. O recurso já existe ou está em uso.",
   UNPROCESSABLE_ENTITY: "Dados inválidos. Verifique as informações enviadas.",
   TOO_MANY_REQUESTS: "Muitas requisições. Tente novamente mais tarde.",
-  SERVICE_UNAVAILABLE: "Serviço temporariamente indisponível."
+  SERVICE_UNAVAILABLE: "Serviço temporariamente indisponível.",
 };

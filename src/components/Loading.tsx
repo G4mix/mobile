@@ -5,7 +5,7 @@ import {
   Easing,
   StyleProp,
   ViewStyle,
-  DimensionValue
+  DimensionValue,
 } from "react-native";
 
 type LoadingProps = {
@@ -21,7 +21,7 @@ export function Loading({
   height = 20,
   borderRadius = 8,
   style,
-  children
+  children,
 }: LoadingProps) {
   const animation = useRef(new Animated.Value(0)).current;
 
@@ -31,14 +31,14 @@ export function Loading({
         toValue: 1,
         duration: 1000,
         easing: Easing.linear,
-        useNativeDriver: true
-      })
+        useNativeDriver: true,
+      }),
     ).start();
   }, []);
 
   const translateX = animation.interpolate({
     inputRange: [0, 1],
-    outputRange: [-200, 200]
+    outputRange: [-200, 200],
   });
 
   return (
@@ -49,9 +49,9 @@ export function Loading({
           height,
           borderRadius,
           backgroundColor: "#2b2b2b",
-          overflow: "hidden"
+          overflow: "hidden",
         },
-        style
+        style,
       ]}
     >
       <Animated.View
@@ -61,7 +61,7 @@ export function Loading({
           height: "100%",
           backgroundColor: "#434343",
           transform: [{ translateX }],
-          borderRadius
+          borderRadius,
         }}
       />
       {children}

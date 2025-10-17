@@ -20,13 +20,13 @@ export const useUsers = ({ search }: { search: string }) => {
             params: {
               search,
               page: pageParam,
-              quantity: 10
-            }
+              quantity: 10,
+            },
           })
         ).data,
       initialPageParam: 0,
-      getNextPageParam: lastPage => lastPage?.nextPage,
-      enabled: true
+      getNextPageParam: (lastPage) => lastPage?.nextPage,
+      enabled: true,
     });
 
   return {
@@ -34,6 +34,6 @@ export const useUsers = ({ search }: { search: string }) => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-    refetch
+    refetch,
   };
 };

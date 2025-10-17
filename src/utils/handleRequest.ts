@@ -11,7 +11,7 @@ export const handleRequest = async <T>({
   showToast,
   setIsLoading,
   successMessage,
-  ignoreErrors = false
+  ignoreErrors = false,
 }: {
   requestFn: RequestFunction<T>;
   showToast: ToastContextType["showToast"];
@@ -77,7 +77,7 @@ export const handleRequest = async <T>({
       showToast({
         message: "Erro ao tentar realizar a ação",
         color: "error",
-        duration: 3000
+        duration: 3000,
       });
     }
     return null;

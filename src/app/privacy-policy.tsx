@@ -5,53 +5,53 @@ import { Colors } from "@/constants/colors";
 
 const styles = StyleSheet.create({
   boldItem: {
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   container: {
     backgroundColor: Colors.light.background,
-    flex: 1
+    flex: 1,
   },
   content: {
     padding: 20,
-    paddingBottom: 60
+    paddingBottom: 60,
   },
   paragraph: {
     color: Colors.light.text,
     fontSize: 13.33,
     lineHeight: 22,
     marginBottom: 6,
-    textAlign: "justify"
+    textAlign: "justify",
   },
   sectionTitle: {
     color: Colors.light.russianViolet,
     fontSize: 23.03,
     fontWeight: "bold",
     marginBottom: 6,
-    marginTop: 12
+    marginTop: 12,
   },
   subsectionTitle: {
     color: Colors.light.text,
     fontSize: 16,
-    fontWeight: "500"
+    fontWeight: "500",
   },
   subtitle: {
     color: Colors.light.jet,
     fontSize: 16,
-    marginBottom: 16
+    marginBottom: 16,
   },
   title: {
     color: Colors.light.majorelleBlue,
     fontSize: 27.64,
     fontWeight: "bold",
-    marginBottom: 4
+    marginBottom: 4,
   },
   topics: {
     color: Colors.light.text,
     fontSize: 13.33,
     lineHeight: 22,
     marginBottom: 6,
-    textAlign: "left"
-  }
+    textAlign: "left",
+  },
 });
 
 export default function TermsScreen() {

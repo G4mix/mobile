@@ -15,13 +15,13 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 8,
     marginBottom: 56,
-    width: "100%"
-  }
+    width: "100%",
+  },
 });
 
 export function ProfileIdeas({ userId }: { userId: string }) {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useFeed({
-    authorId: userId
+    authorId: userId,
   });
   const ideas = data?.pages?.flatMap((page) => page?.data || []) || [];
 

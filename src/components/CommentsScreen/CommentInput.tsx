@@ -11,17 +11,17 @@ export const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     flexDirection: "row",
-    gap: 10
+    gap: 10,
   },
   inputRoot: {
     ...commentsModalStyles.inputRoot,
-    borderTopWidth: 1
+    borderTopWidth: 1,
   },
   root: {
     bottom: 0,
     position: "absolute",
-    width: "100%"
-  }
+    width: "100%",
+  },
 });
 
 type CommentInputProps = {
@@ -47,7 +47,7 @@ export function CommentInput({
   isVisible,
   setIsVisible,
   replying,
-  setReplying
+  setReplying,
 }: CommentInputProps) {
   return (
     <View style={styles.root}>

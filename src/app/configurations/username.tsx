@@ -29,8 +29,8 @@ export const styles = StyleSheet.create({
     overflowY: "auto",
     paddingLeft: 16,
     paddingRight: 16,
-    paddingTop: 16
-  }
+    paddingTop: 16,
+  },
 });
 
 export default function UsernameScreen() {
@@ -42,8 +42,8 @@ export default function UsernameScreen() {
   const queryClient = useQueryClient();
   const { watch, setValue, handleSubmit } = useForm<UpdateUsernameFormData>({
     defaultValues: {
-      username: user.user.username || ""
-    }
+      username: user.user.username || "",
+    },
   });
   const updateUser = async ({ username }: UpdateUsernameFormData) => {
     if (isLoading) return;
@@ -54,18 +54,18 @@ export default function UsernameScreen() {
     }
 
     const formData = objectToFormData({
-      username
+      username,
     });
 
     const data = await handleRequest<UserState>({
       requestFn: async () =>
         api.patch("/user", formData, {
           headers: {
-            "Content-Type": "multipart/form-data"
-          }
+            "Content-Type": "multipart/form-data",
+          },
         }),
       showToast,
-      setIsLoading
+      setIsLoading,
     });
     if (!data) return;
 
@@ -104,7 +104,7 @@ export default function UsernameScreen() {
         color={Colors.light.tropicalIndigo}
         borderWidth={2}
         value={username}
-        onChangeText={value => setValue("username", value)}
+        onChangeText={(value) => setValue("username", value)}
       />
       <Button onPress={onSubmit}>
         <Text style={{ color: Colors.light.white, fontSize: 16 }}>

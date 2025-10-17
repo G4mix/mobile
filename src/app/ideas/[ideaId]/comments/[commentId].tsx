@@ -27,26 +27,26 @@ export default function RepliesScreen() {
           ideaId,
           parentCommentId: commentId,
           page: 0,
-          limit: 1
-        }
+          limit: 1,
+        },
       });
       return response.data.data[0];
     },
-    enabled: !!commentId
+    enabled: !!commentId,
   });
 
   const {
     data: idea,
     isLoading,
     isError,
-    refetch: refetchIdea
+    refetch: refetchIdea,
   } = useQuery({
     queryKey: ["idea", ideaId],
     queryFn: async () => {
       const response = await api.get<IdeaType>(`/idea/${ideaId}`);
       return response.data;
     },
-    enabled: !!ideaId
+    enabled: !!ideaId,
   });
 
   const {
@@ -54,10 +54,10 @@ export default function RepliesScreen() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-    refetch: refetchReplies
+    refetch: refetchReplies,
   } = useComments();
 
-  const replies = data?.pages?.flatMap(page => page?.data || []) || [];
+  const replies = data?.pages?.flatMap((page) => page?.data || []) || [];
   const [replying, setReplying] = useState<{
     parentComment: string;
     toMark: string;
@@ -65,14 +65,14 @@ export default function RepliesScreen() {
   }>({
     parentComment: "",
     toMark: "",
-    author: undefined
+    author: undefined,
   });
   const [isVisible, setIsVisible] = useState(false);
 
   const commentReply = async (
     parentComment: string,
     toMark: string,
-    author: CommentType["author"]
+    author: CommentType["author"],
   ) => {
     setReplying({ parentComment, toMark, author });
     setIsVisible(true);
@@ -82,7 +82,7 @@ export default function RepliesScreen() {
     await queryClient.invalidateQueries({ queryKey: ["comment", commentId] });
     await queryClient.invalidateQueries({ queryKey: ["idea", ideaId] });
     await queryClient.invalidateQueries({
-      queryKey: ["comments", { ideaId, commentId }]
+      queryKey: ["comments", { ideaId, commentId }],
     });
     await refetchReplies();
     await refetchComment();
@@ -90,7 +90,7 @@ export default function RepliesScreen() {
   };
 
   const { refreshControl } = usePullToRefresh({
-    onRefresh: handleRefresh
+    onRefresh: handleRefresh,
   });
 
   if (isError) router.push("/feed");
@@ -115,7 +115,7 @@ export default function RepliesScreen() {
             commentType="post"
           />
         )}
-        {replies.map(reply => (
+        {replies.map((reply) => (
           <View key={`comment-${reply.id}`}>
             <Comment
               key={`reply-${reply.id}`}
@@ -129,7 +129,7 @@ export default function RepliesScreen() {
           </View>
         ))}
         {isFetchingNextPage &&
-          [0, 1, 2].map(c => (
+          [0, 1, 2].map((c) => (
             <CommentLoading
               key={`comment-loading-${c}`}
               commentType="comment"
