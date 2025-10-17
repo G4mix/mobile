@@ -1,8 +1,8 @@
-import { View, TouchableOpacity, StyleSheet, Share } from "react-native";
+import { TouchableOpacity, StyleSheet } from "react-native";
 import { router } from "expo-router";
 import { useRef, useState } from "react";
 import { Icon, IconName } from "../Icon";
-import { Text } from "../Themed";
+import { Text, View } from "../Themed";
 import { Colors } from "@/constants/colors";
 import { useToast } from "@/hooks/useToast";
 import { abbreviateNumber } from "@/utils/abbreviateNumber";
@@ -10,36 +10,41 @@ import { handleRequest } from "@/utils/handleRequest";
 import { debounce } from "@/utils/debounce";
 import { api } from "@/constants/api";
 import { useFeedQueries } from "@/hooks/useFeedQueries";
+import { Button } from "../Button";
 
 const styles = StyleSheet.create({
   actionContainer: {
+    alignItems: "center",
+    borderRadius: 32,
     flexDirection: "row",
-    justifyContent: "space-between"
+    gap: 10,
+    justifyContent: "space-between",
+    padding: 16,
+  },
+  actionIcons: {
+    flexDirection: "row",
+    gap: 12,
   },
   actionOption: {
     alignItems: "center",
     display: "flex",
     flexDirection: "row",
-    gap: 4
-  }
+    gap: 4,
+  },
 });
 
 type IdeaActionsProps = {
   ideaId: string;
   likes: number;
   comments: number;
-  views: number;
   liked: boolean;
-  viewed: boolean;
 };
 
 export function IdeaActions({
   ideaId,
   likes,
   comments,
-  views,
   liked,
-  viewed
 }: IdeaActionsProps) {
   const { showToast } = useToast();
   const [isLiked, setIsLiked] = useState(liked);
@@ -49,24 +54,24 @@ export function IdeaActions({
 
   const likePostRequest = async (
     newIsLiked: boolean,
-    newLikesCount: number
+    newLikesCount: number,
   ) => {
     if (isLoading) return;
     const data = await handleRequest({
       requestFn: async () =>
         api.post("/like", {
           targetLikeId: ideaId,
-          likeType: "Idea"
+          likeType: "Idea",
         }),
       showToast,
       setIsLoading,
-      ignoreErrors: true
+      ignoreErrors: true,
     });
     if (!data) return;
     updateIdea({
       id: ideaId,
       isLiked: newIsLiked,
-      likes: newLikesCount
+      likes: newLikesCount,
     });
   };
 
@@ -74,14 +79,14 @@ export function IdeaActions({
     debounce(
       (newIsLiked: boolean, newLikesCount: number) =>
         likePostRequest(newIsLiked, newLikesCount),
-      700
-    )
+      700,
+    ),
   ).current;
 
   const likePost = async () => {
-    setIsLiked(prevValue => {
+    setIsLiked((prevValue) => {
       const newValue = !prevValue;
-      setCurrentLikesCount(prevCount => {
+      setCurrentLikesCount((prevCount) => {
         const newLikesCount = !prevValue ? prevCount + 1 : prevCount - 1;
         debouncedLikePost(newValue, newLikesCount);
         return newLikesCount;
@@ -94,22 +99,6 @@ export function IdeaActions({
     router.push(`/ideas/${ideaId}`);
   };
 
-  const sharePost = async () => {
-    try {
-      await Share.share({
-        title: "Olha só esse post do Gamix!",
-        message: "Venha conferir esse novo post do Gamix comigo!",
-        url: `https://g4mix.vercel.app/ideas/${ideaId}`
-      });
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (err) {
-      showToast({
-        message: "Houve um erro ao tentar compartilhar o post!",
-        color: "error"
-      });
-    }
-  };
-
   const actions: {
     icon: IconName;
     color: string;
@@ -120,65 +109,50 @@ export function IdeaActions({
       icon: "hand-thumb-up",
       color: isLiked ? Colors.light.majorelleBlue : Colors.light.russianViolet,
       content: abbreviateNumber(currentLikesCount),
-      handlePress: likePost
+      handlePress: likePost,
     },
     {
       icon: "chat-bubble-left-right",
       color: Colors.light.russianViolet,
       content: abbreviateNumber(comments),
-      handlePress: commentPost
+      handlePress: commentPost,
     },
-    {
-      icon: "chart-bar",
-      color: viewed ? Colors.light.majorelleBlue : Colors.light.russianViolet,
-      content: abbreviateNumber(views)
-    },
-    {
-      icon: "share",
-      color: Colors.dark.background,
-      handlePress: sharePost
-    }
   ];
 
   return (
     <View style={styles.actionContainer}>
-      {actions.map(({ color, icon, handlePress, content }) =>
-        handlePress ? (
+      <View style={styles.actionIcons}>
+        {actions.map(({ color, icon, handlePress, content }) => (
           <TouchableOpacity
             key={`post-action-${icon}`}
             style={styles.actionOption}
             onPress={handlePress}
           >
-            <Icon size={18} name={icon} color={color} />
+            <Icon size={24} name={icon} color={color} />
             {content && (
               <Text
                 style={{
-                  fontSize: 12,
+                  fontSize: 13.33,
                   color,
-                  fontWeight: "medium"
+                  fontWeight: "medium",
                 }}
               >
                 {content}
               </Text>
             )}
           </TouchableOpacity>
-        ) : (
-          <View key={`post-action-${icon}`} style={styles.actionOption}>
-            <Icon size={18} name={icon} color={color} />
-            {content && (
-              <Text
-                style={{
-                  fontSize: 12,
-                  color,
-                  fontWeight: "medium"
-                }}
-              >
-                {content}
-              </Text>
-            )}
-          </View>
-        )
-      )}
+        ))}
+      </View>
+      <Button
+        style={{
+          minWidth: "auto",
+          borderRadius: 20,
+          paddingHorizontal: 16,
+          paddingVertical: 12,
+        }}
+      >
+        <Text lightColor="white">Quero Colaborar</Text>
+      </Button>
     </View>
   );
 }

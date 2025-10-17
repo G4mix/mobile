@@ -12,30 +12,30 @@ const styles = StyleSheet.create({
     height: 600,
     justifyContent: "center",
     position: "relative",
-    width: "100%"
+    width: "100%",
   },
   dot: {
     backgroundColor: "gray",
     borderRadius: 5,
     height: 10,
     marginHorizontal: 5,
-    width: 10
+    width: 10,
   },
   image: {
     resizeMode: "cover",
-    width
+    width,
   },
   paginationContainer: {
     alignSelf: "center",
     bottom: 20,
     flexDirection: "row",
-    position: "absolute"
-  }
+    position: "absolute",
+  },
 });
 
 export function IdeaImages({
   images,
-  enablePagination = false
+  enablePagination = false,
 }: {
   images: IdeaType["images"];
   enablePagination?: boolean;
@@ -58,7 +58,7 @@ export function IdeaImages({
         getItemLayout={(_data, index) => ({
           length: width,
           offset: width * index,
-          index
+          index,
         })}
       />
       {enablePagination && (

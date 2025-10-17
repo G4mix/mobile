@@ -3,7 +3,7 @@ import {
   StyleProp,
   StyleSheet,
   TouchableOpacity,
-  ViewStyle
+  ViewStyle,
 } from "react-native";
 import { ReactNode } from "react";
 import { Colors } from "@/constants/colors";
@@ -17,7 +17,7 @@ type ButtonProps = {
 
 const styles = StyleSheet.create({
   disabled: {
-    opacity: 0.7
+    opacity: 0.7,
   },
   root: {
     alignItems: "center",
@@ -26,15 +26,15 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     minWidth: "100%",
-    padding: 16
-  }
+    padding: 16,
+  },
 });
 
 export function Button({
   children,
   onPress,
   disabled = false,
-  style: buttonStyles
+  style: buttonStyles,
 }: ButtonProps) {
   return (
     <TouchableOpacity

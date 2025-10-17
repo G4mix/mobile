@@ -3,7 +3,7 @@ import {
   ScrollView,
   View,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
 } from "react-native";
 import { router } from "expo-router";
 import { useQueryClient } from "@tanstack/react-query";
@@ -22,20 +22,20 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     flex: 1,
     flexDirection: "column",
-    minHeight: Dimensions.get("window").height - 60
+    minHeight: Dimensions.get("window").height - 60,
   },
   ideas: {
     display: "flex",
     flexDirection: "column",
     flex: 1,
     gap: 8,
-    width: "100%"
+    width: "100%",
   },
   scroll: {
     backgroundColor: Colors.light.background,
     marginBottom: 60,
-    width: "100%"
-  }
+    width: "100%",
+  },
 });
 
 export default function FeedScreen() {
@@ -51,14 +51,14 @@ export default function FeedScreen() {
   };
 
   const { refreshControl } = usePullToRefresh({
-    onRefresh: handleRefresh
+    onRefresh: handleRefresh,
   });
 
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scroll} refreshControl={refreshControl}>
+        <FeedHeader />
         <View style={styles.ideas}>
-          <FeedHeader />
           <FloatingOptionsProvider>
             <ConfirmationModalProvider>
               {ideas?.map((idea, index) => (

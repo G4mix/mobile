@@ -1,46 +1,29 @@
 import { StyleSheet } from "react-native";
+import { useState } from "react";
 import { Text, View } from "../Themed";
 import { Colors } from "@/constants/colors";
 import { IdeaType } from ".";
-import { LinearGradient } from "expo-linear-gradient";
 import { Tag } from "../Tag";
 
 const styles = StyleSheet.create({
-  overlayContainer: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    padding: 16,
-    backgroundColor: "rgba(0, 0, 0, 0.3)", 
+  postDescription: {
+    color: Colors.light.russianViolet,
+    fontSize: 13.33,
+    textAlign: "justify",
   },
-  gradient: {
-    ...StyleSheet.absoluteFillObject,
+  postDescriptionContainer: {
+    borderColor: Colors.light.russianViolet,
+    borderRadius: 16,
+    borderWidth: 1,
+    padding: 12,
   },
   postTitle: {
     color: Colors.light.white,
     fontSize: 27.64,
     fontWeight: "bold",
-    textShadowColor: "rgba(0, 0, 0, 0.8)",
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 4,
   },
-  authorName: {
-    color: Colors.light.white,
-    fontSize: 19.2,
-    textShadowColor: "rgba(0, 0, 0, 0.8)",
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 4,
-    paddingTop: 8.44
-  },
-  postDescription: {
-    color: Colors.light.white,
-    fontSize: 13.33,
-    marginTop: 8,
-    textAlign: "justify",
-    textShadowColor: "rgba(0, 0, 0, 0.6)",
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 3,
+  seeMore: {
+    color: Colors.light.majorelleBlue,
   },
   tag: {
     backgroundColor: "transparent",
@@ -49,9 +32,7 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     flexDirection: "row",
     gap: 8,
-    marginTop: 16,
-    marginBottom: 16
-  }
+  },
 });
 
 type IdeaBodyProps = {
@@ -62,28 +43,90 @@ type IdeaBodyProps = {
   tags?: string[];
 };
 
-export function IdeaBody({ author, title, content, images, tags }: IdeaBodyProps) {
+export function IdeaBody({
+  author,
+  title,
+  content,
+  images,
+  tags,
+}: IdeaBodyProps) {
+  const [displayText, setDisplayText] = useState(content);
+  const [truncated, setTruncated] = useState(false);
+
   if (!title && !content && (!images || images.length === 0)) return null;
   return (
-    <View style={styles.overlayContainer}>
-      <LinearGradient
-        colors={["transparent", "rgba(0,0,0,0.8)"]}
-        locations={[0.3, 0.8]}
-        style={styles.gradient}
-      />
-      <View style={{ flexDirection: "row", gap: 8, backgroundColor: "transparent" }}>
-        {title && <Text style={styles.postTitle}>{title}</Text>}
-        <Text style={styles.authorName}>por</Text>
-      </View>
-      {author && <Text style={styles.authorName}>@{author}</Text>}
+    <>
+      <Text
+        style={{
+          flexDirection: "row",
+          gap: 8,
+          backgroundColor: "transparent",
+          color: Colors.light.white,
+          fontSize: 19.2,
+          lineHeight: 36,
+        }}
+      >
+        {title && <Text style={styles.postTitle}>{title}</Text>} por{"\n"}
+        {author && `@${author}`}
+      </Text>
       <View style={styles.tags}>
-        {(tags ?? []).map((tag, index) => (
-          <View key={index} style={styles.tag}>
-            <Tag name={tag}></Tag>
-          </View>
-        ))}
+        {(() => {
+          const maxVisible = 4;
+          const visibleTags = (tags ?? []).slice(0, maxVisible);
+          const remaining = (tags?.length ?? 0) - maxVisible;
+
+          return (
+            <>
+              {visibleTags.map((tag) => (
+                <View key={`view-tag-${tag}`} style={styles.tag}>
+                  <Tag
+                    name={tag}
+                    fontSize={13.33}
+                    style={{
+                      borderRadius: 32,
+                      paddingVertical: 6,
+                      paddingHorizontal: 12,
+                    }}
+                  />
+                </View>
+              ))}
+
+              {remaining > 0 && (
+                <View style={styles.tag}>
+                  <Tag
+                    name={`+${remaining}`}
+                    fontSize={13.33}
+                    style={{
+                      borderRadius: 32,
+                      paddingVertical: 6,
+                      paddingHorizontal: 12,
+                      backgroundColor: Colors.light.majorelleBlue,
+                    }}
+                  />
+                </View>
+              )}
+            </>
+          );
+        })()}
       </View>
-      {content && <Text style={styles.postDescription}>{content}{tags}</Text>}
-    </View>
+
+      <View style={styles.postDescriptionContainer}>
+        {content && (
+          <Text
+            style={styles.postDescription}
+            onTextLayout={() => {
+              if (content.length > 300 && !truncated && content) {
+                const truncatedText = `${content.slice(0, 300).trim()}...`;
+                setDisplayText(truncatedText);
+                setTruncated(true);
+              }
+            }}
+          >
+            {displayText}{" "}
+            {truncated && <Text style={styles.seeMore}>ver mais</Text>}
+          </Text>
+        )}
+      </View>
+    </>
   );
 }

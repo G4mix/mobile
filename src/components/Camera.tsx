@@ -2,7 +2,7 @@ import {
   CameraView,
   CameraType,
   useCameraPermissions,
-  FlashMode
+  FlashMode,
 } from "expo-camera";
 import { Dispatch, SetStateAction, useRef, useState, useEffect } from "react";
 import {
@@ -11,7 +11,7 @@ import {
   View,
   Modal,
   Animated,
-  Easing
+  Easing,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { UseFormSetValue } from "react-hook-form";
@@ -23,7 +23,7 @@ import { getDate } from "@/utils/getDate";
 
 const styles = StyleSheet.create({
   camera: {
-    flex: 1
+    flex: 1,
   },
   changeFlashIcon: {
     backgroundColor: Colors.light.majorelleBlue,
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     padding: 12,
     position: "absolute",
     right: 24,
-    top: 24
+    top: 24,
   },
   closePhoto: {
     backgroundColor: Colors.light.majorelleBlue,
@@ -39,11 +39,11 @@ const styles = StyleSheet.create({
     left: 24,
     padding: 12,
     position: "absolute",
-    top: 24
+    top: 24,
   },
   container: {
     flex: 1,
-    justifyContent: "center"
+    justifyContent: "center",
   },
   photoFlip: {
     backgroundColor: Colors.light.majorelleBlue,
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     bottom: 48,
     padding: 16,
     position: "absolute",
-    right: 48
+    right: 48,
   },
   pickImageRoot: {
     backgroundColor: Colors.light.majorelleBlue,
@@ -59,13 +59,13 @@ const styles = StyleSheet.create({
     bottom: 48,
     left: 48,
     padding: 16,
-    position: "absolute"
+    position: "absolute",
   },
   printButton: {
     backgroundColor: "white",
     borderRadius: 9999,
     height: 50,
-    width: 50
+    width: 50,
   },
   printButtonContent: {
     alignItems: "center",
@@ -73,15 +73,15 @@ const styles = StyleSheet.create({
     borderColor: "white",
     borderRadius: 9999,
     borderWidth: 6,
-    padding: 8
+    padding: 8,
   },
   printButtonRoot: {
     alignSelf: "center",
     backgroundColor: "transparent",
     flex: 1,
     flexDirection: "row",
-    margin: 48
-  }
+    margin: 48,
+  },
 });
 
 export type CameraImage = {
@@ -105,14 +105,14 @@ export function Camera({
   setValue,
   valueKey = "images",
   singleImage = false,
-  images
+  images,
 }: CameraProps) {
   const [facing, setFacing] = useState<CameraType>("back");
   const [flash, setFlash] = useState<FlashMode>("off");
   const [permission, requestPermission] = useCameraPermissions();
   const { showToast } = useToast();
   const cameraRef = useRef<CameraView>(null);
-  const MAX_SIZE = 1_000_000;
+  const MAX_SIZE = 10_000_000;
 
   const rotation = useRef(new Animated.Value(0)).current;
 
@@ -135,7 +135,7 @@ export function Camera({
       toValue,
       duration: 300,
       easing: Easing.out(Easing.ease),
-      useNativeDriver: true
+      useNativeDriver: true,
     }).start();
   };
 
@@ -167,7 +167,7 @@ export function Camera({
   }
 
   const toggleCameraFacing = () => {
-    setFacing(current => (current === "back" ? "front" : "back"));
+    setFacing((current) => (current === "back" ? "front" : "back"));
   };
 
   const closeCamera = async () => {
@@ -184,7 +184,7 @@ export function Camera({
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
       allowsMultipleSelection: !singleImage,
-      quality: 1
+      quality: 1,
     });
 
     if (result.canceled) return;
@@ -196,7 +196,7 @@ export function Camera({
         if (asset.fileSize && asset.fileSize > MAX_SIZE) {
           showToast({
             message: `A imagem ${i + 1} é muito pesada.`,
-            color: "warn"
+            color: "warn",
           });
           return null;
         }
@@ -204,9 +204,9 @@ export function Camera({
         return {
           uri: asset.uri,
           name: asset.fileName || getDate().toISOString(),
-          type: asset.mimeType || "image/jpeg"
+          type: asset.mimeType || "image/jpeg",
         };
-      })
+      }),
     );
 
     const validFiles = fileChecks.filter(Boolean);
@@ -215,7 +215,7 @@ export function Camera({
 
     setValue(
       valueKey as any,
-      (singleImage ? validFiles[0] : [...currentImages, ...validFiles]) as any
+      (singleImage ? validFiles[0] : [...currentImages, ...validFiles]) as any,
     );
     closeCamera();
   };
@@ -232,7 +232,7 @@ export function Camera({
     const parsedTakedPhoto = {
       uri: takedPhoto.uri,
       name: takedPhoto.fileName || getDate().toISOString(),
-      type: takedPhoto.mimeType || "image/jpeg"
+      type: takedPhoto.mimeType || "image/jpeg",
     };
     try {
       const response = await fetch(takedPhoto.uri);
@@ -240,7 +240,7 @@ export function Camera({
       if (blob.size > MAX_SIZE) {
         showToast({
           message: `A imagem é muito pesada.`,
-          color: "warn"
+          color: "warn",
         });
         closeCamera();
         return;
@@ -250,20 +250,20 @@ export function Camera({
 
     setValue(
       valueKey as any,
-      singleImage ? parsedTakedPhoto : [...currentImages, parsedTakedPhoto]
+      singleImage ? parsedTakedPhoto : [...currentImages, parsedTakedPhoto],
     );
     closeCamera();
   };
 
   const changeFlash = () => {
-    setFlash(oldFlash =>
-      oldFlash === "off" ? "on" : flash === "on" ? "auto" : "off"
+    setFlash((oldFlash) =>
+      oldFlash === "off" ? "on" : flash === "on" ? "auto" : "off",
     );
   };
 
   const rotateInterpolate = rotation.interpolate({
     inputRange: [-180, 180],
-    outputRange: ["-180deg", "180deg"]
+    outputRange: ["-180deg", "180deg"],
   });
 
   return (

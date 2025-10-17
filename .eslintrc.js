@@ -2,7 +2,7 @@ module.exports = {
   env: {
     browser: true,
     es2021: true,
-    "react-native/react-native": true
+    "react-native/react-native": true,
   },
   parser: "@typescript-eslint/parser",
   extends: [
@@ -12,22 +12,28 @@ module.exports = {
     "plugin:react-native/all",
     "airbnb",
     "prettier",
-    "plugin:@tanstack/eslint-plugin-query/recommended"
+    "plugin:@tanstack/eslint-plugin-query/recommended",
   ],
   parserOptions: {
     ecmaFeatures: {
-      jsx: true
+      jsx: true,
     },
     ecmaVersion: "latest",
-    sourceType: "module"
+    sourceType: "module",
   },
-  plugins: ["react", "react-native", "@typescript-eslint", "prettier", "@tanstack/query"],
+  plugins: [
+    "react",
+    "react-native",
+    "@typescript-eslint",
+    "prettier",
+    "@tanstack/query",
+  ],
   rules: {
     "no-param-reassign": "off",
     "no-nested-ternary": "off",
     "prettier/prettier": [
       "error",
-      { singleQuote: false, trailingComma: "none" }
+      { singleQuote: false, trailingComma: "all" },
     ],
     "react/react-in-jsx-scope": "off",
     "react/require-default-props": "off",
@@ -35,7 +41,7 @@ module.exports = {
     "react-native/no-color-literals": "off",
     "react/jsx-filename-extension": [
       1,
-      { extensions: [".js", ".jsx", ".ts", ".tsx"] }
+      { extensions: [".js", ".jsx", ".ts", ".tsx"] },
     ],
     "@typescript-eslint/no-unused-vars": "warn",
     "no-console": "warn",
@@ -49,6 +55,6 @@ module.exports = {
     "@tanstack/query/exhaustive-deps": "error",
     "@tanstack/query/no-deprecated-options": "error",
     "@tanstack/query/prefer-query-object-syntax": "error",
-    "@tanstack/query/stable-query-client": "error"
-  }
+    "@tanstack/query/stable-query-client": "error",
+  },
 };

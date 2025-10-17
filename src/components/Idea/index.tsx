@@ -1,10 +1,10 @@
 import React from "react";
-import { View, StyleSheet, Dimensions } from "react-native";
-import { Colors } from "@/constants/colors";
+import { View, StyleSheet, Dimensions, Image } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 import { InView } from "../InView";
-import { IdeaImages } from "./IdeaImages";
-import { IdeaHeader } from "./IdeaHeader";
 import { IdeaBody } from "./IdeaBody";
+import { IdeaActions } from "./IdeaActions";
+import { getImgWithTimestamp } from "../../utils/getImgWithTimestamp";
 
 export type IdeaType = {
   id: string;
@@ -50,24 +50,32 @@ type IdeaProps = {
 };
 
 const styles = StyleSheet.create({
+  gradient: {
+    ...StyleSheet.absoluteFillObject,
+  },
   ideaContainer: {
     backgroundColor: "transparent",
-    borderBottomWidth: 1,
-    borderColor: Colors.light.periwinkle,
     display: "flex",
     flex: 1,
     gap: 8,
     minHeight: Dimensions.get("window").height * 0.75,
-    width: "100%"
+    overflow: "hidden",
+    position: "relative",
+    width: "100%",
   },
-  cardShadowWrapper: {
-    alignSelf: "center",       
-    borderRadius: 16,         
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    elevation: 4,
-  }
+  image: {
+    flex: 1,
+    resizeMode: "cover",
+    width: Dimensions.get("window").width * 1,
+  },
+  overlayContainer: {
+    bottom: 0,
+    gap: 16,
+    left: 0,
+    padding: 16,
+    position: "absolute",
+    right: 0,
+  },
 });
 
 export function Idea({ alreadyVisualized, idea, onInView }: IdeaProps) {
@@ -76,36 +84,30 @@ export function Idea({ alreadyVisualized, idea, onInView }: IdeaProps) {
   if (!idea) return null;
   return (
     <View style={styles.ideaContainer}>
-      {/* <IdeaHeader
-        ideaId={idea.id}
-        author={idea.author}
-        createdAt={idea.createdAt}
-        updatedAt={idea.updatedAt}
-        isDeleting={isDeleting}
-        setIsDeleting={setIsDeleting}
-      /> */}
-      <View style={styles.cardShadowWrapper}>
-        
-          <IdeaImages images={idea.images} />
-          <IdeaBody
-            author={idea.author.displayName}
-            title={idea.title}
-            content={idea.content}
-            images={idea.images}
-            tags={idea.tags}
-          />
-          {/* {idea.links.map((link) => (
-            <IdeaLink key={`link-${link}`} url={link} />
-          ))}
-          <IdeaActions
-            ideaId={idea.id}
-            likes={idea.likes}
-            comments={idea.comments}
-            views={idea.views}
-            liked={idea.isLiked}
-            viewed={false}
-          /> */}
-        
+      <Image
+        source={{ uri: getImgWithTimestamp(idea.images[0].src) }}
+        style={styles.image}
+      />
+      <LinearGradient
+        colors={["rgba(0,0,0,.8)", "transparent"]}
+        style={styles.gradient}
+        start={{ x: 0.5, y: 0.6 }}
+        end={{ x: 0.5, y: 0 }}
+      />
+      <View style={styles.overlayContainer}>
+        <IdeaBody
+          author={idea.author.displayName}
+          title={idea.title}
+          content={idea.content}
+          images={idea.images}
+          tags={idea.tags}
+        />
+        <IdeaActions
+          ideaId={idea.id}
+          likes={idea.likes}
+          comments={idea.comments}
+          liked={idea.isLiked}
+        />
       </View>
       {!alreadyVisualized && onInView && <InView onInView={onInView} />}
     </View>
