@@ -21,7 +21,7 @@ export type IdeaType = {
     id: string;
     displayName: string;
     autobiography: string | null;
-    icon: string | null;
+    icon: string;
     backgroundImage: string | null;
     links: string[];
     isFollowing: boolean;
@@ -99,7 +99,6 @@ export function Idea({ alreadyVisualized, idea, onInView }: IdeaProps) {
           author={idea.author.displayName}
           title={idea.title}
           content={idea.content}
-          images={idea.images}
           tags={idea.tags}
         />
         <IdeaActions

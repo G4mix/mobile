@@ -2,7 +2,6 @@ import { StyleSheet } from "react-native";
 import { useState } from "react";
 import { Text, View } from "../Themed";
 import { Colors } from "@/constants/colors";
-import { IdeaType } from ".";
 import { Tag } from "../Tag";
 
 const styles = StyleSheet.create({
@@ -39,21 +38,13 @@ type IdeaBodyProps = {
   author?: string;
   title?: string;
   content?: string;
-  images: IdeaType["images"];
   tags?: string[];
 };
 
-export function IdeaBody({
-  author,
-  title,
-  content,
-  images,
-  tags,
-}: IdeaBodyProps) {
+export function IdeaBody({ author, title, content, tags }: IdeaBodyProps) {
   const [displayText, setDisplayText] = useState(content);
   const [truncated, setTruncated] = useState(false);
 
-  if (!title && !content && (!images || images.length === 0)) return null;
   return (
     <>
       <Text

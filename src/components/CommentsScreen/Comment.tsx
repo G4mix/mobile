@@ -36,11 +36,8 @@ type CommentProps = {
 const styles = StyleSheet.create({
   commentContainer: {
     backgroundColor: Colors.light.white,
-    borderBottomWidth: 1,
-    borderColor: Colors.light.periwinkle,
     display: "flex",
-    gap: 8,
-    padding: 16,
+    gap: 4,
     position: "relative",
     width: "100%",
   },

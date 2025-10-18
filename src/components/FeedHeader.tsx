@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
   },
   container: {
     alignItems: "center",
-    backgroundColor: "var(--background)",
+    backgroundColor: Colors.light.background,
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 16,

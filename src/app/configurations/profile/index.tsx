@@ -251,7 +251,6 @@ export default function ConfigProfileScreen() {
                 links={links}
                 link={link}
                 key={`post-link-${link}`}
-                noHorizontalPadding
               />
             ))}
           </View>

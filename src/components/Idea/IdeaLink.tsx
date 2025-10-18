@@ -1,134 +1,55 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { Image, StyleSheet } from "react-native";
-import { Text, View } from "@/components/Themed";
-import { ExternalLink } from "@/components/ExternalLink";
+import React from "react";
+import { Platform, StyleSheet, TouchableOpacity } from "react-native";
+import * as WebBrowser from "expo-web-browser";
+import { Text } from "@/components/Themed";
 import { Colors } from "@/constants/colors";
-import { IdeaLinkLoading } from "./IdeaLinkLoading";
-import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
+import { Icon } from "../Icon";
 
 const styles = StyleSheet.create({
   link: {
     alignItems: "center",
-    borderColor: Colors.light.tropicalIndigo,
-    borderRadius: 8,
-    borderStyle: "solid",
-    borderWidth: 2,
-    display: "flex",
+    backgroundColor: Colors.light.periwinkle,
+    borderRadius: 12,
     flexDirection: "row",
-    gap: 8,
-    padding: 12,
-    position: "relative",
+    gap: 4,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    width: "100%",
   },
-  linkImage: {
-    borderRadius: 8,
-    height: 66,
-    objectFit: "cover",
-    width: 66,
-  },
-  linkInformations: {
-    display: "flex",
-    flexDirection: "column",
-    flex: 1,
-    gap: 8,
+  linkText: {
+    color: Colors.light.jet,
+    flexShrink: 1,
+    flexWrap: "nowrap",
+    fontSize: 11.11,
+    fontWeight: "500",
+    width: "100%",
   },
 });
 
 type IdeaLinkProps = {
-  handleError?: () => void;
-  children?: React.ReactNode;
   url?: string;
-  noHorizontalPadding?: boolean;
 };
 
-type DataType = {
-  description: string;
-  title: string;
-  icon: {
-    url: string;
-    width: number;
-    height: number;
-  };
-};
-
-export function IdeaLink({
-  url = "",
-  handleError,
-  children,
-  noHorizontalPadding,
-}: IdeaLinkProps) {
-  const [data, setData] = useState<DataType | null>(null);
-
-  const fetchData = useCallback(async () => {
-    try {
-      const response = await fetch(
-        `https://api.microlink.io?url=${encodeURIComponent(url)}`,
-      );
-      const { data: jsonData } = await response.json();
-
-      setData({
-        title: jsonData.title,
-        description: jsonData.description,
-        icon: {
-          url: jsonData.logo.url,
-          width: jsonData.logo.width,
-          height: jsonData.logo.height,
-        },
-      });
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error) {
-      if (handleError) handleError();
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  if (!data || !data.icon.url) {
-    return <IdeaLinkLoading noHorizontalPadding={noHorizontalPadding} />;
-  }
-
+export function IdeaLink({ url = "" }: IdeaLinkProps) {
   return (
-    <ExternalLink
-      style={{
-        width: "100%",
-        paddingHorizontal: noHorizontalPadding ? 0 : 16,
+    // <ExternalLink
+    //   href={url}
+    //   aria-label={`Link para o site: ${url}`}
+    //   target="_blank"
+    // >
+    <TouchableOpacity
+      style={styles.link}
+      onPress={(e) => {
+        if (Platform.OS === "web") return;
+        e.preventDefault();
+        WebBrowser.openBrowserAsync(url);
       }}
-      href={url}
-      aria-label={`Link para o site: ${data.title}`}
-      target="_blank"
     >
-      <View style={styles.link}>
-        <Image
-          src={getImgWithTimestamp(data.icon.url)}
-          width={data.icon.width}
-          height={data.icon.height}
-          alt={`Ícone do site: ${data.title}`}
-          style={styles.linkImage}
-        />
-        <View style={styles.linkInformations}>
-          <Text
-            style={{
-              fontWeight: "medium",
-              color: Colors.light.majorelleBlue,
-              fontSize: 12,
-            }}
-          >
-            {data.title.slice(0, 32)}...
-          </Text>
-          <Text
-            style={{
-              fontWeight: "regular",
-              textAlign: "justify",
-              color: Colors.light.majorelleBlue,
-              fontSize: 12,
-            }}
-          >
-            {data.description.slice(0, 90)}...
-          </Text>
-        </View>
-        {children}
-      </View>
-    </ExternalLink>
+      <Icon name="link" color={Colors.light.jet} size={16} />
+      <Text style={styles.linkText} numberOfLines={1}>
+        {url}
+      </Text>
+    </TouchableOpacity>
+    // </ExternalLink>
   );
 }

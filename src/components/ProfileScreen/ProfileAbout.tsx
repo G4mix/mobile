@@ -3,19 +3,9 @@ import { ProfileAboutCard } from "./ProfileAboutCard";
 import { Text } from "../Themed";
 import { Colors } from "@/constants/colors";
 import { IdeaLink } from "../Idea/IdeaLink";
-import { useToast } from "@/hooks/useToast";
 import { UserState } from "@/features/auth/userSlice";
 
 export function ProfileAbout({ user }: { user?: UserState }) {
-  const { showToast } = useToast();
-  const handleLoadLinkError = () => {
-    if (!user) return;
-    showToast({
-      message:
-        "Houve um erro ao tentar encontrar informações sobre o link fornecido!",
-      color: "error",
-    });
-  };
   if (!user) return null;
   return (
     <ScrollView style={{ flex: 1, marginBottom: 60 }}>
@@ -32,12 +22,7 @@ export function ProfileAbout({ user }: { user?: UserState }) {
       {user.links.length !== 0 && (
         <ProfileAboutCard title="Links">
           {user.links.map((link) => (
-            <IdeaLink
-              url={link}
-              noHorizontalPadding
-              key={`user-link-${link}`}
-              handleError={handleLoadLinkError}
-            />
+            <IdeaLink url={link} key={`user-link-${link}`} />
           ))}
         </ProfileAboutCard>
       )}

@@ -286,14 +286,24 @@ export default function CreateScreen() {
                 handleDeleteImage={handleDeleteImage}
               />
             ))}
-            {links?.map((link) => (
-              <CreateScreenPostLink
-                setValue={setValue as any}
-                links={links}
-                link={link}
-                key={`post-link-${link}`}
-              />
-            ))}
+            <View
+              style={{
+                width: "100%",
+                flexDirection: "row",
+                gap: 8,
+                paddingHorizontal: 16,
+                flexWrap: "wrap",
+              }}
+            >
+              {links?.map((link) => (
+                <CreateScreenPostLink
+                  setValue={setValue as any}
+                  links={links}
+                  link={link}
+                  key={`post-link-${link}`}
+                />
+              ))}
+            </View>
             <CreateScreenAddLink
               isAddLinkVisible={isAddLinkVisible}
               setIsAddLinkVisible={setIsAddLinkVisible}

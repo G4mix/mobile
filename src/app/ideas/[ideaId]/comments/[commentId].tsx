@@ -1,61 +1,46 @@
 import { View, ScrollView } from "react-native";
 import { useEffect, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Comment, CommentType } from "@/components/CommentsScreen/Comment";
-import { CommentPageable, useComments } from "@/hooks/useComments";
+import { useComments } from "@/hooks/useComments";
 import { InView } from "@/components/InView";
 import { CommentInput } from "@/components/CommentsScreen/CommentInput";
 import { IdeaType } from "@/components/Idea";
 import { api } from "@/constants/api";
 import { CommentLoading } from "@/components/CommentsScreen/CommentLoading";
-import { usePullToRefresh } from "@/hooks/usePullToRefresh";
+import { Colors } from "../../../../constants/colors";
 
 export default function RepliesScreen() {
-  const { ideaId, commentId } = useLocalSearchParams<{
-    ideaId: string;
+  const { postId, commentId } = useLocalSearchParams<{
+    postId: string;
     commentId: string;
   }>();
 
-  const queryClient = useQueryClient();
-
-  const { data: comment, refetch: refetchComment } = useQuery({
-    queryKey: ["comment", { commentId, ideaId }],
+  const { data: comment } = useQuery({
+    queryKey: ["comment", commentId],
     queryFn: async () => {
-      const response = await api.get<CommentPageable>("/comment", {
-        params: {
-          ideaId,
-          parentCommentId: commentId,
-          page: 0,
-          limit: 1,
-        },
-      });
-      return response.data.data[0];
+      const response = await api.get<CommentType>(`/comment/${commentId}`);
+      return response.data;
     },
     enabled: !!commentId,
   });
 
   const {
-    data: idea,
+    data: post,
     isLoading,
     isError,
-    refetch: refetchIdea,
   } = useQuery({
-    queryKey: ["idea", ideaId],
+    queryKey: ["post", postId],
     queryFn: async () => {
-      const response = await api.get<IdeaType>(`/idea/${ideaId}`);
+      const response = await api.get<IdeaType>(`/idea/${postId}`);
       return response.data;
     },
-    enabled: !!ideaId,
+    enabled: !!postId,
   });
 
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    refetch: refetchReplies,
-  } = useComments();
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useComments();
 
   const replies = data?.pages?.flatMap((page) => page?.data || []) || [];
   const [replying, setReplying] = useState<{
@@ -78,31 +63,22 @@ export default function RepliesScreen() {
     setIsVisible(true);
   };
 
-  const handleRefresh = async () => {
-    await queryClient.invalidateQueries({ queryKey: ["comment", commentId] });
-    await queryClient.invalidateQueries({ queryKey: ["idea", ideaId] });
-    await queryClient.invalidateQueries({
-      queryKey: ["comments", { ideaId, commentId }],
-    });
-    await refetchReplies();
-    await refetchComment();
-    await refetchIdea();
-  };
-
-  const { refreshControl } = usePullToRefresh({
-    onRefresh: handleRefresh,
-  });
-
   if (isError) router.push("/feed");
 
   useEffect(() => setIsVisible(true), []);
 
   return (
-    <View style={{ flex: 1, position: "relative" }}>
-      <ScrollView
-        style={{ flex: 1, position: "relative", marginBottom: 56 }}
-        refreshControl={refreshControl}
-      >
+    <View
+      style={{
+        flex: 1,
+        position: "relative",
+        backgroundColor: Colors.light.background,
+        paddingRight: 16,
+        paddingTop: 16,
+        paddingBottom: 16,
+      }}
+    >
+      <ScrollView style={{ flex: 1, position: "relative", marginBottom: 56 }}>
         {isLoading && <CommentLoading commentType="post" />}
         {comment && (
           <Comment
@@ -116,7 +92,7 @@ export default function RepliesScreen() {
           />
         )}
         {replies.map((reply) => (
-          <View key={`comment-${reply.id}`}>
+          <View key={`comment-${reply.id}`} style={{ paddingTop: 16 }}>
             <Comment
               key={`reply-${reply.id}`}
               comment={reply}
@@ -140,7 +116,7 @@ export default function RepliesScreen() {
         )}
       </ScrollView>
       <CommentInput
-        commentsCount={idea?.comments || 0}
+        commentsCount={post?.comments || 0}
         isVisible={isVisible}
         setIsVisible={setIsVisible}
         replying={replying}
