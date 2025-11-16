@@ -34,11 +34,7 @@ export type IdeaType = {
       verified: boolean;
     };
   };
-  images: {
-    id: string;
-    src: string;
-    alt: string;
-  }[];
+  images: string[];
   links: string[];
   tags: string[];
 };
@@ -82,12 +78,16 @@ export function Idea({ alreadyVisualized, idea, onInView }: IdeaProps) {
   // const [isDeleting, setIsDeleting] = useState(false);
   // if (isDeleting) return <IdeaLoading />;
   if (!idea) return null;
+  const firstImage =
+    idea.images && idea.images.length > 0 ? idea.images[0] : null;
   return (
     <View style={styles.ideaContainer}>
-      <Image
-        source={{ uri: getImgWithTimestamp(idea.images[0].src) }}
-        style={styles.image}
-      />
+      {firstImage && (
+        <Image
+          source={{ uri: getImgWithTimestamp(firstImage) }}
+          style={styles.image}
+        />
+      )}
       <LinearGradient
         colors={["rgba(0,0,0,.8)", "transparent"]}
         style={styles.gradient}

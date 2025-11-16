@@ -103,10 +103,10 @@ export default function CreateScreen() {
     setValue(
       "images",
       post.images.map((img) => {
-        const extension = img.src.split(".").pop()?.split("?")[0] || "jpg";
+        const extension = img.split(".").pop()?.split("?")[0] || "jpg";
         return {
-          uri: img.src,
-          name: img.id,
+          uri: img,
+          name: img,
           type: `image/${extension === "jpg" ? "jpeg" : extension}`,
         };
       }),

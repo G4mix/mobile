@@ -44,14 +44,14 @@ export function IdeaImages({
     <View style={styles.container}>
       <FlatList
         data={images}
-        keyExtractor={(item) => `idea-image-${item.id}`}
+        keyExtractor={(item) => `idea-image-${item}`}
         horizontal
         pagingEnabled
         showsHorizontalScrollIndicator={false}
         initialScrollIndex={0}
         renderItem={({ item }) => (
           <Image
-            source={{ uri: getImgWithTimestamp(item.src) }}
+            source={{ uri: getImgWithTimestamp(item) }}
             style={styles.image}
           />
         )}
@@ -64,7 +64,7 @@ export function IdeaImages({
       {enablePagination && (
         <View style={styles.paginationContainer}>
           {images.map((img) => (
-            <View key={`img-current-${img.id}`} style={styles.dot} />
+            <View key={`img-current-${img}`} style={styles.dot} />
           ))}
         </View>
       )}

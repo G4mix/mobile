@@ -254,7 +254,7 @@ export default function IdeaScreen() {
               <View style={styles.ideaContainer}>
                 <View style={styles.imageContainer}>
                   <Image
-                    source={{ uri: getImgWithTimestamp(idea.images[0].src) }}
+                    source={{ uri: getImgWithTimestamp(idea.images[0]) }}
                     style={styles.image}
                   />
                   <TouchableOpacity
