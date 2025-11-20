@@ -78,7 +78,8 @@ export default function CreateScreen() {
   const [isCameraVisible, setIsCameraVisible] = useState(false);
   const [isSuccessVisible, setIsSuccessVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { addNewIdea, updateIdea } = useFeedQueries();
+  const { invalidateAllIdeas, invalidateIdeaQuery, invalidateUserQuery } =
+    useFeedQueries();
   const { postId: ideaId } = useLocalSearchParams<{ postId: string }>();
   const user = useSelector((state: RootState) => state.user);
 
@@ -167,10 +168,10 @@ export default function CreateScreen() {
     });
     if (!data) return;
     if (post && ideaId) {
-      updateIdea(data);
-    } else {
-      addNewIdea(data);
+      invalidateIdeaQuery(ideaId);
     }
+    invalidateAllIdeas();
+    invalidateUserQuery(user.id);
     clearFields();
     setIsSuccessVisible(true);
     await timeout(1000);

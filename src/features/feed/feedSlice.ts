@@ -13,7 +13,6 @@ const feedSlice = createSlice({
       recommendations: false,
       highlights: false,
     },
-    lastFetchTime: new Date().toISOString(),
     actualTab: "recommendations",
   },
   reducers: {
@@ -26,16 +25,9 @@ const feedSlice = createSlice({
     setActualTab: (state, action) => {
       state.actualTab = action.payload;
     },
-    setLastFetchTime: (state, action) => {
-      state.lastFetchTime = action.payload;
-    },
   },
 });
 
-export const {
-  setNewIdeaIndicator,
-  clearNewIdeaIndicator,
-  setLastFetchTime,
-  setActualTab,
-} = feedSlice.actions;
+export const { setNewIdeaIndicator, clearNewIdeaIndicator, setActualTab } =
+  feedSlice.actions;
 export const feedReducer = feedSlice.reducer;

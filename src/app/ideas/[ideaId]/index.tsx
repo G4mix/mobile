@@ -160,7 +160,7 @@ export default function IdeaScreen() {
     await refetchIdea();
     await refetchComments();
   };
-  const { updateIdea } = useFeedQueries();
+  const { invalidateAllIdeas, invalidateIdeaQuery } = useFeedQueries();
   const { showToast } = useToast();
   const [isLoadingLike, setIsLoadingLike] = useState(false);
 
@@ -184,11 +184,8 @@ export default function IdeaScreen() {
       ignoreErrors: true,
     });
     if (!response) return;
-    updateIdea({
-      id: ideaId as string,
-      isLiked: newIsLiked,
-      likes: newLikesCount,
-    });
+    invalidateIdeaQuery(ideaId as string);
+    invalidateAllIdeas();
   };
 
   const debouncedLikePost = useRef(

@@ -1,7 +1,7 @@
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useSelector } from "react-redux";
 import { Dispatch, SetStateAction } from "react";
-import { router, usePathname } from "expo-router";
+import { router } from "expo-router";
 import { Icon } from "../Icon";
 import { Text } from "../Themed";
 import { Colors } from "@/constants/colors";
@@ -71,9 +71,8 @@ export function IdeaHeader({
   );
   const { showConfirmationModal } = useConfirmationModal();
   const { showFloatingOptions } = useFloatingOptions();
-  const { removeIdea, invalidateAllIdeas } = useFeedQueries();
+  const { invalidateAllIdeas, invalidateIdeaQuery } = useFeedQueries();
   const { showToast } = useToast();
-  const pathname = usePathname();
 
   const options: Option[] = [
     {
@@ -95,11 +94,8 @@ export function IdeaHeader({
             setIsLoading: setIsDeleting,
           });
 
-          if (pathname.startsWith("/ideas")) {
-            removeIdea(selectedPost);
-          } else {
-            invalidateAllIdeas();
-          }
+          invalidateIdeaQuery(selectedPost);
+          invalidateAllIdeas();
 
           router.push("/feed");
         };

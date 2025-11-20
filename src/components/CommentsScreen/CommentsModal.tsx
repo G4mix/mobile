@@ -18,8 +18,6 @@ import {
 import { MentionInput } from "react-native-controlled-mentions";
 import { useForm } from "react-hook-form";
 import { router, useLocalSearchParams } from "expo-router";
-import { useDispatch, useSelector } from "react-redux";
-import { useQueryClient } from "@tanstack/react-query";
 import { EmojiPopup } from "react-native-emoji-popup";
 import { Provider as PaperProvider } from "react-native-paper";
 import { Icon } from "../Icon";
@@ -30,9 +28,7 @@ import { api } from "@/constants/api";
 import { useToast } from "@/hooks/useToast";
 import { Button } from "../Button";
 import { Text } from "../Themed";
-import { setLastFetchTime } from "@/features/comments/commentsSlice";
 import { useFeedQueries } from "@/hooks/useFeedQueries";
-import { IdeaType } from "../Idea";
 import { RenderUserSuggestions } from "../RenderUserSugestions";
 import { timeout } from "@/utils/timeout";
 import { InView } from "../InView";
@@ -84,7 +80,6 @@ function CloseButton({ close }: { close: () => void }) {
 type CommentsModalProps = {
   isVisible: boolean;
   setIsVisible: (value: boolean) => void;
-  commentsCount: number;
   replying: {
     parentComment: string;
     toMark: string;
@@ -102,25 +97,20 @@ type CommentsModalProps = {
 export function CommentsModal({
   isVisible,
   setIsVisible,
-  commentsCount,
   replying,
   setReplying,
 }: CommentsModalProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const { updateIdea } = useFeedQueries();
-  const queryClient = useQueryClient();
+  const { invalidateAllIdeas, invalidateIdeaQuery, invalidateCommentsQuery } =
+    useFeedQueries();
   const { ideaId, commentId } = useLocalSearchParams<{
     ideaId: string;
     commentId: string;
   }>();
-  const lastFetchTime = useSelector(
-    (state: any) => state.comments.lastFetchTime,
-  );
   const { showToast } = useToast();
   const { watch, setValue, handleSubmit } = useForm<{ content: string }>({
     defaultValues: { content: "" },
   });
-  const dispatch = useDispatch();
   const inputRef = useRef<TextInput>(null);
   useEffect(() => {
     if (replying.parentComment !== replying.toMark && replying.author) {
@@ -132,47 +122,6 @@ export function CommentsModal({
       setValue("content", "");
     }
   }, [replying.toMark]);
-
-  const addNewComment = (comment: CommentType) => {
-    queryClient.setQueryData(
-      ["comments", { lastFetchTime, ideaId, commentId }],
-      (oldData: any) => {
-        if (!oldData || !oldData.pages[0]) return oldData;
-
-        const firstPage = oldData.pages[0];
-
-        const updatedData =
-          comment.parentCommentId && !commentId
-            ? [...firstPage.data]
-            : [comment, ...firstPage.data];
-
-        return {
-          ...oldData,
-          pages: [
-            {
-              ...firstPage,
-              data: updatedData,
-              total: comment.parentCommentId
-                ? firstPage.total
-                : firstPage.total + 1,
-            },
-            ...oldData.pages.slice(1),
-          ],
-        };
-      },
-    );
-  };
-
-  const updateSingleIdea = () => {
-    queryClient.setQueryData<IdeaType>(["idea", ideaId], (oldData) => {
-      if (!oldData) return oldData;
-
-      return {
-        ...oldData,
-        comments: commentsCount + 1,
-      };
-    });
-  };
 
   const createComment = async ({ content }: { content: string }) => {
     if (content.length < 3) return;
@@ -187,7 +136,6 @@ export function CommentsModal({
       setIsLoading,
     });
     if (!data) return;
-    addNewComment(data);
     setIsVisible(false);
     setValue("content", "");
     setReplying({
@@ -195,8 +143,9 @@ export function CommentsModal({
       toMark: "",
       author: undefined,
     });
-    updateIdea({ id: ideaId, comments: commentsCount + 1 });
-    updateSingleIdea();
+    invalidateCommentsQuery(ideaId, commentId);
+    invalidateIdeaQuery(ideaId);
+    invalidateAllIdeas();
     if (data.parentCommentId && !commentId) {
       await timeout(500);
       router.push(`/ideas/${data.ideaId}/comments/${data.parentCommentId}`);
@@ -206,10 +155,6 @@ export function CommentsModal({
   const content = watch("content");
 
   const onSubmit = handleSubmit(createComment);
-
-  useEffect(() => {
-    dispatch(setLastFetchTime(new Date().toISOString()));
-  }, []);
 
   return (
     <Modal

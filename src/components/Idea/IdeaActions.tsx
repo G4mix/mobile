@@ -50,7 +50,7 @@ export function IdeaActions({
   const [isLiked, setIsLiked] = useState(liked);
   const [currentLikesCount, setCurrentLikesCount] = useState(likes);
   const [isLoading, setIsLoading] = useState(false);
-  const { updateIdea } = useFeedQueries();
+  const { invalidateAllIdeas } = useFeedQueries();
 
   const likePostRequest = async (
     newIsLiked: boolean,
@@ -68,11 +68,7 @@ export function IdeaActions({
       ignoreErrors: true,
     });
     if (!data) return;
-    updateIdea({
-      id: ideaId,
-      isLiked: newIsLiked,
-      likes: newLikesCount,
-    });
+    invalidateAllIdeas();
   };
 
   const debouncedLikePost = useRef(

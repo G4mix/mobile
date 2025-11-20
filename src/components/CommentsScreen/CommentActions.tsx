@@ -1,6 +1,5 @@
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { useRef, useState } from "react";
-import { useSelector } from "react-redux";
 import { useQueryClient } from "@tanstack/react-query";
 import { Icon, IconName } from "../Icon";
 import { Text } from "../Themed";
@@ -44,14 +43,11 @@ export function CommentActions({
   const [isLiked, setIsLiked] = useState(liked);
   const [currentLikesCount, setCurrentLikesCount] = useState(likesCount);
   const [isLoading, setIsLoading] = useState(false);
-  const lastFetchTime = useSelector(
-    (state: any) => state.comments.lastFetchTime,
-  );
   const queryClient = useQueryClient();
 
   const addLikeCount = (data: { isLiked: boolean; likesCount: number }) => {
     queryClient.setQueryData(
-      ["comments", { lastFetchTime, ideaId, commentId }],
+      ["comments", { ideaId, commentId }],
       (oldData: any) => {
         if (!oldData) return oldData;
 

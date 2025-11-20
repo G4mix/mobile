@@ -12,7 +12,7 @@ export const useViewIdeas = ({
   const [isSavingIdea, setIsSavingIdea] = useState(false);
   const { showToast } = useToast();
   const alreadyVisualized = useRef<Set<string>>(new Set(initialViewedIdeaIds));
-  const { increaseViews } = useFeedQueries();
+  const { invalidateAllIdeas } = useFeedQueries();
   const timeouts = useRef<Map<string, ReturnType<typeof setTimeout>>>(
     new Map(),
   );
@@ -24,7 +24,7 @@ export const useViewIdeas = ({
       showToast,
       setIsLoading: setIsSavingIdea,
     });
-    increaseViews([ideaId]);
+    invalidateAllIdeas();
   };
 
   const addVisualizedIdea = (ideaId: string) => {
