@@ -45,7 +45,6 @@ export default function FeedScreen() {
   const ideas = data?.pages?.flatMap((page) => page?.data || []) || [];
 
   const handleRefresh = async () => {
-    // Invalidar e refazer fetch das queries de ideas
     await queryClient.invalidateQueries({ queryKey: ["ideas"] });
     await refetch();
   };
