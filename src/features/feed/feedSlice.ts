@@ -8,34 +8,26 @@ interface FeedState {
 const feedSlice = createSlice({
   name: "feed",
   initialState: {
-    newPosts: {
+    newIdeas: {
       following: false,
       recommendations: false,
-      highlights: false
+      highlights: false,
     },
-    lastFetchTime: new Date().toISOString(),
-    actualTab: "recommendations"
+    actualTab: "recommendations",
   },
   reducers: {
-    setNewPostIndicator: (state, action: PayloadAction<FeedState>) => {
-      state.newPosts[action.payload.tab] = true;
+    setNewIdeaIndicator: (state, action: PayloadAction<FeedState>) => {
+      state.newIdeas[action.payload.tab] = true;
     },
-    clearNewPostIndicator: (state, action: PayloadAction<FeedState>) => {
-      state.newPosts[action.payload.tab] = false;
+    clearNewIdeaIndicator: (state, action: PayloadAction<FeedState>) => {
+      state.newIdeas[action.payload.tab] = false;
     },
     setActualTab: (state, action) => {
       state.actualTab = action.payload;
     },
-    setLastFetchTime: (state, action) => {
-      state.lastFetchTime = action.payload;
-    }
-  }
+  },
 });
 
-export const {
-  setNewPostIndicator,
-  clearNewPostIndicator,
-  setLastFetchTime,
-  setActualTab
-} = feedSlice.actions;
+export const { setNewIdeaIndicator, clearNewIdeaIndicator, setActualTab } =
+  feedSlice.actions;
 export const feedReducer = feedSlice.reducer;

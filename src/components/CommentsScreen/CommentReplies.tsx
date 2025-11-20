@@ -8,18 +8,18 @@ export function CommentReplies({ comment }: { comment: CommentType }) {
   return (
     <TouchableOpacity
       onPress={() =>
-        router.push(`/posts/${comment.postId}/comments/${comment.id}`)
+        router.push(`/ideas/${comment.ideaId}/comments/${comment.id}` as any)
       }
       style={{
         width: "100%",
         paddingVertical: 4,
         flexDirection: "row",
         alignItems: "center",
-        gap: 4
+        gap: 4,
       }}
     >
       <Text>
-        {comment.repliesCount} repl{comment.repliesCount === 1 ? "y" : "ies"}
+        {comment.replies} repl{comment.replies === 1 ? "y" : "ies"}
       </Text>
       <Icon name="chevron-right" size={16} />
     </TouchableOpacity>

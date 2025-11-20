@@ -2,14 +2,14 @@
 import {
   GestureResponderEvent,
   StyleSheet,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import { Colors } from "@/constants/colors";
 import { Text, View } from "../Themed";
 import { Icon, IconName } from "@/components/Icon";
 
 const styles = StyleSheet.create({
-  arrowedView: {   
+  arrowedView: {
     display: "flex",
     flexDirection: "row",
     flex: 1,
@@ -18,15 +18,15 @@ const styles = StyleSheet.create({
   end: {
     borderBottomLeftRadius: 8,
     borderBottomRightRadius: 8,
-    borderTopWidth: 0
+    borderTopWidth: 0,
   },
   full: {
-    borderRadius: 8
+    borderRadius: 8,
   },
   middle: {
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
-    borderBottomWidth: 1
+    borderBottomWidth: 1,
   },
   root: {
     alignItems: "center",
@@ -39,15 +39,15 @@ const styles = StyleSheet.create({
   },
   start: {
     borderTopLeftRadius: 8,
-    borderTopRightRadius: 8
-  }
+    borderTopRightRadius: 8,
+  },
 });
 export function Option({
   name,
   position,
   onPress,
   color = "russianViolet",
-  icon = "undefined"
+  icon = "undefined",
 }: {
   name: string;
   position: "start" | "middle" | "end" | "full";
@@ -61,27 +61,21 @@ export function Option({
         style={[
           {
             ...styles.root,
-            borderColor: Colors.light[color === "red" ? "red" : "periwinkle"]
+            borderColor: Colors.light[color === "red" ? "red" : "periwinkle"],
           },
-          styles[position]
+          styles[position],
         ]}
       >
-        {icon !== "undefined" && <Icon
-          size={24}
-          name={icon}
-          color={
-            Colors.light.russianViolet
-          }
-        />}
+        {icon !== "undefined" && (
+          <Icon size={24} name={icon} color={Colors.light.russianViolet} />
+        )}
         <Text style={{ color: Colors.light[color], fontSize: 16 }}>{name}</Text>
         {icon !== "undefined" && (
           <View style={styles.arrowedView}>
             <Icon
               size={24}
               name="chevron-right"
-              color={
-                Colors.light.russianViolet
-              }
+              color={Colors.light.russianViolet}
             />
           </View>
         )}

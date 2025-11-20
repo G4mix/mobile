@@ -24,22 +24,21 @@ import { SuccessModal } from "@/components/SuccessModal";
 import { getDate } from "@/utils/getDate";
 import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
 import { Camera } from "@/components/Camera";
-import { ConfirmationModalProvider } from "@/context/ConfirmationModalContext";
 
 const styles = StyleSheet.create({
   button: {
     borderRadius: 8,
     minWidth: "auto",
     paddingHorizontal: 16,
-    paddingVertical: 14
+    paddingVertical: 14,
   },
   header: {
     alignItems: "center",
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "100%"
-  }
+    width: "100%",
+  },
 });
 
 export type UpdateUserFormData = {
@@ -73,25 +72,25 @@ export default function ConfigProfileScreen() {
   const date = getDate().toISOString();
   const { watch, setValue, handleSubmit } = useForm<UpdateUserFormData>({
     defaultValues: {
-      displayName: user.userProfile.displayName || "",
-      autobiography: user.userProfile.autobiography || "",
-      backgroundImage: user.userProfile.backgroundImage
+      displayName: user.displayName || "",
+      autobiography: user.autobiography || "",
+      backgroundImage: user.backgroundImage
         ? {
-            uri: user.userProfile.backgroundImage,
-            name: `backgroundImage-${date}.${user.userProfile.backgroundImage.split(".").pop()?.split("?")[0] || "png"}`,
-            type: `image/${user.userProfile.backgroundImage.split(".").pop()?.split("?")[0] || "png"}`
+            uri: user.backgroundImage,
+            name: `backgroundImage-${date}.${user.backgroundImage.split(".").pop()?.split("?")[0] || "png"}`,
+            type: `image/${user.backgroundImage.split(".").pop()?.split("?")[0] || "png"}`,
           }
         : null,
 
-      icon: user.userProfile.icon
+      icon: user.icon
         ? {
-            uri: user.userProfile.icon,
-            name: `user-icon-${date}.${user.userProfile.icon.split(".").pop()?.split("?")[0] || "png"}`,
-            type: `image/${user.userProfile.icon.split(".").pop()?.split("?")[0] || "png"}`
+            uri: user.icon,
+            name: `user-icon-${date}.${user.icon.split(".").pop()?.split("?")[0] || "png"}`,
+            type: `image/${user.icon.split(".").pop()?.split("?")[0] || "png"}`,
           }
         : null,
-      links: user.userProfile.links.map((l) => l.url) || []
-    }
+      links: user.links,
+    },
   });
 
   const updateUser = async ({
@@ -99,18 +98,15 @@ export default function ConfigProfileScreen() {
     backgroundImage,
     displayName,
     icon,
-    links
+    links,
   }: UpdateUserFormData) => {
     if (isLoading) return;
     if (
-      user.userProfile.autobiography === autobiography &&
-      user.userProfile.backgroundImage === backgroundImage?.uri &&
-      user.userProfile.displayName === displayName &&
-      user.userProfile.icon === icon?.uri &&
-      isArrayEqual(
-        user.userProfile.links.map((l) => l.url),
-        links
-      )
+      user.autobiography === autobiography &&
+      user.backgroundImage === backgroundImage?.uri &&
+      user.displayName === displayName &&
+      user.icon === icon?.uri &&
+      isArrayEqual(user.links, links)
     ) {
       router.back();
       setIsLoading(false);
@@ -122,18 +118,18 @@ export default function ConfigProfileScreen() {
       backgroundImage,
       displayName,
       icon,
-      links
+      links,
     });
 
     const data = await handleRequest<UserState>({
       requestFn: async () =>
         api.patch("/user", formData, {
           headers: {
-            "Content-Type": "multipart/form-data"
-          }
+            "Content-Type": "multipart/form-data",
+          },
         }),
       showToast,
-      setIsLoading
+      setIsLoading,
     });
     if (!data) return;
 
@@ -143,7 +139,7 @@ export default function ConfigProfileScreen() {
     setIsSuccessVisible(true);
     await timeout(1000);
     setIsSuccessVisible(false);
-    router.push(`/profile/${user.userProfile.id}`);
+    router.push(`/profile/${user.id}`);
   };
   const onSubmit = handleSubmit(updateUser);
 
@@ -176,7 +172,7 @@ export default function ConfigProfileScreen() {
           position: "relative",
           paddingHorizontal: 16,
           paddingVertical: 24,
-          gap: 12
+          gap: 12,
         }}
       >
         <View style={styles.header}>
@@ -187,19 +183,16 @@ export default function ConfigProfileScreen() {
             </Text>
           </Button>
         </View>
-        <ConfirmationModalProvider>
-          <ProfileHeader
-            id={user.id}
-            icon={iconUri}
-            backgroundImage={bgUri}
-            onPressBackground={handlePressProfileBackground}
-            onPressIcon={handlePressProfileIcon}
-          />
-        </ConfirmationModalProvider>
+        <ProfileHeader
+          id={user.id}
+          icon={iconUri}
+          backgroundImage={bgUri}
+          onPressBackground={handlePressProfileBackground}
+          onPressIcon={handlePressProfileIcon}
+        />
         <Input
           placeholder={
-            user.userProfile.displayName ||
-            "Como quer que as pessoas te chamem?"
+            user.displayName || "Como quer que as pessoas te chamem?"
           }
           label="Nome de Usuário"
           labelColor={Colors.light.russianViolet}
@@ -215,9 +208,7 @@ export default function ConfigProfileScreen() {
             Descrição
           </Text>
           <TextArea
-            placeholder={
-              user.userProfile.autobiography || "Conte-nos um pouco sobre você"
-            }
+            placeholder={user.autobiography || "Conte-nos um pouco sobre você"}
             value={autobiography}
             onChangeText={(value) => setValue("autobiography", value)}
             style={{ minHeight: 136, color: Colors.light.tropicalIndigo }}
@@ -238,7 +229,7 @@ export default function ConfigProfileScreen() {
                 if (links && links.length >= 5) {
                   showToast({
                     message: "O limite de links é 5!",
-                    color: "warn"
+                    color: "warn",
                   });
                   return;
                 }
@@ -257,7 +248,6 @@ export default function ConfigProfileScreen() {
                 links={links}
                 link={link}
                 key={`post-link-${link}`}
-                noHorizontalPadding
               />
             ))}
           </View>

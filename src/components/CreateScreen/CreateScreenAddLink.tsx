@@ -16,7 +16,7 @@ export function CreateScreenAddLink({
   isAddLinkVisible,
   setIsAddLinkVisible,
   setValue,
-  links
+  links,
 }: CreateScreenAddLinkProps) {
   const addLinkRef = useRef<HTMLInputElement>(null);
   const handleSubmit = (e: any) => {
@@ -38,7 +38,7 @@ export function CreateScreenAddLink({
       style={{
         paddingRight: 16,
         paddingLeft: 16,
-        opacity: links && links.length >= 5 ? 0.7 : 1
+        opacity: links && links.length >= 5 ? 0.7 : 1,
       }}
     >
       <Input

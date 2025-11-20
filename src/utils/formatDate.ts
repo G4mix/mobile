@@ -11,7 +11,7 @@ const format = (date: Date) => {
     "set",
     "out",
     "nov",
-    "dez"
+    "dez",
   ];
 
   const day = String(date.getDate()).padStart(2, "0");
@@ -50,7 +50,7 @@ export const formatEventTime = (isoString: string): string => {
 export const formatFullDate = (isoString: string) => {
   const date = new Date(isoString);
   const weeklyDay = new Intl.DateTimeFormat("pt-BR", {
-    weekday: "short"
+    weekday: "short",
   })
     .format(date)
     .replace(".", "");

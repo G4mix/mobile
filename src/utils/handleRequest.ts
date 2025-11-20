@@ -2,6 +2,7 @@ import { isAxiosError } from "axios";
 import { Dispatch, SetStateAction } from "react";
 import { ToastContextType } from "@/context/ToastContext";
 import { messages } from "@/constants/messages";
+import { ApiErrorResponse } from "@/types/apiErrors";
 
 type RequestFunction<T> = () => Promise<T>;
 
@@ -10,7 +11,7 @@ export const handleRequest = async <T>({
   showToast,
   setIsLoading,
   successMessage,
-  ignoreErrors = false
+  ignoreErrors = false,
 }: {
   requestFn: RequestFunction<T>;
   showToast: ToastContextType["showToast"];
@@ -28,17 +29,55 @@ export const handleRequest = async <T>({
   } catch (error) {
     setIsLoading(false);
     if (ignoreErrors) return null;
+
     if (isAxiosError(error)) {
-      const message = error.response?.data?.message;
-      const errorMessage =
-        messages[message as keyof typeof messages] ||
-        "Ocorreu um erro inesperado.";
+      const errorResponse = error.response?.data as ApiErrorResponse;
+      const message = errorResponse?.message;
+      const status = error.response?.status;
+
+      // Mapear códigos de status HTTP para mensagens específicas
+      let errorMessage = message ? messages[message] : undefined;
+
+      if (!errorMessage) {
+        switch (status) {
+          case 400:
+            errorMessage = messages.BAD_REQUEST;
+            break;
+          case 401:
+            errorMessage = messages.UNAUTHORIZED;
+            break;
+          case 403:
+            errorMessage = messages.FORBIDDEN;
+            break;
+          case 404:
+            errorMessage = messages.NOT_FOUNDED_DATA;
+            break;
+          case 409:
+            errorMessage = messages.CONFLICT;
+            break;
+          case 422:
+            errorMessage = messages.UNPROCESSABLE_ENTITY;
+            break;
+          case 429:
+            errorMessage = messages.TOO_MANY_REQUESTS;
+            break;
+          case 500:
+            errorMessage = messages.INTERNAL_SERVER_ERROR;
+            break;
+          case 503:
+            errorMessage = messages.SERVICE_UNAVAILABLE;
+            break;
+          default:
+            errorMessage = "Ocorreu um erro inesperado.";
+        }
+      }
+
       showToast({ message: errorMessage, color: "warn" });
     } else {
       showToast({
         message: "Erro ao tentar realizar a ação",
         color: "error",
-        duration: 3000
+        duration: 3000,
       });
     }
     return null;

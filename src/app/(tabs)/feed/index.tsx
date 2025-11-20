@@ -3,99 +3,74 @@ import {
   ScrollView,
   View,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
 } from "react-native";
 import { router } from "expo-router";
-import { ContentTabs, Tab } from "@/components/ContentTabs";
-import { Post } from "@/components/Post";
+import { useQueryClient } from "@tanstack/react-query";
+import { Idea } from "@/components/Idea";
 import { useFeed } from "@/hooks/useFeed";
 import { InView } from "@/components/InView";
-import { useViewPosts } from "@/hooks/useViewPosts";
-import { FloatingOptionsProvider } from "@/context/FloatingOptionsContext";
-import { ConfirmationModalProvider } from "@/context/ConfirmationModalContext";
-import { PostLoading } from "@/components/Post/PostLoading";
+import { IdeaLoading } from "@/components/Idea/IdeaLoading";
 import { Colors } from "@/constants/colors";
+import { usePullToRefresh } from "@/hooks/usePullToRefresh";
+import { FeedHeader } from "../../../components/FeedHeader";
 
 export const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     flex: 1,
     flexDirection: "column",
-    minHeight: Dimensions.get("window").height - 60
+    minHeight: Dimensions.get("window").height - 60,
   },
-  posts: {
+  ideas: {
     display: "flex",
     flexDirection: "column",
     flex: 1,
-    width: "100%"
+    gap: 8,
+    width: "100%",
   },
   scroll: {
     backgroundColor: Colors.light.background,
     marginBottom: 60,
-    width: "100%"
-  }
+    width: "100%",
+  },
 });
 
 export default function FeedScreen() {
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useFeed();
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } =
+    useFeed();
+  const queryClient = useQueryClient();
+  const ideas = data?.pages?.flatMap((page) => page?.data || []) || [];
 
-  const posts = data?.pages?.flatMap((page) => page?.data || []) || [];
+  const handleRefresh = async () => {
+    await queryClient.invalidateQueries({ queryKey: ["ideas"] });
+    await refetch();
+  };
 
-  const initialViewedPostIds = posts.filter((p) => p.isViewed).map((p) => p.id);
-
-  const { alreadyVisualized, addVisualizedPost } = useViewPosts({
-    initialViewedPostIds
+  const { refreshControl } = usePullToRefresh({
+    onRefresh: handleRefresh,
   });
-
-  const tabs: Tab<"feed">[] = [
-    {
-      name: "Destaques",
-      disabled: true,
-      key: "following"
-    },
-    {
-      name: "Recomendações",
-      key: "recommendations"
-    },
-    {
-      name: "Seguindo",
-      disabled: true,
-      key: "highlights"
-    }
-  ];
 
   return (
     <View style={styles.container}>
-      <ContentTabs tabs={tabs} tabType="feed" />
-      <ScrollView style={styles.scroll}>
-        <View style={styles.posts}>
-          <FloatingOptionsProvider>
-            <ConfirmationModalProvider>
-              {posts?.map((post, index) => (
-                <TouchableOpacity
-                  onPress={() => router.push(`/posts/${post!.id}`)}
-                  key={`post-${post?.id || index}`}
-                >
-                  <Post
-                    post={post}
-                    onInView={() => {
-                      if (post) addVisualizedPost(post.id);
-                    }}
-                    alreadyVisualized={
-                      post ? alreadyVisualized.current.has(post.id) : false
-                    }
-                  />
-                </TouchableOpacity>
-              ))}
-              {isFetchingNextPage &&
-                [1, 2, 3].map((post) => (
-                  <PostLoading key={`post-loading-${post}`} />
-                ))}
-              {isFetchingNextPage || !hasNextPage ? null : (
-                <InView onInView={fetchNextPage} />
-              )}
-            </ConfirmationModalProvider>
-          </FloatingOptionsProvider>
+      <FeedHeader />
+      <ScrollView style={styles.scroll} refreshControl={refreshControl}>
+        <View style={styles.ideas}>
+          {ideas?.map((idea, index) => (
+            <TouchableOpacity
+              onPress={() => router.push(`/ideas/${idea!.id}` as any)}
+              key={`post-${idea?.id || index}`}
+            >
+              <Idea idea={idea} />
+            </TouchableOpacity>
+          ))}
+          {isFetchingNextPage &&
+            [1, 2, 3].map((idea) => (
+              <IdeaLoading key={`idea-loading-${idea}`} />
+            ))}
+          {isFetchingNextPage || !hasNextPage ? null : (
+            <InView onInView={fetchNextPage} />
+          )}
         </View>
       </ScrollView>
     </View>

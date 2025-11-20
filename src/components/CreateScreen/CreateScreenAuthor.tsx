@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { Text, View } from "../Themed";
 import { Icon } from "../Icon";
 import { Colors } from "@/constants/colors";
-import { styles as postHeaderStyles } from "@/components/Post/PostHeader";
+import { styles as postHeaderStyles } from "@/components/CommentsScreen/CommentHeader";
 import { RootState } from "@/constants/reduxStore";
 import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
 
@@ -11,30 +11,30 @@ const styles = StyleSheet.create({
   imageProfile: {
     ...postHeaderStyles.imageProfile,
     height: 24,
-    width: 24
+    width: 24,
   },
   postUserIcon: {
     left: "50%",
     position: "absolute",
     top: "50%",
-    transform: [{ translateX: -12 }, { translateY: -12 }] as any
+    transform: [{ translateX: -12 }, { translateY: -12 }] as any,
   },
   postUserIconCircle: {
     left: "50%",
     position: "absolute",
     top: "50%",
-    transform: [{ translateX: -9 }, { translateY: -9 }] as any
+    transform: [{ translateX: -9 }, { translateY: -9 }] as any,
   },
   postUserInformation: {
     ...postHeaderStyles.postUserInformation,
-    justifyContent: "flex-start"
+    justifyContent: "flex-start",
   },
   userName: {
     ...postHeaderStyles.userName,
     color: Colors.light.majorelleBlue,
     fontSize: 12,
-    fontWeight: "bold"
-  }
+    fontWeight: "bold",
+  },
 });
 
 export function CreateScreenAuthor() {
@@ -42,9 +42,9 @@ export function CreateScreenAuthor() {
 
   return (
     <View style={styles.postUserInformation}>
-      {user.userProfile.icon ? (
+      {user.icon ? (
         <Image
-          source={{ uri: getImgWithTimestamp(user?.userProfile?.icon) }}
+          source={{ uri: getImgWithTimestamp(user?.icon) }}
           style={styles.imageProfile}
         />
       ) : (
@@ -57,8 +57,8 @@ export function CreateScreenAuthor() {
               styles.postUserIcon,
               {
                 zIndex: 1,
-                borderRadius: 9999
-              }
+                borderRadius: 9999,
+              },
             ]}
           />
           <View
@@ -68,13 +68,13 @@ export function CreateScreenAuthor() {
                 width: 18,
                 height: 18,
                 borderRadius: 9999,
-                backgroundColor: Colors.light.majorelleBlue
-              }
+                backgroundColor: Colors.light.majorelleBlue,
+              },
             ]}
           />
         </View>
       )}
-      <Text style={styles.userName}>{user.username}</Text>
+      <Text style={styles.userName}>{user.user.username}</Text>
     </View>
   );
 }

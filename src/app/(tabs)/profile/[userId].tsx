@@ -1,46 +1,50 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef } from "react";
-import { View, PanResponder } from "react-native";
+import { View, PanResponder, ScrollView } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ContentTabs, Tab } from "@/components/ContentTabs";
 import { ProfileAbout } from "@/components/ProfileScreen/ProfileAbout";
-import { ProfilePosts } from "@/components/ProfileScreen/ProfilePosts";
+import { ProfileIdeas } from "@/components/ProfileScreen/ProfileIdeas";
 import { Colors } from "@/constants/colors";
 import { ProfileHeader } from "@/components/ProfileScreen/ProfileHeader";
 import { api } from "@/constants/api";
 import { UserState } from "@/features/auth/userSlice";
 import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
-import { setActualTab } from "@/features/profile/profileSlice"; // <- sua action de redux
+import { setActualTab } from "@/features/profile/profileSlice";
 import { ProfileHeaderLoading } from "@/components/ProfileScreen/ProfileHeaderLoading";
-import { ConfirmationModalProvider } from "@/context/ConfirmationModalContext";
+import { usePullToRefresh } from "@/hooks/usePullToRefresh";
 
 export default function ProfileScreen() {
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
   const { userId } = useLocalSearchParams<{ userId: string }>();
-  const { data, isLoading, isError } = useQuery({
+  const {
+    data,
+    isLoading,
+    isError,
+    refetch: refetchUser,
+  } = useQuery({
     queryKey: ["user", userId],
     queryFn: async () => {
       const response = await api.get<UserState>(`/user/${userId}`);
       return response.data;
     },
-    enabled: !!userId
+    enabled: !!userId,
   });
-
   if (isError) router.push("/feed");
 
   const actualTab = useSelector(
-    (state: any) => state.profile.actualTab
+    (state: any) => state.profile.actualTab,
   ) as Tab<"profile">["key"];
-
   const tabs: Tab<"profile">[] = [
-    { name: "Postagens", key: "posts" },
-    { name: "Sobre", key: "about" }
+    { name: "Ideias", key: "ideas" },
+    { name: "Sobre", key: "about" },
   ];
 
   const tabComponents = {
-    posts: ProfilePosts,
-    about: ProfileAbout
+    ideas: ProfileIdeas,
+    about: ProfileAbout,
   };
 
   const tabKeys = tabs.map((tab) => tab.key);
@@ -61,37 +65,57 @@ export default function ProfileScreen() {
         } else if (gestureState.dx > 50 && currentIndex > 0) {
           dispatch(setActualTab(tabKeys[currentIndex - 1]));
         }
-      }
-    })
+      },
+    }),
   ).current;
+
+  const handleRefresh = async () => {
+    await queryClient.invalidateQueries({ queryKey: ["user", userId] });
+    await queryClient.invalidateQueries({
+      queryKey: ["ideas", { authorId: userId }],
+    });
+    await refetchUser();
+  };
+
+  const { refreshControl } = usePullToRefresh({
+    onRefresh: handleRefresh,
+  });
+
   const ActualTab = tabComponents[actualTab];
 
   return (
-    <View
-      style={{ backgroundColor: Colors.light.background, flex: 1 }}
+    <ScrollView
+      style={{
+        backgroundColor: Colors.light.background,
+        flex: 1,
+      }}
+      refreshControl={refreshControl}
       {...panResponder.panHandlers}
     >
-      {isLoading && !data && <ProfileHeaderLoading id={userId} />}
-      <ConfirmationModalProvider>
+      <View
+        style={{
+          flex: 1,
+          gap: 8,
+        }}
+      >
+        {isLoading && !data && <ProfileHeaderLoading id={userId} />}
         {!isLoading && data && (
           <ProfileHeader
-            isFollowing={data.userProfile.isFollowing}
-            icon={getImgWithTimestamp(data.userProfile.icon!)}
-            displayName={data.userProfile.displayName}
-            backgroundImage={getImgWithTimestamp(
-              data.userProfile.backgroundImage!
-            )}
-            username={data.username}
+            isFollowing={data.isFollowing}
+            icon={getImgWithTimestamp(data.icon!)}
+            displayName={data.displayName}
+            backgroundImage={getImgWithTimestamp(data.backgroundImage!)}
+            username={data.user.username}
             id={data.id}
-            userProfileId={data.userProfile.id}
-            followersCount={data.userProfile.followersCount}
-            followingCount={data.userProfile.followingCount}
+            userProfileId={data.id}
+            followersCount={data.followers}
+            followingCount={data.following}
             onlyView
           />
         )}
         <ContentTabs tabs={tabs} tabType="profile" />
         <ActualTab userId={userId} user={data} />
-      </ConfirmationModalProvider>
-    </View>
+      </View>
+    </ScrollView>
   );
 }

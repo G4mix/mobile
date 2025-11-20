@@ -15,14 +15,14 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     height: 16,
     position: "absolute",
-    width: 16
+    width: 16,
   },
   container: {
     alignItems: "center",
     height: 100,
     justifyContent: "center",
     position: "fixed",
-    width: "100%"
+    width: "100%",
   },
   root: {
     alignItems: "center",
@@ -32,22 +32,22 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     position: "fixed",
     width: "100%",
-    zIndex: 9999
+    zIndex: 9999,
   },
   title: {
     color: Colors.light.majorelleBlue,
     fontSize: 20,
-    fontWeight: "bold"
-  }
+    fontWeight: "bold",
+  },
 });
 
 export function SpinLoading({
-  message = "Carregando..."
+  message = "Carregando...",
 }: {
   message?: string;
 }) {
   const fadeAnimations = useRef(
-    Array.from({ length: CIRCLE_COUNT }, () => new Animated.Value(0))
+    Array.from({ length: CIRCLE_COUNT }, () => new Animated.Value(0)),
   ).current;
 
   useEffect(() => {
@@ -60,18 +60,18 @@ export function SpinLoading({
                 toValue: 1, // Mais visível
                 duration: ANIMATION_DURATION * 0.4,
                 easing: Easing.inOut(Easing.ease),
-                useNativeDriver: true
+                useNativeDriver: true,
               }),
               Animated.timing(anim, {
                 toValue: 0.3, // Menos visível
                 duration: ANIMATION_DURATION * 0.6,
                 easing: Easing.inOut(Easing.ease),
-                useNativeDriver: true
-              })
-            ])
+                useNativeDriver: true,
+              }),
+            ]),
           ).start();
         },
-        (ANIMATION_DURATION / CIRCLE_COUNT) * i
+        (ANIMATION_DURATION / CIRCLE_COUNT) * i,
       );
     });
   }, [fadeAnimations]);
@@ -88,7 +88,7 @@ export function SpinLoading({
 
             const scale = anim.interpolate({
               inputRange: [0.3, 1],
-              outputRange: [MIN_SCALE, MAX_SCALE] // Menor quando menos visível, maior quando mais visível
+              outputRange: [MIN_SCALE, MAX_SCALE], // Menor quando menos visível, maior quando mais visível
             });
 
             return (
@@ -102,9 +102,9 @@ export function SpinLoading({
                     transform: [
                       { translateX: x },
                       { translateY: y },
-                      { scale } // Anima o tamanho sem erro do Native Driver
-                    ]
-                  }
+                      { scale }, // Anima o tamanho sem erro do Native Driver
+                    ],
+                  },
                 ]}
               />
             );

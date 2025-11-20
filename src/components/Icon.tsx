@@ -38,12 +38,15 @@ export type IconName =
   | "user"
   | "user-circle"
   | "user-group"
-  | "x-mark";
+  | "x-mark"
+  | "bell"
+  | "bell-slash"
+  | "bell-alert";
 
 export const Icon = createIconSetFromIcoMoon(
   icoMoonConfig,
   "heroicons",
-  "heroicons.ttf"
+  "heroicons.ttf",
 ) as React.ComponentType<{
   name: IconName;
   size?: number;

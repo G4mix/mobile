@@ -4,7 +4,7 @@ import {
   StyleSheet,
   TextInput,
   TextInputFocusEventData,
-  TextInputSubmitEditingEventData
+  TextInputSubmitEditingEventData,
 } from "react-native";
 import { forwardRef, ReactNode } from "react";
 import { Text, View } from "./Themed";
@@ -22,7 +22,7 @@ type TagsProps = {
   onBlur?: (e?: NativeSyntheticEvent<TextInputFocusEventData>) => void;
   returnKeyType?: ReturnKeyTypeOptions;
   onSubmitEditing?: (
-    e: NativeSyntheticEvent<TextInputSubmitEditingEventData>
+    e: NativeSyntheticEvent<TextInputSubmitEditingEventData>,
   ) => void;
   disabled?: boolean;
 };
@@ -38,30 +38,30 @@ export const styles = StyleSheet.create({
     flexWrap: "wrap",
     gap: 8,
     padding: 12,
-    width: "100%"
+    width: "100%",
   },
   input: {
     backgroundColor: "transparent",
     display: "flex",
     flexGrow: 1,
     minHeight: 0,
-    padding: 0
+    padding: 0,
   },
   inputLabel: {
     color: Colors.light.majorelleBlue,
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   invalid: {
-    borderColor: "red"
+    borderColor: "red",
   },
   root: {
     display: "flex",
     gap: 4,
-    width: "100%"
+    width: "100%",
   },
   valid: {
-    borderColor: "green"
-  }
+    borderColor: "green",
+  },
 });
 
 export const Tags = forwardRef<HTMLInputElement, TagsProps>(
@@ -77,9 +77,9 @@ export const Tags = forwardRef<HTMLInputElement, TagsProps>(
       returnKeyType,
       showPlaceholder = true,
       onSubmitEditing,
-      disabled = false
+      disabled = false,
     },
-    ref
+    ref,
   ) => (
     <View style={styles.root}>
       <Text style={styles.inputLabel}>{label}</Text>
@@ -87,7 +87,7 @@ export const Tags = forwardRef<HTMLInputElement, TagsProps>(
         style={[
           styles.container,
           isValid === "valid" ? styles.valid : {},
-          isValid === "invalid" ? styles.invalid : {}
+          isValid === "invalid" ? styles.invalid : {},
         ]}
       >
         <Icon
@@ -104,7 +104,7 @@ export const Tags = forwardRef<HTMLInputElement, TagsProps>(
             display: "flex",
             width: 24,
             height: 24,
-            justifyContent: "center"
+            justifyContent: "center",
           }}
         />
         {children}
@@ -126,5 +126,5 @@ export const Tags = forwardRef<HTMLInputElement, TagsProps>(
         )}
       </View>
     </View>
-  )
+  ),
 );

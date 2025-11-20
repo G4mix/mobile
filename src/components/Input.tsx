@@ -6,7 +6,7 @@ import {
   TextInputFocusEventData,
   ReturnKeyTypeOptions,
   TextInputSubmitEditingEventData,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import React, { forwardRef } from "react";
 import { Text } from "@/components/Themed";
@@ -30,7 +30,7 @@ type InputProps = {
   labelColor?: string;
   borderWidth?: number;
   onSubmitEditing?: (
-    e: NativeSyntheticEvent<TextInputSubmitEditingEventData>
+    e: NativeSyntheticEvent<TextInputSubmitEditingEventData>,
   ) => void;
   editable?: boolean;
   value?: string;
@@ -45,36 +45,36 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 8,
     padding: 12,
-    width: "100%"
+    width: "100%",
   },
   errorMessage: {
     alignItems: "center",
     display: "flex",
     flexDirection: "row",
     gap: 4,
-    paddingLeft: 6
+    paddingLeft: 6,
   },
   input: {
     backgroundColor: "transparent",
     display: "flex",
     flexGrow: 1,
     minHeight: 0,
-    padding: 0
+    padding: 0,
   },
   inputLabel: {
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   invalid: {
-    borderColor: "red"
+    borderColor: "red",
   },
   root: {
     display: "flex",
     gap: 4,
-    width: "100%"
+    width: "100%",
   },
   valid: {
-    borderColor: "green"
-  }
+    borderColor: "green",
+  },
 });
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
@@ -97,9 +97,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       returnKeyType,
       onSubmitEditing,
       editable,
-      value
+      value,
     },
-    ref
+    ref,
   ) => (
     <View style={styles.root}>
       {label && (
@@ -113,10 +113,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           {
             borderColor: color,
             borderWidth,
-            flexDirection: iconRight ? "row-reverse" : "row"
+            flexDirection: iconRight ? "row-reverse" : "row",
           },
           isValid === "valid" ? styles.valid : {},
-          isValid === "invalid" ? styles.invalid : {}
+          isValid === "invalid" ? styles.invalid : {},
         ]}
       >
         {icon &&
@@ -136,7 +136,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                   display: "flex",
                   width: 24,
                   height: 24,
-                  justifyContent: "center"
+                  justifyContent: "center",
                 }}
               />
             </TouchableOpacity>
@@ -151,7 +151,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                 display: "flex",
                 width: 24,
                 height: 24,
-                justifyContent: "center"
+                justifyContent: "center",
               }}
             />
           ))}
@@ -177,5 +177,5 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         </View>
       )}
     </View>
-  )
+  ),
 );

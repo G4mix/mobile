@@ -1,25 +1,37 @@
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, ViewStyle } from "react-native";
 import { Colors } from "@/constants/colors";
-import { Text } from "./Themed";
+import { Text, View } from "./Themed";
 
 type TagProps = {
   onPress?: () => void;
   disabled?: boolean;
   name: string;
+  fontSize?: number;
+  style?: ViewStyle;
+  color?: string;
 };
 
-export function Tag({ name, onPress, disabled = false }: TagProps) {
+export function Tag({
+  name,
+  onPress,
+  disabled = false,
+  fontSize,
+  color = Colors.light.white,
+  style = {},
+}: TagProps) {
+  const Button = onPress ? TouchableOpacity : View;
   return (
-    <TouchableOpacity
+    <Button
       style={{
         backgroundColor: Colors.light.majorelleBlue,
         padding: 6,
         borderRadius: 8,
-        opacity: disabled ? 0.7 : 1
+        opacity: disabled ? 0.7 : 1,
+        ...style,
       }}
       onPress={onPress}
     >
-      <Text style={{ color: "white" }}>{name}</Text>
-    </TouchableOpacity>
+      <Text style={{ color, fontSize }}>{name}</Text>
+    </Button>
   );
 }

@@ -11,7 +11,7 @@ export type Option = {
 export type FloatingOptionsContextType = {
   showFloatingOptions: ({
     options,
-    optionProps
+    optionProps,
   }: {
     options: Option[];
     optionProps: object;
@@ -25,7 +25,7 @@ export const FloatingOptionsContext = createContext<
 type FloatingOptionsProviderProps = { children: React.ReactNode };
 
 export function FloatingOptionsProvider({
-  children
+  children,
 }: FloatingOptionsProviderProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [floatingOptionsProps, setFloatingOptionsProps] = useState<{
@@ -33,26 +33,26 @@ export function FloatingOptionsProvider({
     optionProps: object;
   }>({
     optionProps: {},
-    options: []
+    options: [],
   });
 
   const showFloatingOptions = ({
     options,
-    optionProps
+    optionProps,
   }: {
     options: Option[];
     optionProps: object;
   }) => {
     setFloatingOptionsProps({
       options,
-      optionProps
+      optionProps,
     });
     setIsVisible(true);
   };
 
   const contextValue = useMemo(
     () => ({ showFloatingOptions }),
-    [showFloatingOptions]
+    [showFloatingOptions],
   );
 
   return (

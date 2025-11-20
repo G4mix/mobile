@@ -13,13 +13,13 @@ export type ToastProps = {
 const styles = StyleSheet.create({
   text: {
     color: Colors.light.background,
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   toast: {
     borderRadius: 5,
     marginBottom: 8,
-    padding: 10
-  }
+    padding: 10,
+  },
 });
 
 export function Toast({ message, animation }: ToastProps) {
@@ -34,11 +34,11 @@ export function Toast({ message, animation }: ToastProps) {
             {
               translateX: animation.interpolate({
                 inputRange: [0, 1],
-                outputRange: [-100, 0]
-              })
-            }
-          ]
-        }
+                outputRange: [-100, 0],
+              }),
+            },
+          ],
+        },
       ]}
     >
       <Text style={styles.text}>{message}</Text>

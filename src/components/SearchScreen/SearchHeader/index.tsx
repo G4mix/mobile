@@ -19,14 +19,14 @@ const styles = StyleSheet.create({
     gap: 10,
     paddingBlock: 8,
     paddingInline: 16,
-    width: "100%"
+    width: "100%",
   },
   header: {
     left: 0,
     padding: 16,
     position: "fixed",
     top: 0,
-    width: "100%"
+    width: "100%",
   },
   input: {
     backgroundColor: "transparent",
@@ -34,13 +34,13 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     fontSize: 14,
     minHeight: 0,
-    padding: 0
-  }
+    padding: 0,
+  },
 });
 
 export function SearchHeader({
   onChangeText,
-  onSubmitEditing
+  onSubmitEditing,
 }: SearchHeaderProps) {
   return (
     <View style={styles.header}>
@@ -52,7 +52,7 @@ export function SearchHeader({
           style={{
             display: "flex",
             justifyContent: "center",
-            padding: 4
+            padding: 4,
           }}
         />
         <TextInput

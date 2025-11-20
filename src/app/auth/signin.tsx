@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     gap: 32,
-    justifyContent: "center"
+    justifyContent: "center",
   },
   container: {
     alignItems: "center",
@@ -34,18 +34,18 @@ const styles = StyleSheet.create({
     gap: 16,
     justifyContent: "center",
     paddingLeft: 16,
-    paddingRight: 16
+    paddingRight: 16,
   },
   passwordContainer: {
     display: "flex",
     gap: 4,
-    width: "100%"
+    width: "100%",
   },
   title: {
     color: Colors.light.russianViolet,
     fontSize: 20,
-    fontWeight: "bold"
-  }
+    fontWeight: "bold",
+  },
 });
 
 export default function LoginScreen() {
@@ -54,8 +54,8 @@ export default function LoginScreen() {
   const { watch, setValue, handleSubmit } = useForm<FormData>({
     defaultValues: {
       email: "",
-      password: ""
-    }
+      password: "",
+    },
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -68,18 +68,19 @@ export default function LoginScreen() {
     const data = await handleRequest<{
       accessToken: string;
       refreshToken: string;
-      user: UserState;
+      userProfile: UserState;
     }>({
       requestFn: async () =>
         api.post("/auth/signin", { password, email }, {
-          skipAuth: true
+          skipAuth: true,
         } as any),
       showToast,
-      setIsLoading
+      setIsLoading,
     });
     if (!data) return;
-    dispatch(setUser(data.user));
-    await setItem("user", JSON.stringify(data.user));
+
+    dispatch(setUser(data.userProfile));
+    await setItem("user", JSON.stringify(data.userProfile));
     await setItem("accessToken", data.accessToken);
     await setItem("refreshToken", data.refreshToken);
     router.replace("/feed");

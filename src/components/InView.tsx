@@ -3,7 +3,7 @@ import {
   View,
   useWindowDimensions,
   findNodeHandle,
-  UIManager
+  UIManager,
 } from "react-native";
 
 type InViewProps = {

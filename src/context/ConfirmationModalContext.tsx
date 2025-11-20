@@ -19,7 +19,7 @@ export const ConfirmationModalContext = createContext<
 type ConfirmationModalProviderProps = { children: React.ReactNode };
 
 export function ConfirmationModalProvider({
-  children
+  children,
 }: ConfirmationModalProviderProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [confirmationModalProps, setConfirmationModalProps] =
@@ -27,27 +27,27 @@ export function ConfirmationModalProvider({
       title: "",
       content: "",
       actionName: "",
-      handleConfirm: () => undefined
+      handleConfirm: () => undefined,
     });
 
   const showConfirmationModal = ({
     title,
     content,
     actionName,
-    handleConfirm
+    handleConfirm,
   }: ConfirmationProps) => {
     setConfirmationModalProps({
       title,
       content,
       actionName,
-      handleConfirm
+      handleConfirm,
     });
     setIsVisible(true);
   };
 
   const contextValue = useMemo(
     () => ({ showConfirmationModal }),
-    [showConfirmationModal]
+    [showConfirmationModal],
   );
 
   return (

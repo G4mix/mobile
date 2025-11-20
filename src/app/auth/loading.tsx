@@ -39,10 +39,10 @@ export default function AuthLoadingScreen() {
     }>({
       requestFn: async () =>
         api.post(`/auth/social-login/${provider}`, { token }, {
-          skipAuth: true
+          skipAuth: true,
         } as any),
       showToast,
-      setIsLoading
+      setIsLoading,
     });
 
     if (!data) {

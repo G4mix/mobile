@@ -4,18 +4,16 @@
     "slug": "Gamix",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./src/assets/images/favicon.png",
+    "icon": "./src/assets/images/icon.png",
     "scheme": "com.gamix",
-    "platforms": [
-      "ios",
-      "android"
-    ],
+    "owner": "g4mix",
+    "platforms": ["ios", "android"],
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
-      "image": "./src/assets/images/splash-icon.png",
+      "image": "./src/assets/images/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#D8CEFA"
     },
     "ios": {
       "bundleIdentifier": "com.gamix",
@@ -32,8 +30,8 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./src/assets/images/favicon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./src/assets/images/adaptive-icon.png",
+        "backgroundColor": "#D8CEFA"
       },
       "package": "com.gamix"
     },
@@ -46,7 +44,8 @@
       "expo-router",
       "expo-image-picker",
       [
-        "expo-font", {
+        "expo-font",
+        {
           "fonts": ["./src/assets/heroicons/heroicons.ttf"]
         }
       ],

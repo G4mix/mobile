@@ -21,11 +21,9 @@ import { CreateScreenImage } from "@/components/CreateScreen/CreateScreenImage";
 import { api } from "@/constants/api";
 import { handleRequest } from "@/utils/handleRequest";
 import { objectToFormData } from "@/utils/objectToFormData";
-import { PostType } from "@/components/Post";
+import { IdeaType } from "@/components/Idea";
 import { SpinLoading } from "@/components/SpinLoading";
 import { useFeedQueries } from "@/hooks/useFeedQueries";
-import { CreateScreenEvent } from "@/components/CreateScreen/CreateScreenEvent";
-import { getDate } from "@/utils/getDate";
 import { isValidPostContent, isValidPostTitle } from "@/constants/validations";
 import { RootState } from "@/constants/reduxStore";
 import { SuccessModal } from "@/components/SuccessModal";
@@ -36,7 +34,7 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 18,
     minHeight: Dimensions.get("window").height - 60,
-    padding: 20
+    padding: 20,
   },
   postContent: {
     alignItems: "center",
@@ -52,19 +50,19 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     minHeight: 230,
     paddingBottom: 16,
-    position: "relative"
+    position: "relative",
   },
   postContentRoot: {
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
   },
   scroll: {
     flex: 1,
-    marginBottom: 60
+    marginBottom: 60,
   },
   textArea: {
-    borderWidth: 0
-  }
+    borderWidth: 0,
+  },
 });
 
 export type CreateScreenFormData = {
@@ -73,17 +71,16 @@ export type CreateScreenFormData = {
   images?: CameraImage[];
   links?: string[];
   tags?: string[];
-  event?: Partial<PostType["event"]>;
 };
 
 export default function CreateScreen() {
   const [isAddLinkVisible, setIsAddLinkVisible] = useState(false);
   const [isCameraVisible, setIsCameraVisible] = useState(false);
-  const [isAddEventVisible, setIsAddEventVisible] = useState(false);
   const [isSuccessVisible, setIsSuccessVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { addNewPost, updatePost } = useFeedQueries();
-  const { postId } = useLocalSearchParams<{ postId: string }>();
+  const { invalidateAllIdeas, invalidateIdeaQuery, invalidateUserQuery } =
+    useFeedQueries();
+  const { ideaId } = useLocalSearchParams<{ ideaId: string }>();
   const user = useSelector((state: RootState) => state.user);
 
   const { watch, setValue, handleSubmit } = useForm<CreateScreenFormData>();
@@ -91,39 +88,32 @@ export default function CreateScreen() {
   const titleRef = useRef<HTMLInputElement>(null);
   const contentRef = useRef<HTMLInputElement>(null);
 
-  const { data: post } = useQuery({
-    queryKey: ["post", postId],
+  const { data: idea } = useQuery({
+    queryKey: ["idea", ideaId],
     queryFn: async () => {
-      const response = await api.get<PostType>(`/post/${postId}`);
+      const response = await api.get<IdeaType>(`/idea/${ideaId}`);
       return response.data;
     },
-    enabled: !!postId
+    enabled: !!ideaId,
   });
 
   const getPost = () => {
-    if (!post || !postId) return;
-    setValue("title", post.title);
-    setValue("content", post.content);
+    if (!idea || !ideaId) return;
+    setValue("title", idea.title);
+    setValue("content", idea.content);
     setValue(
       "images",
-      post.images.map((img) => {
-        const extension = img.src.split(".").pop()?.split("?")[0] || "jpg";
+      idea.images.map((img: string) => {
+        const extension = img.split(".").pop()?.split("?")[0] || "jpg";
         return {
-          uri: img.src,
-          name: img.id,
-          type: `image/${extension === "jpg" ? "jpeg" : extension}`
+          uri: img,
+          name: img,
+          type: `image/${extension === "jpg" ? "jpeg" : extension}`,
         };
-      })
+      }),
     );
-    setValue(
-      "links",
-      post.links.map((l) => l.url)
-    );
-    setValue(
-      "tags",
-      post.tags.map((t) => t.name)
-    );
-    setValue("event", post.event);
+    setValue("links", idea.links);
+    setValue("tags", idea.tags);
   };
 
   const clearFields = () => {
@@ -134,24 +124,23 @@ export default function CreateScreen() {
     setValue("tags", []);
     setValue("images", []);
     setValue("links", []);
-    setValue("event", undefined);
   };
 
   useEffect(() => {
-    getPost();
-    return clearFields;
-  }, [post, postId]);
+    if (idea && ideaId) {
+      getPost();
+    }
+  }, [idea, ideaId]);
 
   const createOrUpdatePost = async ({
     title,
     content,
-    event,
     images,
     links,
-    tags
+    tags,
   }: CreateScreenFormData) => {
     if (isLoading) return;
-    if (!title && !content && !images && !links && !event) {
+    if (!title && !content && !images && !links) {
       showToast({ message: "Você precisa preencher ao menos um campo!" });
       setIsLoading(false);
       return;
@@ -162,34 +151,33 @@ export default function CreateScreen() {
       images,
       links,
       tags,
-      event
     });
 
-    const data = await handleRequest<PostType>({
+    const data = await handleRequest<IdeaType>({
       requestFn: async () =>
-        api[post && postId ? "patch" : "post"](
-          `/post${post && postId ? `?postId=${postId}` : ""}`,
+        api[idea && ideaId ? "patch" : "post"](
+          `/idea${idea && ideaId ? `/${ideaId}` : ""}`,
           formData,
           {
             headers: {
-              "Content-Type": "multipart/form-data"
-            }
-          }
+              "Content-Type": "multipart/form-data",
+            },
+          },
         ),
       showToast,
-      setIsLoading
+      setIsLoading,
     });
     if (!data) return;
-    if (post && postId) {
-      updatePost(data);
-    } else {
-      addNewPost(data);
+    if (idea && ideaId) {
+      invalidateIdeaQuery(ideaId);
     }
+    invalidateAllIdeas();
+    invalidateUserQuery(user.id);
     clearFields();
     setIsSuccessVisible(true);
     await timeout(1000);
     setIsSuccessVisible(false);
-    router.push("/feed");
+    router.push("/(tabs)/feed");
   };
 
   const onSubmit = handleSubmit(createOrUpdatePost);
@@ -198,19 +186,18 @@ export default function CreateScreen() {
   const content = watch("content");
   const images = watch("images");
   const links = watch("links");
-  const event = watch("event");
 
-  const postContentActions: { name: IconName; handleClick?: () => void }[] = [
+  const ideaContentActions: { name: IconName; handleClick?: () => void }[] = [
     {
       name: "camera",
       handleClick:
         images && images.length >= 8
           ? () =>
               showToast({ message: "O máximo de imagens é 5.", color: "warn" })
-          : () => setIsCameraVisible(true)
+          : () => setIsCameraVisible(true),
     },
     {
-      name: "chart-bar"
+      name: "chart-bar",
     },
     {
       name: "link",
@@ -218,34 +205,23 @@ export default function CreateScreen() {
         links && links.length >= 5
           ? () =>
               showToast({ message: "O máximo de links é 5.", color: "warn" })
-          : () => setIsAddLinkVisible((prevValue) => !prevValue)
+          : () => setIsAddLinkVisible((prevValue) => !prevValue),
     },
     {
-      name: "code-bracket"
+      name: "code-bracket",
     },
-    {
-      name: "calendar",
-      handleClick: () => {
-        setIsAddEventVisible((prevValue) => !prevValue);
-        const actualDate = getDate().toISOString();
-        setValue("event", {
-          startDate: actualDate,
-          endDate: actualDate
-        });
-      }
-    }
   ];
 
   const handleDeleteImage = (src: string) => {
     const currentImages = images || [];
     setValue(
       "images",
-      currentImages.filter((currentImage) => currentImage.uri !== src)
+      currentImages.filter((currentImage) => currentImage.uri !== src),
     );
   };
 
-  if (post && post.author.id !== user.userProfile.id) {
-    router.push("/feed");
+  if (idea && idea.author.id !== user.id) {
+    router.push("/(tabs)/feed");
     return null;
   }
 
@@ -253,10 +229,10 @@ export default function CreateScreen() {
     <ScrollView style={styles.scroll}>
       <View style={styles.container}>
         {isLoading && (
-          <SpinLoading message={postId ? "Atualizando..." : "Publicando..."} />
+          <SpinLoading message={ideaId ? "Atualizando..." : "Publicando..."} />
         )}
         {isSuccessVisible && (
-          <SuccessModal message={postId ? "Atualizado!" : "Publicado!"} />
+          <SuccessModal message={ideaId ? "Atualizado!" : "Publicado!"} />
         )}
         <CreateScreenHeader
           isLoading={isLoading}
@@ -266,9 +242,8 @@ export default function CreateScreen() {
             content,
             images,
             links,
-            event
           }}
-          post={post}
+          post={idea}
         />
         <CreateScreenAuthor />
         <Input
@@ -290,7 +265,7 @@ export default function CreateScreen() {
               styles.postContent,
               isValidPostContent(content) === "invalid"
                 ? { borderColor: "red" }
-                : {}
+                : {},
             ]}
           >
             <TextArea
@@ -299,9 +274,10 @@ export default function CreateScreen() {
                 styles.textArea,
                 isValidPostContent(content) === "invalid"
                   ? { color: "red" }
-                  : {}
+                  : {},
               ]}
               ref={contentRef}
+              value={content}
               onChangeText={(value: string) =>
                 setValue("content", value.slice(0, 700))
               }
@@ -313,14 +289,24 @@ export default function CreateScreen() {
                 handleDeleteImage={handleDeleteImage}
               />
             ))}
-            {links?.map((link) => (
-              <CreateScreenPostLink
-                setValue={setValue as any}
-                links={links}
-                link={link}
-                key={`post-link-${link}`}
-              />
-            ))}
+            <View
+              style={{
+                width: "100%",
+                flexDirection: "row",
+                gap: 8,
+                paddingHorizontal: 16,
+                flexWrap: "wrap",
+              }}
+            >
+              {links?.map((link) => (
+                <CreateScreenPostLink
+                  setValue={setValue as any}
+                  links={links}
+                  link={link}
+                  key={`post-link-${link}`}
+                />
+              ))}
+            </View>
             <CreateScreenAddLink
               isAddLinkVisible={isAddLinkVisible}
               setIsAddLinkVisible={setIsAddLinkVisible}
@@ -335,7 +321,7 @@ export default function CreateScreen() {
             />
           </View>
           <CreateScreenContentActions
-            postContentActions={postContentActions}
+            postContentActions={ideaContentActions}
             style={
               isValidPostContent(content) === "invalid"
                 ? { borderColor: "red" }
@@ -344,11 +330,6 @@ export default function CreateScreen() {
           />
         </View>
         <CreateScreenTags setValue={setValue} watch={watch} />
-        <CreateScreenEvent
-          isAddEventVisible={isAddEventVisible}
-          setValue={setValue}
-          watch={watch}
-        />
       </View>
     </ScrollView>
   );

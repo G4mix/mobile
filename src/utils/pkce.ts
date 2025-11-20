@@ -9,14 +9,14 @@ export const generateCodeVerifier = async () => {
 };
 
 export const generateCodeChallenge = async ({
-  codeVerifier
+  codeVerifier,
 }: {
   codeVerifier: string;
 }) => {
   const hashed = await Crypto.digestStringAsync(
     Crypto.CryptoDigestAlgorithm.SHA256,
     codeVerifier,
-    { encoding: Crypto.CryptoEncoding.BASE64 }
+    { encoding: Crypto.CryptoEncoding.BASE64 },
   );
 
   return hashed.replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");

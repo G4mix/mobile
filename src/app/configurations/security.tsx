@@ -12,17 +12,16 @@ export default function SecurityScreen() {
           position: "relative",
           paddingHorizontal: 16,
           paddingVertical: 24,
-          gap: 16
+          gap: 16,
         }}
       >
         <View>
           <Option
-                position="full"
-                name="Altere sua senha"
-                icon="lock-closed"
-                onPress={() => router.push("/configurations/password")}
-              />
-              
+            position="full"
+            name="Altere sua senha"
+            icon="lock-closed"
+            onPress={() => router.push("/configurations/password")}
+          />
         </View>
         <View>
           <Option

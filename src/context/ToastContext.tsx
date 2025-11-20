@@ -13,7 +13,7 @@ export type ToastContextType = {
 };
 
 export const ToastContext = createContext<ToastContextType | undefined>(
-  undefined
+  undefined,
 );
 
 const styles = StyleSheet.create({
@@ -24,8 +24,8 @@ const styles = StyleSheet.create({
     left: 0,
     position: "absolute",
     right: 0,
-    zIndex: 999
-  }
+    zIndex: 999,
+  },
 });
 
 type ToastProviderProps = { children: React.ReactNode };
@@ -43,20 +43,20 @@ export function ToastProvider({ children }: ToastProviderProps) {
       Animated.timing(animation, {
         toValue: 1,
         duration: 300,
-        useNativeDriver: true
+        useNativeDriver: true,
       }).start();
 
       setTimeout(() => {
         Animated.timing(animation, {
           toValue: 0,
           duration: 300,
-          useNativeDriver: true
+          useNativeDriver: true,
         }).start(() => {
           setToasts((prev) => prev.filter((toast) => toast.id !== id));
         });
       }, duration);
     },
-    []
+    [],
   );
 
   const contextValue = useMemo(() => ({ showToast }), [showToast]);

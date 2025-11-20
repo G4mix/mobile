@@ -3,7 +3,7 @@ import React, {
   SetStateAction,
   useEffect,
   useRef,
-  useState
+  useState,
 } from "react";
 import {
   Modal,
@@ -13,13 +13,11 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
-  TextInput
+  TextInput,
 } from "react-native";
 import { MentionInput } from "react-native-controlled-mentions";
 import { useForm } from "react-hook-form";
 import { router, useLocalSearchParams } from "expo-router";
-import { useDispatch, useSelector } from "react-redux";
-import { useQueryClient } from "@tanstack/react-query";
 import { EmojiPopup } from "react-native-emoji-popup";
 import { Provider as PaperProvider } from "react-native-paper";
 import { Icon } from "../Icon";
@@ -30,9 +28,7 @@ import { api } from "@/constants/api";
 import { useToast } from "@/hooks/useToast";
 import { Button } from "../Button";
 import { Text } from "../Themed";
-import { setLastFetchTime } from "@/features/comments/commentsSlice";
 import { useFeedQueries } from "@/hooks/useFeedQueries";
-import { PostType } from "../Post";
 import { RenderUserSuggestions } from "../RenderUserSugestions";
 import { timeout } from "@/utils/timeout";
 import { InView } from "../InView";
@@ -41,7 +37,7 @@ export const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     flexDirection: "row",
-    gap: 10
+    gap: 10,
   },
   inputRoot: {
     alignItems: "center",
@@ -54,13 +50,13 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 16,
     position: "absolute",
-    width: "100%"
+    width: "100%",
   },
   modalContainer: {
     backgroundColor: "rgba(0, 0, 0, 0.3)",
     flex: 1,
-    justifyContent: "flex-end"
-  }
+    justifyContent: "flex-end",
+  },
 });
 
 function CloseButton({ close }: { close: () => void }) {
@@ -72,7 +68,7 @@ function CloseButton({ close }: { close: () => void }) {
         onPress={close}
         style={{
           paddingVertical: 12,
-          minWidth: "95%"
+          minWidth: "95%",
         }}
       >
         <Text style={{ color: Colors.light.background }}>Fechar</Text>
@@ -84,7 +80,6 @@ function CloseButton({ close }: { close: () => void }) {
 type CommentsModalProps = {
   isVisible: boolean;
   setIsVisible: (value: boolean) => void;
-  commentsCount: number;
   replying: {
     parentComment: string;
     toMark: string;
@@ -102,116 +97,64 @@ type CommentsModalProps = {
 export function CommentsModal({
   isVisible,
   setIsVisible,
-  commentsCount,
   replying,
-  setReplying
+  setReplying,
 }: CommentsModalProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const { updatePost } = useFeedQueries();
-  const queryClient = useQueryClient();
-  const { postId, commentId } = useLocalSearchParams<{
-    postId: string;
+  const { invalidateAllIdeas, invalidateIdeaQuery, invalidateCommentsQuery } =
+    useFeedQueries();
+  const { ideaId, commentId } = useLocalSearchParams<{
+    ideaId: string;
     commentId: string;
   }>();
-  const lastFetchTime = useSelector(
-    (state: any) => state.comments.lastFetchTime
-  );
   const { showToast } = useToast();
   const { watch, setValue, handleSubmit } = useForm<{ content: string }>({
-    defaultValues: { content: "" }
+    defaultValues: { content: "" },
   });
-  const dispatch = useDispatch();
   const inputRef = useRef<TextInput>(null);
   useEffect(() => {
     if (replying.parentComment !== replying.toMark && replying.author) {
       setValue(
         "content",
-        `@[${replying.author.user.username}](${replying.author.id}) `
+        `@[${replying.author.user.username}](${replying.author.id}) `,
       );
     } else {
       setValue("content", "");
     }
   }, [replying.toMark]);
 
-  const addNewComment = (comment: CommentType) => {
-    queryClient.setQueryData(
-      ["comments", { lastFetchTime, postId, commentId }],
-      (oldData: any) => {
-        if (!oldData || !oldData.pages[0]) return oldData;
-
-        const firstPage = oldData.pages[0];
-
-        const updatedData =
-          comment.parentCommentId && !commentId
-            ? [...firstPage.data]
-            : [comment, ...firstPage.data];
-
-        return {
-          ...oldData,
-          pages: [
-            {
-              ...firstPage,
-              data: updatedData,
-              total: comment.parentCommentId
-                ? firstPage.total
-                : firstPage.total + 1
-            },
-            ...oldData.pages.slice(1)
-          ]
-        };
-      }
-    );
-  };
-
-  const updateSinglePost = () => {
-    queryClient.setQueryData<PostType>(["post", postId], (oldData) => {
-      if (!oldData) return oldData;
-
-      return {
-        ...oldData,
-        commentsCount: commentsCount + 1
-      };
-    });
-  };
-
   const createComment = async ({ content }: { content: string }) => {
     if (content.length < 3) return;
-    const queryParams = new URLSearchParams();
-    if (postId) queryParams.append("postId", postId);
-    if (commentId || replying.parentComment !== "") {
-      queryParams.append("commentId", commentId || replying.parentComment);
-    }
-    const queryString = queryParams.toString();
-    const url = `/comment${queryString ? `?${queryString}` : ""}`;
     const data = await handleRequest<CommentType>({
-      requestFn: async () => api.post(url, { content }),
+      requestFn: async () =>
+        api.post("/comment", {
+          ideaId,
+          content,
+          parentCommentId: commentId || replying.parentComment || undefined,
+        }),
       showToast,
-      setIsLoading
+      setIsLoading,
     });
     if (!data) return;
-    addNewComment(data);
     setIsVisible(false);
     setValue("content", "");
     setReplying({
       parentComment: "",
       toMark: "",
-      author: undefined
+      author: undefined,
     });
-    updatePost({ id: postId, commentsCount: commentsCount + 1 });
-    updateSinglePost();
+    invalidateCommentsQuery(ideaId, commentId);
+    invalidateIdeaQuery(ideaId);
+    invalidateAllIdeas();
     if (data.parentCommentId && !commentId) {
       await timeout(500);
-      router.push(`/posts/${data.postId}/comments/${data.parentCommentId}`);
+      router.push(`/ideas/${data.ideaId}/comments/${data.parentCommentId}`);
     }
   };
 
   const content = watch("content");
 
   const onSubmit = handleSubmit(createComment);
-
-  useEffect(() => {
-    dispatch(setLastFetchTime(new Date().toISOString()));
-  }, []);
 
   return (
     <Modal
@@ -236,7 +179,7 @@ export function CommentsModal({
                     contentContainerStyle={{
                       paddingTop: 24,
                       alignItems: "center",
-                      gap: 24
+                      gap: 24,
                     }}
                     closeButton={CloseButton}
                     onEmojiSelected={(emoji) =>
@@ -256,7 +199,7 @@ export function CommentsModal({
                       borderWidth: 0,
                       padding: 0,
                       width: "100%",
-                      maxWidth: 300
+                      maxWidth: 300,
                     }}
                     placeholder="Digite seu comentário"
                     onSubmitEditing={
@@ -279,9 +222,9 @@ export function CommentsModal({
                         ),
                         textStyle: {
                           fontWeight: "bold",
-                          color: Colors.light.majorelleBlue
-                        }
-                      }
+                          color: Colors.light.majorelleBlue,
+                        },
+                      },
                     ]}
                   />
                 </View>

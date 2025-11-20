@@ -1,6 +1,5 @@
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { useRef, useState } from "react";
-import { useSelector } from "react-redux";
 import { useQueryClient } from "@tanstack/react-query";
 import { Icon, IconName } from "../Icon";
 import { Text } from "../Themed";
@@ -15,20 +14,20 @@ import { CommentPageable } from "@/hooks/useComments";
 const styles = StyleSheet.create({
   actionContainer: {
     flexDirection: "row",
-    gap: 10
+    gap: 10,
   },
   actionOption: {
     alignItems: "center",
     display: "flex",
     flexDirection: "row",
-    gap: 4
-  }
+    gap: 4,
+  },
 });
 
 type CommentActionsProps = {
   commentReply: () => void;
   commentId: string;
-  postId: string;
+  ideaId: string;
   liked: boolean;
   likesCount: number;
 };
@@ -36,22 +35,19 @@ type CommentActionsProps = {
 export function CommentActions({
   commentReply,
   commentId,
-  postId,
+  ideaId,
   liked,
-  likesCount
+  likesCount,
 }: CommentActionsProps) {
   const { showToast } = useToast();
   const [isLiked, setIsLiked] = useState(liked);
   const [currentLikesCount, setCurrentLikesCount] = useState(likesCount);
   const [isLoading, setIsLoading] = useState(false);
-  const lastFetchTime = useSelector(
-    (state: any) => state.comments.lastFetchTime
-  );
   const queryClient = useQueryClient();
 
   const addLikeCount = (data: { isLiked: boolean; likesCount: number }) => {
     queryClient.setQueryData(
-      ["comments", { lastFetchTime, postId, commentId }],
+      ["comments", { ideaId, commentId }],
       (oldData: any) => {
         if (!oldData) return oldData;
 
@@ -64,32 +60,35 @@ export function CommentActions({
                 ? {
                     ...comment,
                     isLiked: data.isLiked,
-                    likesCount: data.likesCount
+                    likesCount: data.likesCount,
                   }
-                : comment
-            )
-          }))
+                : comment,
+            ),
+          })),
         };
-      }
+      },
     );
   };
 
   const likeCommentRequest = async (
     newIsLiked: boolean,
-    newLikesCount: number
+    newLikesCount: number,
   ) => {
     if (isLoading) return;
     const data = await handleRequest({
       requestFn: async () =>
-        api.get(`/like/comment?isLiked=${newIsLiked}&commentId=${commentId}`),
+        api.post("/like", {
+          targetLikeId: commentId,
+          likeType: "Comment",
+        }),
       showToast,
       setIsLoading,
-      ignoreErrors: true
+      ignoreErrors: true,
     });
     if (!data) return;
     addLikeCount({
       isLiked: newIsLiked,
-      likesCount: newLikesCount
+      likesCount: newLikesCount,
     });
   };
 
@@ -97,8 +96,8 @@ export function CommentActions({
     debounce(
       (newIsLiked: boolean, newLikesCount: number) =>
         likeCommentRequest(newIsLiked, newLikesCount),
-      700
-    )
+      700,
+    ),
   ).current;
 
   const likeComment = async () => {
@@ -123,8 +122,8 @@ export function CommentActions({
       icon: "hand-thumb-up",
       color: isLiked ? Colors.light.majorelleBlue : Colors.light.russianViolet,
       content: abbreviateNumber(currentLikesCount),
-      handlePress: likeComment
-    }
+      handlePress: likeComment,
+    },
   ];
 
   return (
@@ -141,7 +140,7 @@ export function CommentActions({
               style={{
                 fontSize: 12,
                 color,
-                fontWeight: "medium"
+                fontWeight: "medium",
               }}
             >
               {content}

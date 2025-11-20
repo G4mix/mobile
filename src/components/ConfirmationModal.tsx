@@ -2,7 +2,7 @@ import {
   Modal,
   StyleSheet,
   TouchableWithoutFeedback,
-  View
+  View,
 } from "react-native";
 import { Button } from "./Button";
 import { Text } from "./Themed";
@@ -16,15 +16,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     gap: 24,
     justifyContent: "center",
-    padding: 16
+    padding: 16,
   },
   root: {
     alignItems: "center",
     flexDirection: "column",
     flex: 1,
     justifyContent: "center",
-    padding: 16
-  }
+    padding: 16,
+  },
 });
 
 export function ConfirmationModal({
@@ -33,7 +33,7 @@ export function ConfirmationModal({
   title,
   content,
   handleConfirm,
-  actionName = "Confirmar"
+  actionName = "Confirmar",
 }: {
   isVisible: boolean;
   setIsVisible: (value: boolean) => void;
@@ -60,7 +60,7 @@ export function ConfirmationModal({
                       textAlign: "justify",
                       fontWeight: "medium",
                       fontSize: 16,
-                      color: Colors.light.russianViolet
+                      color: Colors.light.russianViolet,
                     }}
                   >
                     {title}
@@ -69,7 +69,7 @@ export function ConfirmationModal({
                     style={{
                       textAlign: "justify",
                       fontSize: 13.33,
-                      color: Colors.light.russianViolet
+                      color: Colors.light.russianViolet,
                     }}
                   >
                     {content}

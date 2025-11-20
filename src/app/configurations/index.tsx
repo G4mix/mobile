@@ -2,7 +2,6 @@ import { View, ScrollView } from "react-native";
 import { router } from "expo-router";
 import { Option } from "@/components/ConfigurationsScreen/Option";
 import { Colors } from "@/constants/colors";
-import { ConfirmationModalProvider } from "@/context/ConfirmationModalContext";
 import { Logout } from "@/components/ConfigurationsScreen/Logout";
 
 export default function ConfigurationsScreen() {
@@ -14,7 +13,7 @@ export default function ConfigurationsScreen() {
           position: "relative",
           paddingHorizontal: 16,
           paddingVertical: 24,
-          gap: 16
+          gap: 16,
         }}
       >
         <View>
@@ -41,9 +40,7 @@ export default function ConfigurationsScreen() {
             onPress={() => router.push("/privacy-policy")}
           />
         </View>
-        <ConfirmationModalProvider>
-          <Logout />
-        </ConfirmationModalProvider>
+        <Logout />
       </View>
     </ScrollView>
   );

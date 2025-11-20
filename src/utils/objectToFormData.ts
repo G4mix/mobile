@@ -1,14 +1,14 @@
 export const objectToFormData = (
   obj: Record<string, any>,
   form?: FormData,
-  namespace?: string
+  namespace?: string,
 ): FormData => {
   const formData = form || new FormData();
 
   Object.entries(obj).forEach(([property, value]) => {
     const key = namespace ? `${namespace}[${property}]` : property;
 
-    if (value) {
+    if (value !== undefined && value !== null) {
       if (value instanceof Date) {
         formData.append(key, value.toISOString());
       } else if (value instanceof File || value instanceof Blob) {
@@ -19,7 +19,7 @@ export const objectToFormData = (
             (e) =>
               e instanceof File ||
               e instanceof Blob ||
-              (typeof e === "object" && e !== null)
+              (typeof e === "object" && e !== null),
           )
         ) {
           value.forEach((element) => {

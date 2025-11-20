@@ -4,7 +4,7 @@ import {
   TabList,
   TabSlot,
   TabTrigger,
-  TabTriggerSlotProps
+  TabTriggerSlotProps,
 } from "expo-router/ui";
 import {
   Image,
@@ -12,7 +12,7 @@ import {
   StyleProp,
   StyleSheet,
   View,
-  ViewStyle
+  ViewStyle,
 } from "react-native";
 
 import { Href } from "expo-router";
@@ -39,9 +39,9 @@ const TabBarIcon = React.forwardRef<View, TabBarIconProps>((props, ref) => (
         height: props.size,
         flex: 1,
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
       },
-      props.style || {}
+      props.style || {},
     ]}
   >
     {props.userIcon ? (
@@ -54,7 +54,7 @@ const TabBarIcon = React.forwardRef<View, TabBarIconProps>((props, ref) => (
           borderWidth: 1,
           borderColor: props.isFocused
             ? Colors.light.majorelleBlue
-            : Colors.light.russianViolet
+            : Colors.light.russianViolet,
         }}
       />
     ) : (
@@ -85,17 +85,17 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     position: "absolute",
     right: 0,
-    width: "100%"
+    width: "100%",
   },
   tabTrigger: {
     alignItems: "center",
     flex: 1,
-    justifyContent: "center"
-  }
+    justifyContent: "center",
+  },
 });
 
 export default function TabLayout() {
-  const user = useSelector((state: RootState) => state.user);
+  const { icon, id } = useSelector((state: RootState) => state.user);
   const tabs: {
     name: string;
     href: Href;
@@ -108,33 +108,33 @@ export default function TabLayout() {
       name: "feed",
       href: "/feed",
       iconName: "home",
-      size: 28
+      size: 28,
     },
     {
       name: "search",
       href: "/search",
       iconName: "magnifying-glass",
-      size: 28
+      size: 28,
     },
     {
       name: "create",
       href: "/create",
       iconName: "plus-circle",
-      size: 28
+      size: 28,
     },
     {
       name: "team",
       href: "/team",
       iconName: "user-group",
       size: 28,
-      disabled: true
+      disabled: true,
     },
     {
       name: "profile",
-      href: `/profile/${user.userProfile.id}`,
+      href: `/profile/${id}`,
       iconName: "user-circle",
-      size: 28
-    }
+      size: 28,
+    },
   ];
   return (
     <Tabs>
@@ -153,8 +153,8 @@ export default function TabLayout() {
               name={iconName}
               size={size}
               userIcon={
-                href.toString().startsWith("/profile") && user.userProfile.icon
-                  ? user.userProfile.icon
+                href.toString().startsWith("/profile") && icon
+                  ? icon
                   : undefined
               }
             />

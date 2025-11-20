@@ -3,7 +3,7 @@ import {
   View,
   StyleSheet,
   TouchableOpacity,
-  DimensionValue
+  DimensionValue,
 } from "react-native";
 import React from "react";
 import { Text } from "@/components/Themed";
@@ -30,29 +30,29 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 8,
     padding: 12,
-    width: "100%"
+    width: "100%",
   },
   input: {
     backgroundColor: "transparent",
     display: "flex",
     flexGrow: 1,
     minHeight: 0,
-    padding: 0
+    padding: 0,
   },
   inputLabel: {
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   invalid: {
-    borderColor: "red"
+    borderColor: "red",
   },
   root: {
     display: "flex",
     gap: 4,
-    width: "100%"
+    width: "100%",
   },
   valid: {
-    borderColor: "green"
-  }
+    borderColor: "green",
+  },
 });
 
 export function ExternalInput({
@@ -64,7 +64,7 @@ export function ExternalInput({
   isValid = null,
   onPress,
   onChangeText,
-  label
+  label,
 }: ExternalInputProps) {
   return (
     <View style={[styles.root, { width }]}>
@@ -75,10 +75,10 @@ export function ExternalInput({
           styles.container,
           {
             borderColor: color,
-            borderWidth
+            borderWidth,
           },
           isValid === "valid" ? styles.valid : {},
-          isValid === "invalid" ? styles.invalid : {}
+          isValid === "invalid" ? styles.invalid : {},
         ]}
       >
         <TextInput

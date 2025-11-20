@@ -9,20 +9,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flex: 1,
     justifyContent: "center",
-    padding: 20
+    padding: 20,
   },
   link: {
     marginTop: 15,
-    paddingVertical: 15
+    paddingVertical: 15,
   },
   linkText: {
     color: "#2e78b7",
-    fontSize: 14
+    fontSize: 14,
   },
   title: {
     fontSize: 20,
-    fontWeight: "bold"
-  }
+    fontWeight: "bold",
+  },
 });
 
 export default function NotFoundScreen() {

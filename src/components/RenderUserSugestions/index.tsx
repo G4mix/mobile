@@ -1,4 +1,4 @@
-import { ScrollView, Image, Pressable } from "react-native";
+import { ScrollView, Image, Pressable, StyleSheet } from "react-native";
 import { MentionSuggestionsProps } from "react-native-controlled-mentions";
 import { Portal } from "react-native-paper";
 import { Text, View } from "../Themed";
@@ -6,16 +6,23 @@ import { Colors } from "@/constants/colors";
 import { useUsers } from "@/hooks/useUsers";
 import { InView } from "../InView";
 import { Icon } from "../Icon";
-import { styles } from "../Post/PostHeader";
 import { RenderUserSugestionsLoading } from "./RenderUserSugestionsLoading";
 import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
 
+const styles = StyleSheet.create({
+  imageProfile: {
+    borderRadius: 9999,
+    height: 18,
+    width: 18,
+  },
+});
+
 export function RenderUserSuggestions({
   keyword,
-  onSuggestionPress
+  onSuggestionPress,
 }: MentionSuggestionsProps) {
   const { data, fetchNextPage, isFetchingNextPage, hasNextPage } = useUsers({
-    search: keyword || ""
+    search: keyword || "",
   });
   const users = data?.pages?.flatMap((page) => page?.data || []) || [];
   if (typeof keyword !== "string") return null;
@@ -28,7 +35,7 @@ export function RenderUserSuggestions({
           position: "absolute",
           width: "100%",
           borderTopWidth: 1,
-          borderColor: Colors.light.russianViolet
+          borderColor: Colors.light.russianViolet,
         }}
       >
         <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
@@ -38,8 +45,8 @@ export function RenderUserSuggestions({
               focusable={false}
               onPress={() =>
                 onSuggestionPress({
-                  id: user.userProfile.id,
-                  name: user.username
+                  id: user.id,
+                  name: user.user.username,
                 })
               }
               style={{
@@ -47,12 +54,12 @@ export function RenderUserSuggestions({
                 flexDirection: "row",
                 gap: 4,
                 borderBottomWidth: 1,
-                borderColor: Colors.light.periwinkle
+                borderColor: Colors.light.periwinkle,
               }}
             >
-              {user.userProfile.icon ? (
+              {user.icon ? (
                 <Image
-                  source={{ uri: getImgWithTimestamp(user.userProfile.icon) }}
+                  source={{ uri: getImgWithTimestamp(user.icon) }}
                   style={styles.imageProfile}
                 />
               ) : (
@@ -64,9 +71,9 @@ export function RenderUserSuggestions({
               )}
               <View style={{ flexDirection: "column", gap: 4 }}>
                 <Text style={{ fontWeight: "bold" }}>
-                  {user.userProfile.displayName || user.username}
+                  {user.displayName || user.user.username}
                 </Text>
-                {user.userProfile.displayName && <Text>{user.username}</Text>}
+                {user.displayName && <Text>{user.user.username}</Text>}
               </View>
             </Pressable>
           ))}

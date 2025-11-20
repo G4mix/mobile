@@ -16,33 +16,33 @@ import { handleRequest } from "@/utils/handleRequest";
 const styles = StyleSheet.create({
   followers: {
     fontSize: 10,
-    marginTop: 8
+    marginTop: 8,
   },
   imageProfile: {
     borderRadius: 9999,
     height: 30,
-    width: 30
+    width: 30,
   },
   leftSide: {
     alignItems: "center",
     display: "flex",
     flexDirection: "row",
-    gap: 4
+    gap: 4,
   },
   postUserInformation: {
     alignItems: "center",
     display: "flex",
     flexDirection: "row",
     gap: 8,
-    justifyContent: "center"
+    justifyContent: "center",
   },
   userName: {
     fontSize: 14,
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   usersListItem: {
-    width: "100%"
-  }
+    width: "100%",
+  },
 });
 
 export function UserListItem({ userId }: { userId: string }) {
@@ -59,7 +59,7 @@ export function UserListItem({ userId }: { userId: string }) {
       const response = await api.get<UserState>(`/user/${userId}`);
       return response.data;
     },
-    enabled: !!userId
+    enabled: !!userId,
   });
 
   useEffect(() => {
@@ -67,11 +67,11 @@ export function UserListItem({ userId }: { userId: string }) {
   }, [isError]);
 
   useEffect(() => {
-    if (isSuccess) setIsFollowing(data.userProfile.isFollowing ?? false);
+    if (isSuccess) setIsFollowing(data.isFollowing ?? false);
   }, [isSuccess]);
 
   const executeFollow = async ({
-    userProfileId
+    userProfileId,
   }: {
     userProfileId: string;
   }) => {
@@ -79,18 +79,25 @@ export function UserListItem({ userId }: { userId: string }) {
 
     setIsLoading(true);
 
-    const res = await handleRequest({
+    const res = await handleRequest<{
+      following: boolean;
+      followersCount: number;
+      followingCount: number;
+    }>({
       requestFn: () =>
-        api.post(
-          `/follow?followingUserId=${userProfileId}&wantFollow=${isFollowing}`
-        ),
+        api.post("/follow", {
+          targetUserId: userProfileId,
+        }),
       showToast,
-      setIsLoading
+      setIsLoading,
     });
 
     if (!res) {
       return;
     }
+
+    // Atualizar o estado local com a resposta da API
+    setIsFollowing(res.following);
 
     queryClient.invalidateQueries({ queryKey: [userId] });
     refetch();
@@ -102,8 +109,8 @@ export function UserListItem({ userId }: { userId: string }) {
     debounce(
       ({ userProfileId }: { userProfileId: string }) =>
         executeFollow({ userProfileId }),
-      1000
-    )
+      1000,
+    ),
   ).current;
 
   const handleFollow = ({ userProfileId }: { userProfileId: string }) => {
@@ -125,21 +132,19 @@ export function UserListItem({ userId }: { userId: string }) {
           alignItems: "center",
           gap: 16,
           paddingBlock: 10,
-          paddingInline: 18
+          paddingInline: 18,
         }}
       >
         <View>
           <View style={styles.leftSide}>
             <TouchableOpacity
               style={styles.postUserInformation}
-              onPress={() =>
-                router.push(`/(tabs)/profile/${data.userProfile.id}`)
-              }
+              onPress={() => router.push(`/(tabs)/profile/${data.id}`)}
             >
-              {data.userProfile.icon ? (
+              {data.icon ? (
                 <Image
                   source={{
-                    uri: getImgWithTimestamp(data.userProfile.icon)
+                    uri: getImgWithTimestamp(data.icon),
                   }}
                   style={styles.imageProfile}
                 />
@@ -150,12 +155,12 @@ export function UserListItem({ userId }: { userId: string }) {
                   color={Colors.dark.background}
                 />
               )}
-              <Text style={styles.userName}>{data?.username}</Text>
+              <Text style={styles.userName}>{data?.user.username}</Text>
             </TouchableOpacity>
           </View>
 
           <Text style={styles.followers}>
-            {formatFollowers(data?.userProfile.followersCount)} seguidores
+            {formatFollowers(data?.followers)} seguidores
           </Text>
         </View>
 
@@ -163,11 +168,11 @@ export function UserListItem({ userId }: { userId: string }) {
           style={{
             minWidth: "auto",
             paddingHorizontal: 14,
-            paddingVertical: 8
+            paddingVertical: 8,
           }}
           onPress={() =>
             handleFollow({
-              userProfileId: data.userProfile.id
+              userProfileId: data.id,
             })
           }
         >

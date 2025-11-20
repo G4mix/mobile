@@ -1,14 +1,8 @@
-export const messages = {
+import { ApiErrorCode } from "@/types/apiErrors";
+
+export const messages: Record<ApiErrorCode, string> = {
   INVALID_TOKEN: "O token passado é inválido!",
-  WRONG_PASSWORD_ONCE: "Você errou a senha uma vez!",
-  WRONG_PASSWORD_TWICE:
-    'Você errou a senha duas vezes! Caso tenha esquecido sua senha, redefina-a clicando em "esqueci minha senha".',
-  WRONG_PASSWORD_THREE_TIMES:
-    "Você errou a senha 3 vezes! Apenas mais duas chances.",
-  WRONG_PASSWORD_FOUR_TIMES:
-    "Você errou a senha 4 vezes! Se errar novamente seu login será temporariamente bloquedo.",
-  WRONG_PASSWORD_FIVE_TIMES:
-    "Você errou a senha 5 vezes! Seu login foi bloqueado temporariamente, tente novamente mais tarde.",
+  INVALID_EMAIL_OR_PASSWORD: "E-mail ou senha inválidos!",
   INVALID_NAME: "O nome passado é inválido!",
   INVALID_EMAIL: "O e-mail informado é inválido!",
   INVALID_PASSWORD: "A senha informada é inválida!",
@@ -31,10 +25,27 @@ export const messages = {
   EMAIL_NOT_VERIFIED: "E-mail não verificado.",
   PROVIDER_NOT_FOUND: "Provedor não encontrado!",
   USER_NOT_FOUND: "Usuário não encontrado!",
+  IDEA_NOT_FOUND: "Ideia não encontrada!",
+  COMMENT_NOT_FOUND: "Comentário não encontrado!",
   NOT_FOUNDED_DATA: "Os dados não foram encontrados!",
   USER_ALREADY_EXISTS: "Esse usuário já existe!",
+  IDEA_ALREADY_LIKED: "Você já curtiu esta ideia!",
+  IDEA_NOT_LIKED: "Você ainda não curtiu esta ideia!",
+  COMMENT_ALREADY_LIKED: "Você já curtiu este comentário!",
+  COMMENT_NOT_LIKED: "Você ainda não curtiu este comentário!",
+  CANNOT_FOLLOW_SELF: "Você não pode seguir a si mesmo!",
+  ALREADY_FOLLOWING: "Você já está seguindo este usuário!",
+  NOT_FOLLOWING: "Você não está seguindo este usuário!",
   ERROR_WHILE_CHECKING_EMAIL:
     "Houve um erro ao tentar verificar o e-mail do usuário!",
   ERROR_WHILE_SENDING_EMAIL:
-    "Houve um erro ao tentar enviar um e-mail para o usuário!"
+    "Houve um erro ao tentar enviar um e-mail para o usuário!",
+  INTERNAL_SERVER_ERROR:
+    "Erro interno do servidor. Tente novamente mais tarde.",
+  BAD_REQUEST: "Requisição inválida. Verifique os dados enviados.",
+  FORBIDDEN: "Acesso negado. Você não tem permissão para esta ação.",
+  CONFLICT: "Conflito de dados. O recurso já existe ou está em uso.",
+  UNPROCESSABLE_ENTITY: "Dados inválidos. Verifique as informações enviadas.",
+  TOO_MANY_REQUESTS: "Muitas requisições. Tente novamente mais tarde.",
+  SERVICE_UNAVAILABLE: "Serviço temporariamente indisponível.",
 };

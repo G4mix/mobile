@@ -7,15 +7,19 @@ const globalForAxios = globalThis as unknown as {
   axiosInstance?: AxiosInstance;
 };
 
+const baseURL = `https://${env.EXPO_PUBLIC_API_URL}/v1`;
+
 if (!globalForAxios.axiosInstance) {
   globalForAxios.axiosInstance = axios.create({
-    baseURL: `https://${env.EXPO_PUBLIC_API_URL}/api/v1`
+    baseURL,
   });
 }
-
 export const api = globalForAxios.axiosInstance;
 
 let accessTokenCache: string | null = null;
+export const clearAccessTokenCache = () => {
+  accessTokenCache = null;
+};
 let isRefreshing = false;
 let failedQueue: {
   resolve: (token: string) => void;
@@ -24,7 +28,7 @@ let failedQueue: {
 
 const processQueue = (error: any, token?: string) => {
   failedQueue.forEach((prom) =>
-    token ? prom.resolve(token) : prom.reject(error)
+    token ? prom.resolve(token) : prom.reject(error),
   );
   failedQueue = [];
 };
@@ -38,20 +42,23 @@ api.interceptors.request.use(
     if (!accessTokenCache) {
       accessTokenCache = await getItem("accessToken");
     }
+
     if (accessTokenCache) {
       config.headers = config.headers || {};
       config.headers.Authorization = `Bearer ${accessTokenCache}`;
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    if (error.response?.status === 401 && !originalRequest.retry) {
+    const isAuthError =
+      error.response?.status === 401 || error.response?.status === 403;
+    if (isAuthError && !originalRequest.retry) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
@@ -70,11 +77,12 @@ api.interceptors.response.use(
         const refreshToken = await getItem("refreshToken");
         if (!refreshToken) throw new Error("No refresh token available");
 
-        const { data } = await api.post("/auth/refresh-token", {
-          refreshToken
+        const { data } = await axios.post(`${baseURL}/auth/refresh-token`, {
+          refreshToken,
         });
 
         await setItem("accessToken", data.accessToken);
+        await setItem("refreshToken", data.refreshToken);
         accessTokenCache = data.accessToken;
         processQueue(null, data.accessToken);
 
@@ -91,5 +99,5 @@ api.interceptors.response.use(
       }
     }
     return Promise.reject(error);
-  }
+  },
 );

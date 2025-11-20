@@ -1,12 +1,14 @@
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { View, Text, TouchableOpacity } from "react-native";
+import { ReactNode } from "react";
 import { Icon } from "./Icon";
 import { Colors } from "@/constants/colors";
 
 export function Header({
   title,
-  navigation
-}: NativeStackHeaderProps & { title?: string }) {
+  navigation,
+  rightComponent,
+}: NativeStackHeaderProps & { title?: string; rightComponent?: ReactNode }) {
   return (
     <View
       style={{
@@ -17,7 +19,7 @@ export function Header({
         alignItems: "center",
         borderBottomWidth: 1,
         borderBottomColor: Colors.light.majorelleBlue,
-        position: "relative"
+        position: "relative",
       }}
     >
       <TouchableOpacity
@@ -28,7 +30,7 @@ export function Header({
           size={24}
           name="arrow-left"
           style={{
-            color: Colors.light.russianViolet
+            color: Colors.light.russianViolet,
           }}
         />
       </TouchableOpacity>
@@ -39,11 +41,23 @@ export function Header({
             fontSize: 19.2,
             width: "100%",
             textAlign: "center",
-            color: Colors.light.russianViolet
+            color: Colors.light.russianViolet,
           }}
         >
           {title}
         </Text>
+      )}
+      {rightComponent && (
+        <View
+          style={{
+            top: 22,
+            right: 16,
+            position: "absolute",
+            zIndex: 2,
+          }}
+        >
+          {rightComponent}
+        </View>
       )}
     </View>
   );

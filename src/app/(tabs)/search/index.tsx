@@ -11,15 +11,15 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     gap: 12,
-    width: "100%"
-  }
+    width: "100%",
+  },
 });
 
 export default function SearchScreen() {
   const [searchValue, setSearchValue] = useState("");
 
   const { data } = useUsers({
-    search: searchValue
+    search: searchValue,
   });
 
   const users = data?.pages?.flatMap((page) => page?.data || []) || [];
@@ -27,7 +27,7 @@ export default function SearchScreen() {
   const debounceSearch = useRef(
     debounce((value: string) => {
       setSearchValue(value);
-    }, 1000)
+    }, 1000),
   ).current;
 
   const onChangeText = (value: string) => {
@@ -43,7 +43,7 @@ export default function SearchScreen() {
       style={{
         backgroundColor: Colors.light.background,
         flex: 1,
-        paddingBottom: 60
+        paddingBottom: 60,
       }}
     >
       <SearchHeader

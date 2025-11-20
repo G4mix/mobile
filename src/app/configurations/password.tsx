@@ -13,8 +13,8 @@ import { SuccessModal } from "@/components/SuccessModal";
 import { ChangePasswordInputs } from "@/components/ChangePasswordInputs";
 
 export type UpdateUserPasswordFormData = {
-    password: string;
-    confirmPassword: string;
+  password: string;
+  confirmPassword: string;
 };
 
 export const styles = StyleSheet.create({
@@ -25,62 +25,71 @@ export const styles = StyleSheet.create({
     overflowY: "auto",
     paddingLeft: 16,
     paddingRight: 16,
-    paddingTop: 16
+    paddingTop: 16,
   },
 });
 
 export default function PasswordScreen() {
-    const [isSuccessVisible, setIsSuccessVisible] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [isPasswordValid, setIsPasswordValid] = useState<"valid" | "invalid" | null>(null);
-    const [isConfirmPasswordValid, setIsConfirmPasswordValid] = useState<"valid" | "invalid" | null>(null);
-    const { showToast } = useToast();
-    const passwordRef = useRef<HTMLInputElement>(null);
-    const { watch, setValue, handleSubmit } = useForm<UpdateUserPasswordFormData>({
-        defaultValues: {
-            password: "",
-            confirmPassword: ""
-        }
+  const [isSuccessVisible, setIsSuccessVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isPasswordValid, setIsPasswordValid] = useState<
+    "valid" | "invalid" | null
+  >(null);
+  const [isConfirmPasswordValid, setIsConfirmPasswordValid] = useState<
+    "valid" | "invalid" | null
+  >(null);
+  const { showToast } = useToast();
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const { watch, setValue, handleSubmit } = useForm<UpdateUserPasswordFormData>(
+    {
+      defaultValues: {
+        password: "",
+        confirmPassword: "",
+      },
+    },
+  );
+  const updatePassword = async ({ password }: UpdateUserPasswordFormData) => {
+    if (isLoading) return;
+
+    const data = await handleRequest<UserState>({
+      requestFn: async () =>
+        api.post(
+          "/auth/change-password",
+          { password },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          },
+        ),
+      showToast,
+      setIsLoading,
     });
-    const updatePassword = async ({ password }: UpdateUserPasswordFormData) => {
-        if (isLoading) return;
-
-        const data = await handleRequest<UserState>({
-            requestFn: async () =>
-                api.post("/auth/change-password", { password }, {
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                }),
-            showToast,
-            setIsLoading
-        });
-        if (!data) return;
-        setIsSuccessVisible(true);
-        await timeout(1000);
-        setIsSuccessVisible(false);
-        router.push(`/configurations/account`);
-    };
-    const onSubmit = handleSubmit(updatePassword);
-    return (
-        <View style={styles.container}>
-            {isSuccessVisible && <SuccessModal message="Senha atualizado!" />}
-            <ChangePasswordInputs
-                onSubmit={onSubmit}
-                setValue={setValue as any}
-                watch={watch as any}
-                setIsConfirmPasswordValid={setIsConfirmPasswordValid}
-                isConfirmPasswordValid={isConfirmPasswordValid}
-                setIsPasswordValid={setIsPasswordValid}
-                isPasswordValid={isPasswordValid}
-                ref={passwordRef}
-            />
-            <Button onPress={onSubmit}>
-                <Text style={{ color: Colors.light.white, fontSize: 16 }}>
-                    Atualizar
-                </Text>
-            </Button>
-        </View>
-    )
-
+    if (!data) return;
+    setIsSuccessVisible(true);
+    await timeout(1000);
+    setIsSuccessVisible(false);
+    router.push(`/configurations/account`);
+  };
+  const onSubmit = handleSubmit(updatePassword);
+  return (
+    <View style={styles.container}>
+      {isSuccessVisible && <SuccessModal message="Senha atualizado!" />}
+      <ChangePasswordInputs
+        onSubmit={onSubmit}
+        setValue={setValue as any}
+        watch={watch as any}
+        setIsConfirmPasswordValid={setIsConfirmPasswordValid}
+        isConfirmPasswordValid={isConfirmPasswordValid}
+        setIsPasswordValid={setIsPasswordValid}
+        isPasswordValid={isPasswordValid}
+        ref={passwordRef}
+      />
+      <Button onPress={onSubmit}>
+        <Text style={{ color: Colors.light.white, fontSize: 16 }}>
+          Atualizar
+        </Text>
+      </Button>
+    </View>
+  );
 }

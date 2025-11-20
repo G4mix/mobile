@@ -16,7 +16,7 @@ export function OAuthLogin({ provider }: OAuthLoginProps) {
   const providers = {
     google: { image: googleIcon },
     linkedin: { image: linkedinIcon },
-    github: { image: githubIcon }
+    github: { image: githubIcon },
   };
 
   const selectedProvider = providers[provider as keyof typeof providers];
@@ -31,7 +31,7 @@ export function OAuthLogin({ provider }: OAuthLoginProps) {
           borderRadius: 8,
           borderWidth: 1,
           borderColor: Colors.light.tropicalIndigo,
-          padding: 6
+          padding: 6,
         }}
       >
         <Image
