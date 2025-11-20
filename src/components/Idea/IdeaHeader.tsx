@@ -1,153 +1,39 @@
-import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
-import { useSelector } from "react-redux";
-import { Dispatch, SetStateAction } from "react";
-import { router } from "expo-router";
-import { Icon } from "../Icon";
-import { Text } from "../Themed";
-import { Colors } from "@/constants/colors";
-import { UserState } from "@/features/auth/userSlice";
-import { formatDate } from "@/utils/formatDate";
-import { IdeaType } from ".";
-import { useFloatingOptions } from "@/hooks/useFloatingOptions";
-import { handleRequest } from "@/utils/handleRequest";
+import { NativeStackHeaderProps } from "@react-navigation/native-stack";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { api } from "@/constants/api";
-import { useToast } from "@/hooks/useToast";
-import { useFeedQueries } from "@/hooks/useFeedQueries";
-import { useConfirmationModal } from "@/hooks/useConfirmationModal";
-import { Option } from "@/context/FloatingOptionsContext";
-import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
+import { IdeaType } from ".";
+import { Header } from "../Header";
+import { IdeaOptions } from "./IdeaOptions";
 
-export const styles = StyleSheet.create({
-  firstRow: {
-    color: Colors.dark.background,
-    display: "flex",
-    flexDirection: "row",
-    gap: 4,
-    justifyContent: "space-between",
-  },
-  imageProfile: {
-    borderRadius: 9999,
-    height: 18,
-    width: 18,
-  },
-  leftSide: {
-    alignItems: "center",
-    display: "flex",
-    flexDirection: "row",
-    gap: 4,
-  },
-  postUserInformation: {
-    alignItems: "center",
-    display: "flex",
-    flexDirection: "row",
-    gap: 8,
-    justifyContent: "center",
-  },
-  userName: {
-    fontSize: 13.33,
-    fontWeight: "medium",
-  },
-});
+export function IdeaHeader({ route, ...props }: NativeStackHeaderProps) {
+  const ideaId = (route.params as { ideaId?: string })?.ideaId;
+  const [isDeleting, setIsDeleting] = useState(false);
 
-type IdeaHeaderProps = {
-  ideaId: string;
-  author: IdeaType["author"];
-  createdAt: string;
-  updatedAt?: string;
-  isDeleting: boolean;
-  setIsDeleting: Dispatch<SetStateAction<boolean>>;
-};
-
-export function IdeaHeader({
-  ideaId,
-  author,
-  createdAt,
-  updatedAt,
-  isDeleting,
-  setIsDeleting,
-}: IdeaHeaderProps) {
-  const userProfileId = useSelector(
-    (state: { user: UserState }) => state.user.id,
-  );
-  const { showConfirmationModal } = useConfirmationModal();
-  const { showFloatingOptions } = useFloatingOptions();
-  const { invalidateAllIdeas, invalidateIdeaQuery } = useFeedQueries();
-  const { showToast } = useToast();
-
-  const options: Option[] = [
-    {
-      name: "Editar",
-      iconName: "pencil",
-      onPress: ({ selectedPost }: any) => {
-        router.push(`/create?ideaId=${selectedPost}`);
-      },
+  const { data: idea } = useQuery({
+    queryKey: ["idea", ideaId],
+    queryFn: async () => {
+      const response = await api.get<IdeaType>(`/idea/${ideaId}`);
+      return response.data;
     },
-    {
-      name: "Deletar",
-      iconName: "x-mark",
-      onPress: async ({ selectedPost }: any) => {
-        if (isDeleting) return;
-        const handleConfirm = () => {
-          handleRequest({
-            requestFn: async () => api.delete(`/idea/${selectedPost}`),
-            showToast,
-            setIsLoading: setIsDeleting,
-          });
+    enabled: !!ideaId,
+  });
 
-          invalidateIdeaQuery(selectedPost);
-          invalidateAllIdeas();
+  const rightComponent = idea ? (
+    <IdeaOptions
+      ideaId={idea.id}
+      author={idea.author}
+      isDeleting={isDeleting}
+      setIsDeleting={setIsDeleting}
+    />
+  ) : null;
 
-          router.push("/feed");
-        };
-
-        showConfirmationModal({
-          actionName: "Excluir",
-          title: "Você realmente deseja apagar a publicação?",
-          content:
-            "Esta ação não pode ser revertida, certifique-se que realmente deseja excluir a publicação.",
-          handleConfirm,
-        });
-      },
-    },
-  ];
-
-  if (!author) return null;
   return (
-    <View style={styles.firstRow}>
-      <View style={styles.leftSide}>
-        <TouchableOpacity
-          style={styles.postUserInformation}
-          onPress={() => router.push(`/(tabs)/profile/${author.id}`)}
-        >
-          {author.icon ? (
-            <Image
-              source={{ uri: getImgWithTimestamp(author.icon) }}
-              style={styles.imageProfile}
-            />
-          ) : (
-            <Icon size={18} name="user-circle" color={Colors.dark.background} />
-          )}
-          <Text style={styles.userName}>{author.user.username}</Text>
-        </TouchableOpacity>
-        <Text>•</Text>
-        <Text>{formatDate(createdAt, updatedAt)}</Text>
-      </View>
-      {userProfileId === author.id && (
-        <TouchableOpacity
-          onPress={() =>
-            showFloatingOptions({
-              optionProps: { selectedPost: ideaId },
-              options,
-            })
-          }
-        >
-          <Icon
-            size={24}
-            name="ellipsis-horizontal"
-            color={Colors.dark.background}
-          />
-        </TouchableOpacity>
-      )}
-    </View>
+    <Header
+      {...props}
+      route={route}
+      title="Comentários"
+      rightComponent={rightComponent}
+    />
   );
 }

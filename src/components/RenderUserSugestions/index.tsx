@@ -1,4 +1,4 @@
-import { ScrollView, Image, Pressable } from "react-native";
+import { ScrollView, Image, Pressable, StyleSheet } from "react-native";
 import { MentionSuggestionsProps } from "react-native-controlled-mentions";
 import { Portal } from "react-native-paper";
 import { Text, View } from "../Themed";
@@ -6,9 +6,16 @@ import { Colors } from "@/constants/colors";
 import { useUsers } from "@/hooks/useUsers";
 import { InView } from "../InView";
 import { Icon } from "../Icon";
-import { styles } from "../Idea/IdeaHeader";
 import { RenderUserSugestionsLoading } from "./RenderUserSugestionsLoading";
 import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
+
+const styles = StyleSheet.create({
+  imageProfile: {
+    borderRadius: 9999,
+    height: 18,
+    width: 18,
+  },
+});
 
 export function RenderUserSuggestions({
   keyword,

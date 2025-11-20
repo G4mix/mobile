@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Text, View } from "../Themed";
-import { styles } from "../Idea/IdeaHeader";
+import { styles } from "../CommentsScreen/CommentHeader";
 import { Colors } from "@/constants/colors";
 import { Icon } from "../Icon";
 import { Button } from "../Button";

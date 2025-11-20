@@ -1,14 +1,14 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
 import { Text } from "react-native";
-import { Button } from "../components/Button"; 
+import { Button } from "../components/Button";
 
 describe("Button component", () => {
   it("renderiza corretamente com o texto filho", () => {
     const { getByText } = render(
       <Button>
         <Text>Enviar</Text>
-      </Button>
+      </Button>,
     );
 
     expect(getByText("Enviar")).toBeTruthy();
@@ -19,7 +19,7 @@ describe("Button component", () => {
     const { getByText } = render(
       <Button onPress={onPressMock}>
         <Text>Pressionar</Text>
-      </Button>
+      </Button>,
     );
 
     fireEvent.press(getByText("Pressionar"));
@@ -28,15 +28,15 @@ describe("Button component", () => {
 
   it("aplica o estilo de desabilitado quando `disabled` é true", () => {
     const { getByTestId } = render(
-        <Button disabled>
+      <Button disabled>
         <Text>Desabilitado</Text>
-        </Button>
+      </Button>,
     );
 
     const button = getByTestId("custom-button");
 
     expect(button.props.style).toEqual(
-        expect.objectContaining({ opacity: 0.7 })
+      expect.objectContaining({ opacity: 0.7 }),
     );
   });
 });

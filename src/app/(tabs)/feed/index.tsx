@@ -10,8 +10,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Idea } from "@/components/Idea";
 import { useFeed } from "@/hooks/useFeed";
 import { InView } from "@/components/InView";
-import { FloatingOptionsProvider } from "@/context/FloatingOptionsContext";
-import { ConfirmationModalProvider } from "@/context/ConfirmationModalContext";
 import { IdeaLoading } from "@/components/Idea/IdeaLoading";
 import { Colors } from "@/constants/colors";
 import { usePullToRefresh } from "@/hooks/usePullToRefresh";
@@ -58,33 +56,21 @@ export default function FeedScreen() {
       <FeedHeader />
       <ScrollView style={styles.scroll} refreshControl={refreshControl}>
         <View style={styles.ideas}>
-          <FloatingOptionsProvider>
-            <ConfirmationModalProvider>
-              {ideas?.map((idea, index) => (
-                <TouchableOpacity
-                  onPress={() => router.push(`/ideas/${idea!.id}` as any)}
-                  key={`post-${idea?.id || index}`}
-                >
-                  <Idea
-                    idea={idea}
-                    // onInView={() => {
-                    //   if (post) addVisualizedPost(post.id);
-                    // }}
-                    // alreadyVisualized={
-                    //   post ? alreadyVisualized.current.has(post.id) : false
-                    // }
-                  />
-                </TouchableOpacity>
-              ))}
-              {isFetchingNextPage &&
-                [1, 2, 3].map((idea) => (
-                  <IdeaLoading key={`idea-loading-${idea}`} />
-                ))}
-              {isFetchingNextPage || !hasNextPage ? null : (
-                <InView onInView={fetchNextPage} />
-              )}
-            </ConfirmationModalProvider>
-          </FloatingOptionsProvider>
+          {ideas?.map((idea, index) => (
+            <TouchableOpacity
+              onPress={() => router.push(`/ideas/${idea!.id}` as any)}
+              key={`post-${idea?.id || index}`}
+            >
+              <Idea idea={idea} />
+            </TouchableOpacity>
+          ))}
+          {isFetchingNextPage &&
+            [1, 2, 3].map((idea) => (
+              <IdeaLoading key={`idea-loading-${idea}`} />
+            ))}
+          {isFetchingNextPage || !hasNextPage ? null : (
+            <InView onInView={fetchNextPage} />
+          )}
         </View>
       </ScrollView>
     </View>

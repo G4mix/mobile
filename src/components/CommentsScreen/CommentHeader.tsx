@@ -1,11 +1,42 @@
-import { Image, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import { Icon } from "../Icon";
 import { Text } from "../Themed";
 import { Colors } from "@/constants/colors";
 import { formatDate } from "@/utils/formatDate";
 import { IdeaType } from "../Idea";
-import { styles } from "../Idea/IdeaHeader";
 import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
+
+export const styles = StyleSheet.create({
+  firstRow: {
+    color: Colors.dark.background,
+    display: "flex",
+    flexDirection: "row",
+    gap: 4,
+    justifyContent: "space-between",
+  },
+  imageProfile: {
+    borderRadius: 9999,
+    height: 18,
+    width: 18,
+  },
+  leftSide: {
+    alignItems: "center",
+    display: "flex",
+    flexDirection: "row",
+    gap: 4,
+  },
+  postUserInformation: {
+    alignItems: "center",
+    display: "flex",
+    flexDirection: "row",
+    gap: 8,
+    justifyContent: "center",
+  },
+  userName: {
+    fontSize: 13.33,
+    fontWeight: "medium",
+  },
+});
 
 type CommentHeaderProps = {
   author: IdeaType["author"];

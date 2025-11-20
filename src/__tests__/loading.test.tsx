@@ -7,6 +7,9 @@ import { userReducer } from "../features/auth/userSlice";
 import * as storage from "../constants/storage";
 import { api } from "../constants/api";
 
+// Import após os mocks
+import AuthLoadingScreen from "../app/auth/loading";
+
 // Mock das dependências
 const mockRouterReplace = jest.fn();
 const mockShowToast = jest.fn();
@@ -28,9 +31,6 @@ jest.mock("../hooks/useToast", () => ({
     showToast: (...args: any[]) => mockShowToast(...args),
   }),
 }));
-
-// Import após os mocks
-import AuthLoadingScreen from "../app/auth/loading";
 
 describe("AuthLoadingScreen", () => {
   let store: any;
@@ -55,15 +55,14 @@ describe("AuthLoadingScreen", () => {
     queryClient.clear();
   });
 
-  const renderScreen = () => {
-    return render(
+  const renderScreen = () =>
+    render(
       <Provider store={store}>
         <QueryClientProvider client={queryClient}>
           <AuthLoadingScreen />
         </QueryClientProvider>
       </Provider>,
     );
-  };
 
   it("renderiza o componente de loading", () => {
     const screen = renderScreen();
@@ -178,4 +177,3 @@ describe("AuthLoadingScreen", () => {
     });
   });
 });
-

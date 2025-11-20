@@ -21,7 +21,8 @@ jest.mock("../constants/api", () => ({
 
 jest.mock("../hooks/useConfirmationModal", () => ({
   useConfirmationModal: () => ({
-    showConfirmationModal: (...args: any[]) => mockShowConfirmationModal(...args),
+    showConfirmationModal: (...args: any[]) =>
+      mockShowConfirmationModal(...args),
   }),
 }));
 
@@ -72,15 +73,14 @@ describe("Logout Component", () => {
     );
   });
 
-  const renderComponent = () => {
-    return render(
+  const renderComponent = () =>
+    render(
       <Provider store={store}>
         <QueryClientProvider client={queryClient}>
           <Logout />
         </QueryClientProvider>
       </Provider>,
     );
-  };
 
   it("renderiza o botão de logout", () => {
     const { getByText } = renderComponent();
@@ -109,7 +109,7 @@ describe("Logout Component", () => {
     fireEvent.press(logoutButton!);
 
     const confirmCall = mockShowConfirmationModal.mock.calls[0][0];
-    const handleConfirm = confirmCall.handleConfirm;
+    const { handleConfirm } = confirmCall;
 
     (storage.removeItem as jest.Mock).mockResolvedValue(undefined);
 
@@ -126,7 +126,6 @@ describe("Logout Component", () => {
       expect(router.replace).toHaveBeenCalledWith("/auth/signin");
     });
 
-  
     const state = store.getState();
     expect(state.user.id).toBe("");
     expect(state.user.user.username).toBe("");
@@ -134,4 +133,3 @@ describe("Logout Component", () => {
     clearSpy.mockRestore();
   });
 });
-

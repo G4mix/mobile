@@ -32,7 +32,11 @@ jest.mock("../features/auth/OAuthLogin", () => {
   const { Text } = require("react-native");
   return {
     OAuthLogin: ({ provider }: any) =>
-      React.createElement(Text, { testID: `oauth-${provider}` }, `OAuth ${provider}`),
+      React.createElement(
+        Text,
+        { testID: `oauth-${provider}` },
+        `OAuth ${provider}`,
+      ),
   };
 });
 
@@ -58,15 +62,14 @@ describe("LoginScreen", () => {
     jest.clearAllTimers();
   });
 
-  const renderScreen = () => {
-    return render(
+  const renderScreen = () =>
+    render(
       <Provider store={store}>
         <QueryClientProvider client={queryClient}>
           <LoginScreen />
         </QueryClientProvider>
       </Provider>,
     );
-  };
 
   it("renderiza corretamente com os campos de email e senha", () => {
     const { getByPlaceholderText, getByText } = renderScreen();
@@ -97,7 +100,11 @@ describe("LoginScreen", () => {
     fireEvent.changeText(emailInput, "test@example.com");
     fireEvent.changeText(passwordInput, "password123");
 
-    expect(emailInput.props.value || emailInput.props.defaultValue || emailInput.props.placeholder).toBeTruthy();
+    expect(
+      emailInput.props.value ||
+        emailInput.props.defaultValue ||
+        emailInput.props.placeholder,
+    ).toBeTruthy();
     expect(passwordInput.props.secureTextEntry).toBe(true);
   });
 
@@ -173,7 +180,18 @@ describe("LoginScreen", () => {
       data: {
         accessToken: "access-token",
         refreshToken: "refresh-token",
-        userProfile: { id: "1", user: { id: "1", username: "test", email: "test@test.com", verified: false }, followers: 0, following: 0, links: [] },
+        userProfile: {
+          id: "1",
+          user: {
+            id: "1",
+            username: "test",
+            email: "test@test.com",
+            verified: false,
+          },
+          followers: 0,
+          following: 0,
+          links: [],
+        },
       },
     };
 
@@ -182,12 +200,10 @@ describe("LoginScreen", () => {
       resolvePromise = resolve;
     });
 
-    (api.post as jest.Mock).mockImplementation(
-      async () => {
-        await promise;
-        return mockResponse;
-      },
-    );
+    (api.post as jest.Mock).mockImplementation(async () => {
+      await promise;
+      return mockResponse;
+    });
     (storage.setItem as jest.Mock).mockResolvedValue(undefined);
 
     const { getByPlaceholderText, getByTestId } = renderScreen();
@@ -200,14 +216,14 @@ describe("LoginScreen", () => {
     fireEvent.changeText(passwordInput, "password123");
 
     fireEvent.press(loginButton);
-    
-    await new Promise(resolve => setTimeout(resolve, 10));
-    
+
+    await new Promise((resolve) => setTimeout(resolve, 10));
+
     const buttonAfterLoading = getByTestId("custom-button");
     expect(buttonAfterLoading.props.onPress).toBeUndefined();
 
     resolvePromise(mockResponse);
-    
+
     await waitFor(() => {
       expect(api.post).toHaveBeenCalledTimes(1);
     });
@@ -228,4 +244,3 @@ describe("LoginScreen", () => {
     expect(getByTestId("link-/auth/signup")).toBeTruthy();
   });
 });
-

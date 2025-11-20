@@ -8,7 +8,7 @@ export const objectToFormData = (
   Object.entries(obj).forEach(([property, value]) => {
     const key = namespace ? `${namespace}[${property}]` : property;
 
-    if (value) {
+    if (value !== undefined && value !== null) {
       if (value instanceof Date) {
         formData.append(key, value.toISOString());
       } else if (value instanceof File || value instanceof Blob) {

@@ -1,12 +1,14 @@
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { View, Text, TouchableOpacity } from "react-native";
+import { ReactNode } from "react";
 import { Icon } from "./Icon";
 import { Colors } from "@/constants/colors";
 
 export function Header({
   title,
   navigation,
-}: NativeStackHeaderProps & { title?: string }) {
+  rightComponent,
+}: NativeStackHeaderProps & { title?: string; rightComponent?: ReactNode }) {
   return (
     <View
       style={{
@@ -44,6 +46,18 @@ export function Header({
         >
           {title}
         </Text>
+      )}
+      {rightComponent && (
+        <View
+          style={{
+            top: 22,
+            right: 16,
+            position: "absolute",
+            zIndex: 2,
+          }}
+        >
+          {rightComponent}
+        </View>
       )}
     </View>
   );

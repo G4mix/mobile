@@ -80,7 +80,7 @@ export default function CreateScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const { invalidateAllIdeas, invalidateIdeaQuery, invalidateUserQuery } =
     useFeedQueries();
-  const { postId: ideaId } = useLocalSearchParams<{ postId: string }>();
+  const { ideaId } = useLocalSearchParams<{ ideaId: string }>();
   const user = useSelector((state: RootState) => state.user);
 
   const { watch, setValue, handleSubmit } = useForm<CreateScreenFormData>();
@@ -88,7 +88,7 @@ export default function CreateScreen() {
   const titleRef = useRef<HTMLInputElement>(null);
   const contentRef = useRef<HTMLInputElement>(null);
 
-  const { data: post } = useQuery({
+  const { data: idea } = useQuery({
     queryKey: ["idea", ideaId],
     queryFn: async () => {
       const response = await api.get<IdeaType>(`/idea/${ideaId}`);
@@ -98,12 +98,12 @@ export default function CreateScreen() {
   });
 
   const getPost = () => {
-    if (!post || !ideaId) return;
-    setValue("title", post.title);
-    setValue("content", post.content);
+    if (!idea || !ideaId) return;
+    setValue("title", idea.title);
+    setValue("content", idea.content);
     setValue(
       "images",
-      post.images.map((img) => {
+      idea.images.map((img: string) => {
         const extension = img.split(".").pop()?.split("?")[0] || "jpg";
         return {
           uri: img,
@@ -112,8 +112,8 @@ export default function CreateScreen() {
         };
       }),
     );
-    setValue("links", post.links);
-    setValue("tags", post.tags);
+    setValue("links", idea.links);
+    setValue("tags", idea.tags);
   };
 
   const clearFields = () => {
@@ -127,9 +127,10 @@ export default function CreateScreen() {
   };
 
   useEffect(() => {
-    getPost();
-    return clearFields;
-  }, [post, ideaId]);
+    if (idea && ideaId) {
+      getPost();
+    }
+  }, [idea, ideaId]);
 
   const createOrUpdatePost = async ({
     title,
@@ -154,8 +155,8 @@ export default function CreateScreen() {
 
     const data = await handleRequest<IdeaType>({
       requestFn: async () =>
-        api[post && ideaId ? "patch" : "post"](
-          `/idea${post && ideaId ? `/${ideaId}` : ""}`,
+        api[idea && ideaId ? "patch" : "post"](
+          `/idea${idea && ideaId ? `/${ideaId}` : ""}`,
           formData,
           {
             headers: {
@@ -167,7 +168,7 @@ export default function CreateScreen() {
       setIsLoading,
     });
     if (!data) return;
-    if (post && ideaId) {
+    if (idea && ideaId) {
       invalidateIdeaQuery(ideaId);
     }
     invalidateAllIdeas();
@@ -176,7 +177,7 @@ export default function CreateScreen() {
     setIsSuccessVisible(true);
     await timeout(1000);
     setIsSuccessVisible(false);
-    router.push("/feed");
+    router.push("/(tabs)/feed");
   };
 
   const onSubmit = handleSubmit(createOrUpdatePost);
@@ -186,7 +187,7 @@ export default function CreateScreen() {
   const images = watch("images");
   const links = watch("links");
 
-  const postContentActions: { name: IconName; handleClick?: () => void }[] = [
+  const ideaContentActions: { name: IconName; handleClick?: () => void }[] = [
     {
       name: "camera",
       handleClick:
@@ -219,8 +220,8 @@ export default function CreateScreen() {
     );
   };
 
-  if (post && post.author.id !== user.id) {
-    router.push("/feed");
+  if (idea && idea.author.id !== user.id) {
+    router.push("/(tabs)/feed");
     return null;
   }
 
@@ -242,7 +243,7 @@ export default function CreateScreen() {
             images,
             links,
           }}
-          post={post}
+          post={idea}
         />
         <CreateScreenAuthor />
         <Input
@@ -276,6 +277,7 @@ export default function CreateScreen() {
                   : {},
               ]}
               ref={contentRef}
+              value={content}
               onChangeText={(value: string) =>
                 setValue("content", value.slice(0, 700))
               }
@@ -319,7 +321,7 @@ export default function CreateScreen() {
             />
           </View>
           <CreateScreenContentActions
-            postContentActions={postContentActions}
+            postContentActions={ideaContentActions}
             style={
               isValidPostContent(content) === "invalid"
                 ? { borderColor: "red" }

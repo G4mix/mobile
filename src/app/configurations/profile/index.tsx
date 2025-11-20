@@ -24,7 +24,6 @@ import { SuccessModal } from "@/components/SuccessModal";
 import { getDate } from "@/utils/getDate";
 import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
 import { Camera } from "@/components/Camera";
-import { ConfirmationModalProvider } from "@/context/ConfirmationModalContext";
 
 const styles = StyleSheet.create({
   button: {
@@ -184,15 +183,13 @@ export default function ConfigProfileScreen() {
             </Text>
           </Button>
         </View>
-        <ConfirmationModalProvider>
-          <ProfileHeader
-            id={user.id}
-            icon={iconUri}
-            backgroundImage={bgUri}
-            onPressBackground={handlePressProfileBackground}
-            onPressIcon={handlePressProfileIcon}
-          />
-        </ConfirmationModalProvider>
+        <ProfileHeader
+          id={user.id}
+          icon={iconUri}
+          backgroundImage={bgUri}
+          onPressBackground={handlePressProfileBackground}
+          onPressIcon={handlePressProfileIcon}
+        />
         <Input
           placeholder={
             user.displayName || "Como quer que as pessoas te chamem?"

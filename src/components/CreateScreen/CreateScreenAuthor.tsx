@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { Text, View } from "../Themed";
 import { Icon } from "../Icon";
 import { Colors } from "@/constants/colors";
-import { styles as postHeaderStyles } from "@/components/Idea/IdeaHeader";
+import { styles as postHeaderStyles } from "@/components/CommentsScreen/CommentHeader";
 import { RootState } from "@/constants/reduxStore";
 import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
 

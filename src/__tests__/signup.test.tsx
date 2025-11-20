@@ -71,20 +71,21 @@ describe("RegisterScreen", () => {
     queryClient.clear();
   });
 
-  const renderScreen = () => {
-    return render(
+  const renderScreen = () =>
+    render(
       <Provider store={store}>
         <QueryClientProvider client={queryClient}>
           <RegisterScreen />
         </QueryClientProvider>
       </Provider>,
     );
-  };
 
   it("renderiza corretamente com todos os campos", () => {
     const { getByPlaceholderText, getByText } = renderScreen();
 
-    expect(getByPlaceholderText("Digite seu nome de usuário aqui")).toBeTruthy();
+    expect(
+      getByPlaceholderText("Digite seu nome de usuário aqui"),
+    ).toBeTruthy();
     expect(getByPlaceholderText("Digite seu e-mail aqui")).toBeTruthy();
     expect(getByText("Criar uma conta")).toBeTruthy();
     expect(getByText("Registrar-se")).toBeTruthy();
@@ -102,26 +103,33 @@ describe("RegisterScreen", () => {
 
     (api.get as jest.Mock).mockResolvedValue({ data: null });
 
-    const usernameInput = getByPlaceholderText("Digite seu nome de usuário aqui");
+    const usernameInput = getByPlaceholderText(
+      "Digite seu nome de usuário aqui",
+    );
     const emailInput = getByPlaceholderText("Digite seu e-mail aqui");
     const passwordInput = getByPlaceholderText("Digite uma senha");
-    const confirmPasswordInput = getByPlaceholderText("Digite sua senha novamente");
+    const confirmPasswordInput = getByPlaceholderText(
+      "Digite sua senha novamente",
+    );
     const checkbox = getByTestId("checkbox");
 
     fireEvent.changeText(usernameInput, "testuser123");
     fireEvent.changeText(emailInput, "test@example.com");
- 
+
     fireEvent.changeText(passwordInput, "Password123!");
     fireEvent.changeText(confirmPasswordInput, "Password123!");
-    
+
     fireEvent.press(checkbox);
 
     jest.advanceTimersByTime(1500);
 
-    await waitFor(() => {
-      const registerButton = getByTestId("custom-button");
-      expect(registerButton).toBeTruthy();
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        const registerButton = getByTestId("custom-button");
+        expect(registerButton).toBeTruthy();
+      },
+      { timeout: 3000 },
+    );
   });
 
   it("valida email em tempo real", async () => {
@@ -132,7 +140,7 @@ describe("RegisterScreen", () => {
     const emailInput = getByPlaceholderText("Digite seu e-mail aqui");
 
     fireEvent.changeText(emailInput, "invalid-email");
-    
+
     await waitFor(() => {
       const inputContainer = emailInput.parent;
       expect(inputContainer).toBeTruthy();
@@ -142,10 +150,9 @@ describe("RegisterScreen", () => {
     jest.advanceTimersByTime(1000);
 
     await waitFor(() => {
-      expect(api.get).toHaveBeenCalledWith(
-        "/user/exists/valid@example.com",
-        { skipAuth: true },
-      );
+      expect(api.get).toHaveBeenCalledWith("/user/exists/valid@example.com", {
+        skipAuth: true,
+      });
     });
   });
 
@@ -178,18 +185,22 @@ describe("RegisterScreen", () => {
 
     const { getByPlaceholderText, getByTestId } = renderScreen();
 
-    const usernameInput = getByPlaceholderText("Digite seu nome de usuário aqui");
+    const usernameInput = getByPlaceholderText(
+      "Digite seu nome de usuário aqui",
+    );
     const emailInput = getByPlaceholderText("Digite seu e-mail aqui");
     const passwordInput = getByPlaceholderText("Digite uma senha");
-    const confirmPasswordInput = getByPlaceholderText("Digite sua senha novamente");
+    const confirmPasswordInput = getByPlaceholderText(
+      "Digite sua senha novamente",
+    );
     const checkbox = getByTestId("checkbox");
 
     fireEvent.changeText(usernameInput, "testuser123");
     fireEvent.changeText(emailInput, "test@example.com");
-    
+
     fireEvent.changeText(passwordInput, "Password123!");
     fireEvent.changeText(confirmPasswordInput, "Password123!");
-    
+
     fireEvent.press(checkbox);
 
     await act(async () => {
@@ -216,17 +227,20 @@ describe("RegisterScreen", () => {
         jest.runAllTimers();
       });
 
-      await waitFor(() => {
-        expect(api.post).toHaveBeenCalledWith(
-          "/auth/signup",
-          {
-            username: "testuser123",
-            password: "Password123!",
-            email: "test@example.com",
-          },
-          { skipAuth: true },
-        );
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(api.post).toHaveBeenCalledWith(
+            "/auth/signup",
+            {
+              username: "testuser123",
+              password: "Password123!",
+              email: "test@example.com",
+            },
+            { skipAuth: true },
+          );
+        },
+        { timeout: 3000 },
+      );
     } else {
       expect(usernameInput).toBeTruthy();
       expect(emailInput).toBeTruthy();
@@ -242,4 +256,3 @@ describe("RegisterScreen", () => {
     expect(getByTestId("link-/auth/signin")).toBeTruthy();
   });
 });
-

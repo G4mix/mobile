@@ -52,10 +52,7 @@ export function IdeaActions({
   const [isLoading, setIsLoading] = useState(false);
   const { invalidateAllIdeas } = useFeedQueries();
 
-  const likePostRequest = async (
-    newIsLiked: boolean,
-    newLikesCount: number,
-  ) => {
+  const likePostRequest = async () => {
     if (isLoading) return;
     const data = await handleRequest({
       requestFn: async () =>
@@ -72,11 +69,7 @@ export function IdeaActions({
   };
 
   const debouncedLikePost = useRef(
-    debounce(
-      (newIsLiked: boolean, newLikesCount: number) =>
-        likePostRequest(newIsLiked, newLikesCount),
-      700,
-    ),
+    debounce(() => likePostRequest(), 700),
   ).current;
 
   const likePost = async () => {
@@ -84,7 +77,7 @@ export function IdeaActions({
       const newValue = !prevValue;
       setCurrentLikesCount((prevCount) => {
         const newLikesCount = !prevValue ? prevCount + 1 : prevCount - 1;
-        debouncedLikePost(newValue, newLikesCount);
+        debouncedLikePost();
         return newLikesCount;
       });
       return newValue;

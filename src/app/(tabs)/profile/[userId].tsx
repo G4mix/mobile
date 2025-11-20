@@ -13,7 +13,6 @@ import { UserState } from "@/features/auth/userSlice";
 import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
 import { setActualTab } from "@/features/profile/profileSlice";
 import { ProfileHeaderLoading } from "@/components/ProfileScreen/ProfileHeaderLoading";
-import { ConfirmationModalProvider } from "@/context/ConfirmationModalContext";
 import { usePullToRefresh } from "@/hooks/usePullToRefresh";
 
 export default function ProfileScreen() {
@@ -100,24 +99,22 @@ export default function ProfileScreen() {
         }}
       >
         {isLoading && !data && <ProfileHeaderLoading id={userId} />}
-        <ConfirmationModalProvider>
-          {!isLoading && data && (
-            <ProfileHeader
-              isFollowing={data.isFollowing}
-              icon={getImgWithTimestamp(data.icon!)}
-              displayName={data.displayName}
-              backgroundImage={getImgWithTimestamp(data.backgroundImage!)}
-              username={data.user.username}
-              id={data.id}
-              userProfileId={data.id}
-              followersCount={data.followers}
-              followingCount={data.following}
-              onlyView
-            />
-          )}
-          <ContentTabs tabs={tabs} tabType="profile" />
-          <ActualTab userId={userId} user={data} />
-        </ConfirmationModalProvider>
+        {!isLoading && data && (
+          <ProfileHeader
+            isFollowing={data.isFollowing}
+            icon={getImgWithTimestamp(data.icon!)}
+            displayName={data.displayName}
+            backgroundImage={getImgWithTimestamp(data.backgroundImage!)}
+            username={data.user.username}
+            id={data.id}
+            userProfileId={data.id}
+            followersCount={data.followers}
+            followingCount={data.following}
+            onlyView
+          />
+        )}
+        <ContentTabs tabs={tabs} tabType="profile" />
+        <ActualTab userId={userId} user={data} />
       </View>
     </ScrollView>
   );

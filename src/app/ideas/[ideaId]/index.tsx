@@ -10,10 +10,8 @@ import {
 } from "react-native";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRef, useState } from "react";
-import { FloatingOptionsProvider } from "@/context/FloatingOptionsContext";
 import { api } from "@/constants/api";
 import { IdeaType } from "@/components/Idea";
-import { ConfirmationModalProvider } from "@/context/ConfirmationModalContext";
 import { Comment, CommentType } from "@/components/CommentsScreen/Comment";
 import { useComments } from "@/hooks/useComments";
 import { InView } from "@/components/InView";
@@ -152,7 +150,6 @@ export default function IdeaScreen() {
   };
 
   const handleRefresh = async () => {
-    // Invalidar e refazer fetch da idea e seus comentários
     await queryClient.invalidateQueries({ queryKey: ["idea", ideaId] });
     await queryClient.invalidateQueries({
       queryKey: ["comments", { postId: ideaId }],
@@ -168,10 +165,7 @@ export default function IdeaScreen() {
     onRefresh: handleRefresh,
   });
 
-  const likePostRequest = async (
-    newIsLiked: boolean,
-    newLikesCount: number,
-  ) => {
+  const likePostRequest = async () => {
     if (isLoadingLike) return;
     const response = await handleRequest({
       requestFn: async () =>
@@ -189,11 +183,7 @@ export default function IdeaScreen() {
   };
 
   const debouncedLikePost = useRef(
-    debounce(
-      (newIsLiked: boolean, newLikesCount: number) =>
-        likePostRequest(newIsLiked, newLikesCount),
-      700,
-    ),
+    debounce(() => likePostRequest(), 700),
   ).current;
 
   const likeColor = isLiked
@@ -205,7 +195,7 @@ export default function IdeaScreen() {
       const newValue = !prevValue;
       setCurrentLikesCount((prevCount) => {
         const newLikesCount = !prevValue ? prevCount + 1 : prevCount - 1;
-        debouncedLikePost(newValue, newLikesCount);
+        debouncedLikePost();
         return newLikesCount;
       });
       return newValue;
@@ -245,141 +235,137 @@ export default function IdeaScreen() {
         refreshControl={refreshControl}
       >
         {isLoading && <IdeaLoading />}
-        <FloatingOptionsProvider>
-          <ConfirmationModalProvider>
-            {idea && (
-              <View style={styles.ideaContainer}>
-                <View style={styles.imageContainer}>
-                  <Image
-                    source={{ uri: getImgWithTimestamp(idea.images[0]) }}
-                    style={styles.image}
-                  />
-                  <TouchableOpacity
-                    key="post-action-hand-thumb-up"
-                    style={styles.likeContainer}
-                    onPress={likePost}
-                  >
-                    <Icon size={24} name="hand-thumb-up" color={likeColor} />
-                    {abbreviateNumber(currentLikesCount) && (
-                      <Text
-                        style={{
-                          fontSize: 13.33,
-                          color: likeColor,
-                          fontWeight: "medium",
-                        }}
-                      >
-                        {abbreviateNumber(currentLikesCount)}
-                      </Text>
-                    )}
-                  </TouchableOpacity>
-                </View>
-                <View style={styles.ideaBody}>
-                  <View style={{ gap: 24 }}>
-                    <View style={{ gap: 12 }}>
-                      <View
-                        style={{
-                          alignItems: "center",
-                          flexDirection: "row",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <Text style={styles.ideaTitle}>{idea.title}</Text>
-                        <TouchableOpacity
-                          key="post-action-share"
-                          onPress={sharePost}
-                        >
-                          <Icon size={24} name="share" />
-                        </TouchableOpacity>
-                      </View>
-                      <Link
-                        key={`user-profile-${idea.id}`}
-                        href={`/profile/${idea.author.id}`}
-                      >
-                        <View
-                          style={{
-                            flex: 1,
-                            gap: 6,
-                            alignItems: "center",
-                            flexDirection: "row",
-                          }}
-                        >
-                          <Image
-                            source={{
-                              uri: getImgWithTimestamp(idea.author.icon),
-                            }}
-                            style={{
-                              borderRadius: 9999,
-                              height: 24,
-                              width: 24,
-                              borderWidth: 1,
-                            }}
-                          />
-                          <Text
-                            style={{
-                              color: Colors.light.jet,
-                              fontWeight: "500",
-                            }}
-                          >
-                            Criado por{" "}
-                            <Text
-                              style={{
-                                color: Colors.light.jet,
-                                fontWeight: "400",
-                              }}
-                            >
-                              @{idea.author.displayName}
-                            </Text>
-                          </Text>
-                        </View>
-                      </Link>
-                    </View>
-                    <View style={styles.tags}>
-                      {idea.tags.map((tag) => (
-                        <View key={`view-tag-${tag}`} style={styles.tag}>
-                          <Tag
-                            name={tag}
-                            fontSize={13.33}
-                            color={Colors.light.russianViolet}
-                            style={{
-                              borderRadius: 32,
-                              paddingVertical: 6,
-                              paddingHorizontal: 12,
-                              backgroundColor: Colors.light.periwinkle,
-                            }}
-                          />
-                        </View>
-                      ))}
-                    </View>
-                  </View>
-                  <View style={styles.ideaContentContainer}>
-                    <Text style={styles.ideaContentHeader}>
-                      Descrição do Projeto
-                    </Text>
-                    <Text style={styles.ideaContent}>{idea.content}</Text>
-                    <View style={styles.links}>
-                      {idea.links.map((url) => (
-                        <IdeaLink key={`idea-link-${url}`} url={url} />
-                      ))}
-                    </View>
-                  </View>
-                  <Button
+        {idea && (
+          <View style={styles.ideaContainer}>
+            <View style={styles.imageContainer}>
+              <Image
+                source={{ uri: getImgWithTimestamp(idea.images[0]) }}
+                style={styles.image}
+              />
+              <TouchableOpacity
+                key="post-action-hand-thumb-up"
+                style={styles.likeContainer}
+                onPress={likePost}
+              >
+                <Icon size={24} name="hand-thumb-up" color={likeColor} />
+                {abbreviateNumber(currentLikesCount) && (
+                  <Text
                     style={{
-                      borderRadius: 20,
-                      paddingVertical: 16,
+                      fontSize: 13.33,
+                      color: likeColor,
+                      fontWeight: "medium",
                     }}
                   >
-                    <Text
-                      lightColor="white"
-                      style={{ fontWeight: "700", fontSize: 16 }}
+                    {abbreviateNumber(currentLikesCount)}
+                  </Text>
+                )}
+              </TouchableOpacity>
+            </View>
+            <View style={styles.ideaBody}>
+              <View style={{ gap: 24 }}>
+                <View style={{ gap: 12 }}>
+                  <View
+                    style={{
+                      alignItems: "center",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Text style={styles.ideaTitle}>{idea.title}</Text>
+                    <TouchableOpacity
+                      key="post-action-share"
+                      onPress={sharePost}
                     >
-                      Quero Colaborar
-                    </Text>
-                  </Button>
+                      <Icon size={24} name="share" />
+                    </TouchableOpacity>
+                  </View>
+                  <Link
+                    key={`user-profile-${idea.id}`}
+                    href={`/profile/${idea.author.id}`}
+                  >
+                    <View
+                      style={{
+                        flex: 1,
+                        gap: 6,
+                        alignItems: "center",
+                        flexDirection: "row",
+                      }}
+                    >
+                      <Image
+                        source={{
+                          uri: getImgWithTimestamp(idea.author.icon),
+                        }}
+                        style={{
+                          borderRadius: 9999,
+                          height: 24,
+                          width: 24,
+                          borderWidth: 1,
+                        }}
+                      />
+                      <Text
+                        style={{
+                          color: Colors.light.jet,
+                          fontWeight: "500",
+                        }}
+                      >
+                        Criado por{" "}
+                        <Text
+                          style={{
+                            color: Colors.light.jet,
+                            fontWeight: "400",
+                          }}
+                        >
+                          @{idea.author.displayName}
+                        </Text>
+                      </Text>
+                    </View>
+                  </Link>
+                </View>
+                <View style={styles.tags}>
+                  {idea.tags.map((tag) => (
+                    <View key={`view-tag-${tag}`} style={styles.tag}>
+                      <Tag
+                        name={tag}
+                        fontSize={13.33}
+                        color={Colors.light.russianViolet}
+                        style={{
+                          borderRadius: 32,
+                          paddingVertical: 6,
+                          paddingHorizontal: 12,
+                          backgroundColor: Colors.light.periwinkle,
+                        }}
+                      />
+                    </View>
+                  ))}
                 </View>
               </View>
-            )}
-          </ConfirmationModalProvider>
-        </FloatingOptionsProvider>
+              <View style={styles.ideaContentContainer}>
+                <Text style={styles.ideaContentHeader}>
+                  Descrição do Projeto
+                </Text>
+                <Text style={styles.ideaContent}>{idea.content}</Text>
+                <View style={styles.links}>
+                  {idea.links.map((url) => (
+                    <IdeaLink key={`idea-link-${url}`} url={url} />
+                  ))}
+                </View>
+              </View>
+              <Button
+                style={{
+                  borderRadius: 20,
+                  paddingVertical: 16,
+                }}
+              >
+                <Text
+                  lightColor="white"
+                  style={{ fontWeight: "700", fontSize: 16 }}
+                >
+                  Quero Colaborar
+                </Text>
+              </Button>
+            </View>
+          </View>
+        )}
         <View style={{ gap: 16, paddingHorizontal: 16, paddingVertical: 16 }}>
           <Text style={styles.ideaContentHeader}>Comentários</Text>
           <View style={{ marginBottom: 56 }}>

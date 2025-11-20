@@ -1,5 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { userReducer, setUser, logout, UserState } from "../features/auth/userSlice";
+import {
+  userReducer,
+  setUser,
+  logout,
+  UserState,
+} from "../features/auth/userSlice";
 
 type RootState = {
   user: UserState;
@@ -153,4 +158,3 @@ describe("userSlice", () => {
     });
   });
 });
-
