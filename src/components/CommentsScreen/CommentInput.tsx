@@ -25,7 +25,6 @@ export const styles = StyleSheet.create({
 });
 
 type CommentInputProps = {
-  commentsCount: number;
   isVisible: boolean;
   setIsVisible: Dispatch<SetStateAction<boolean>>;
   replying: {
@@ -43,7 +42,6 @@ type CommentInputProps = {
 };
 
 export function CommentInput({
-  commentsCount,
   isVisible,
   setIsVisible,
   replying,
@@ -71,7 +69,6 @@ export function CommentInput({
       <CommentsModal
         isVisible={isVisible}
         setIsVisible={setIsVisible}
-        commentsCount={commentsCount}
         replying={replying}
         setReplying={setReplying}
       />
