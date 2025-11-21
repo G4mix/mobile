@@ -396,7 +396,6 @@ export default function IdeaScreen() {
         </View>
       </ScrollView>
       <CommentInput
-        commentsCount={idea?.comments || 0}
         isVisible={isVisible}
         setIsVisible={setIsVisible}
         replying={replying}

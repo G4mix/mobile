@@ -135,18 +135,36 @@ export default function TabLayout() {
       iconName: "user-circle",
       size: 28,
     },
+    {
+      name: "notifications",
+      href: "/notification" as any,
+      iconName: "bell",
+      size: 28,
+      hidden: true,
+    },
+    {
+      name: "chat",
+      href: "/chat" as any,
+      iconName: "chat-bubble-left-right",
+      size: 28,
+      hidden: true,
+    },
   ];
   return (
     <Tabs>
       <TabSlot />
       <TabList style={styles.tabList}>
-        {tabs.map(({ name, href, iconName, size, disabled }) => (
+        {tabs.map(({ name, href, iconName, size, disabled, hidden }) => (
           <TabTrigger
             key={`tab-${href}`}
             name={name}
             href={href}
             disabled={disabled}
-            style={[styles.tabTrigger, disabled ? { opacity: 0.5 } : {}]}
+            style={[
+              styles.tabTrigger,
+              disabled ? { opacity: 0.5 } : {},
+              hidden ? { display: "none" } : {},
+            ]}
             asChild
           >
             <TabBarIcon
