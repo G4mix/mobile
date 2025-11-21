@@ -1,9 +1,7 @@
-import React from "react";
-import { render, fireEvent, waitFor, act } from "@testing-library/react-native";
+import { render, fireEvent, waitFor } from "@testing-library/react-native";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Text } from "react-native";
 import LoginScreen from "../app/auth/signin";
 import { userReducer } from "../features/auth/userSlice";
 import * as storage from "../constants/storage";
@@ -28,15 +26,11 @@ jest.mock("../hooks/useToast", () => ({
 }));
 
 jest.mock("../features/auth/OAuthLogin", () => {
-  const React = require("react");
   const { Text } = require("react-native");
+  const { createElement } = require("react");
   return {
     OAuthLogin: ({ provider }: any) =>
-      React.createElement(
-        Text,
-        { testID: `oauth-${provider}` },
-        `OAuth ${provider}`,
-      ),
+      createElement(Text, { testID: `oauth-${provider}` }, `OAuth ${provider}`),
   };
 });
 
@@ -217,7 +211,9 @@ describe("LoginScreen", () => {
 
     fireEvent.press(loginButton);
 
-    await new Promise((resolve) => setTimeout(resolve, 10));
+    await new Promise((resolve) => {
+      setTimeout(resolve, 10);
+    });
 
     const buttonAfterLoading = getByTestId("custom-button");
     expect(buttonAfterLoading.props.onPress).toBeUndefined();

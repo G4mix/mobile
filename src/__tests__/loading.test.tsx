@@ -11,7 +11,6 @@ import { api } from "../constants/api";
 import AuthLoadingScreen from "../app/auth/loading";
 
 // Mock das dependências
-const mockRouterReplace = jest.fn();
 const mockShowToast = jest.fn();
 
 jest.mock("../constants/storage", () => ({

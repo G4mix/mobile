@@ -3,7 +3,6 @@ import { render, fireEvent, waitFor, act } from "@testing-library/react-native";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Text } from "react-native";
 import RegisterScreen from "../app/auth/signup";
 import { userReducer } from "../features/auth/userSlice";
 import * as storage from "../constants/storage";
