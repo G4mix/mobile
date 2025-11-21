@@ -1,42 +1,28 @@
 import { View, ScrollView } from "react-native";
 import { useEffect, useState } from "react";
-import { router, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { Comment, CommentType } from "@/components/CommentsScreen/Comment";
 import { useComments } from "@/hooks/useComments";
 import { InView } from "@/components/InView";
 import { CommentInput } from "@/components/CommentsScreen/CommentInput";
-import { IdeaType } from "@/components/Idea";
 import { api } from "@/constants/api";
 import { CommentLoading } from "@/components/CommentsScreen/CommentLoading";
 import { Colors } from "../../../../constants/colors";
 
 export default function RepliesScreen() {
-  const { postId, commentId } = useLocalSearchParams<{
+  const { commentId } = useLocalSearchParams<{
     postId: string;
     commentId: string;
   }>();
 
-  const { data: comment } = useQuery({
+  const { data: comment, isLoading } = useQuery({
     queryKey: ["comment", commentId],
     queryFn: async () => {
       const response = await api.get<CommentType>(`/comment/${commentId}`);
       return response.data;
     },
     enabled: !!commentId,
-  });
-
-  const {
-    data: post,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["post", postId],
-    queryFn: async () => {
-      const response = await api.get<IdeaType>(`/idea/${postId}`);
-      return response.data;
-    },
-    enabled: !!postId,
   });
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
@@ -62,8 +48,6 @@ export default function RepliesScreen() {
     setReplying({ parentComment, toMark, author });
     setIsVisible(true);
   };
-
-  if (isError) router.push("/feed");
 
   useEffect(() => setIsVisible(true), []);
 
@@ -116,7 +100,6 @@ export default function RepliesScreen() {
         )}
       </ScrollView>
       <CommentInput
-        commentsCount={post?.comments || 0}
         isVisible={isVisible}
         setIsVisible={setIsVisible}
         replying={replying}
