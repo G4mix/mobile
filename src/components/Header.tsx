@@ -8,7 +8,12 @@ export function Header({
   title,
   navigation,
   rightComponent,
-}: NativeStackHeaderProps & { title?: string; rightComponent?: ReactNode }) {
+  leftComponent,
+}: NativeStackHeaderProps & {
+  title?: string;
+  rightComponent?: ReactNode;
+  leftComponent?: ReactNode;
+}) {
   return (
     <View
       style={{
@@ -34,6 +39,18 @@ export function Header({
           }}
         />
       </TouchableOpacity>
+      {leftComponent && (
+        <View
+          style={{
+            top: 12,
+            left: 56,
+            position: "absolute",
+            zIndex: 2,
+          }}
+        >
+          {leftComponent}
+        </View>
+      )}
       {title && (
         <Text
           style={{
