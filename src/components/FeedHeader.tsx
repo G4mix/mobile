@@ -1,5 +1,6 @@
 import React from "react";
-import { StyleSheet, View, Image } from "react-native";
+import { StyleSheet, View, Image, TouchableOpacity } from "react-native";
+import { router } from "expo-router";
 import { Colors } from "@/constants/colors";
 import { Icon } from "./Icon";
 import logo from "@/assets/images/gamix-logo.png";
@@ -31,12 +32,16 @@ export function FeedHeader() {
     <View style={styles.container}>
       <Image source={logo} style={styles.logo} />
       <View style={styles.actions}>
-        <Icon
-          name="chat-bubble-left-right"
-          size={24}
-          color={Colors.light.russianViolet}
-        />
-        <Icon name="bell" size={24} color={Colors.light.russianViolet} />
+        <TouchableOpacity onPress={() => router.push("/chat" as any)}>
+          <Icon
+            name="chat-bubble-left-right"
+            size={24}
+            color={Colors.light.russianViolet}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => router.push("/notification" as any)}>
+          <Icon name="bell" size={24} color={Colors.light.russianViolet} />
+        </TouchableOpacity>
       </View>
     </View>
   );
