@@ -35,7 +35,6 @@ export const handleRequest = async <T>({
       const message = errorResponse?.message;
       const status = error.response?.status;
 
-      // Mapear códigos de status HTTP para mensagens específicas
       let errorMessage = message ? messages[message] : undefined;
 
       if (!errorMessage) {
