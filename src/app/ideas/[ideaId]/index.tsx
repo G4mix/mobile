@@ -33,6 +33,7 @@ import { useToast } from "../../../hooks/useToast";
 import { Tag } from "../../../components/Tag";
 import { Button } from "../../../components/Button";
 import { IdeaLink } from "../../../components/Idea/IdeaLink";
+import { CollaborationRequestFormModal } from "../../../components/CollaborationRequestFormModal";
 
 const styles = StyleSheet.create({
   ideaBody: {
@@ -163,6 +164,7 @@ export default function IdeaScreen() {
   const { showToast } = useToast();
   const [isLoadingLike, setIsLoadingLike] = useState(false);
   const [isCollaborating, setIsCollaborating] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const currentUserId = useSelector((state: RootState) => state.user.id);
 
   const { refreshControl } = usePullToRefresh({
@@ -224,15 +226,21 @@ export default function IdeaScreen() {
     }
   };
 
-  const handleCollaborate = async () => {
-    if (isCollaborating || !ideaId || !idea) return;
+  const handleCollaborate = () => {
+    if (!ideaId || !idea) return;
     if (idea.author.id === currentUserId) return;
+    setIsModalVisible(true);
+  };
+
+  const handleSendCollaborationRequest = async (message: string) => {
+    if (isCollaborating || !ideaId) return;
 
     setIsCollaborating(true);
     const result = await handleRequest({
       requestFn: async () =>
         api.post("/collaboration-request", {
           ideaId,
+          message,
         }),
       showToast,
       setIsLoading: () => {},
@@ -242,6 +250,7 @@ export default function IdeaScreen() {
     if (result) {
       invalidateIdeaQuery(ideaId as string);
       invalidateAllIdeas();
+      setIsModalVisible(false);
     }
 
     setIsCollaborating(false);
@@ -429,6 +438,12 @@ export default function IdeaScreen() {
         setIsVisible={setIsVisible}
         replying={replying}
         setReplying={setReplying}
+      />
+      <CollaborationRequestFormModal
+        isVisible={isModalVisible}
+        setIsVisible={setIsModalVisible}
+        onConfirm={handleSendCollaborationRequest}
+        isLoading={isCollaborating}
       />
     </View>
   );
