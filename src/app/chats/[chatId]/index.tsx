@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useCallback, useState } from "react";
 import { ScrollView, ActivityIndicator, View as RNView } from "react-native";
-import { useNavigation, useLocalSearchParams } from "expo-router";
+import { useNavigation, useLocalSearchParams, router } from "expo-router";
 import { useRoute } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import { useQueryClient } from "@tanstack/react-query";
@@ -135,9 +135,12 @@ export default function ChatScreen() {
     if (result !== null) {
       queryClient.invalidateQueries({ queryKey: ["chat", chatId] });
       queryClient.invalidateQueries({ queryKey: ["chats"] });
+      setTimeout(() => {
+        router.back();
+      }, 500);
+    } else {
+      setIsHandlingApproval(false);
     }
-
-    setIsHandlingApproval(false);
   };
 
   const handleReject = async () => {
@@ -165,9 +168,12 @@ export default function ChatScreen() {
     if (result !== null) {
       queryClient.invalidateQueries({ queryKey: ["chat", chatId] });
       queryClient.invalidateQueries({ queryKey: ["chats"] });
+      setTimeout(() => {
+        router.back();
+      }, 500);
+    } else {
+      setIsHandlingApproval(false);
     }
-
-    setIsHandlingApproval(false);
   };
 
   if (isLoading) {
@@ -223,24 +229,26 @@ export default function ChatScreen() {
               }}
             >
               <Button
-                onPress={handleApprove}
-                disabled={isHandlingApproval}
-                style={{
-                  flex: 1,
-                  backgroundColor: Colors.light.majorelleBlue,
-                }}
-              >
-                <Text style={{ color: Colors.light.background }}>Aceitar</Text>
-              </Button>
-              <Button
                 onPress={handleReject}
                 disabled={isHandlingApproval}
                 style={{
                   flex: 1,
-                  backgroundColor: Colors.light.russianViolet,
+                  minWidth: 0,
+                  backgroundColor: Colors.light.majorelleBlue,
                 }}
               >
                 <Text style={{ color: Colors.light.background }}>Recusar</Text>
+              </Button>
+              <Button
+                onPress={handleApprove}
+                disabled={isHandlingApproval}
+                style={{
+                  flex: 1,
+                  minWidth: 0,
+                  backgroundColor: Colors.light.russianViolet,
+                }}
+              >
+                <Text style={{ color: Colors.light.background }}>Aceitar</Text>
               </Button>
             </RNView>
           )}

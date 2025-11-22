@@ -33,7 +33,6 @@ export function useChatSocket(
     if (!chatId) {
       return undefined;
     }
-    console.log("chatId", chatId);
 
     let mounted = true;
 
