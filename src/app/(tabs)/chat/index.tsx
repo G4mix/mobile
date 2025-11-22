@@ -2,17 +2,29 @@ import React from "react";
 import { useRoute } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import { ScrollView, ActivityIndicator } from "react-native";
+import { useQueryClient } from "@tanstack/react-query";
 import { Header } from "@/components/Header";
 import { Text, View } from "../../../components/Themed";
 import { Colors } from "../../../constants/colors";
 import { ChatItem } from "../../../components/ChatsScreen/ChatItem";
 import { useChats } from "@/hooks/useChats";
 import { formatChatTime } from "@/utils/formatChatDate";
+import { usePullToRefresh } from "@/hooks/usePullToRefresh";
 
 export default function ChatsScreen() {
   const navigation = useNavigation();
   const route = useRoute();
-  const { data, isLoading } = useChats(0, 10);
+  const queryClient = useQueryClient();
+  const { data, isLoading, refetch } = useChats(0, 10);
+
+  const handleRefresh = async () => {
+    await queryClient.invalidateQueries({ queryKey: ["chats"] });
+    await refetch();
+  };
+
+  const { refreshControl } = usePullToRefresh({
+    onRefresh: handleRefresh,
+  });
 
   return (
     <View style={{ flex: 1 }}>
@@ -22,7 +34,10 @@ export default function ChatsScreen() {
         route={route}
         navigation={navigation as any}
       />
-      <ScrollView style={{ backgroundColor: Colors.light.background }}>
+      <ScrollView
+        style={{ backgroundColor: Colors.light.background }}
+        refreshControl={refreshControl}
+      >
         <View style={{ paddingHorizontal: 16, paddingVertical: 24, gap: 12 }}>
           <View
             style={{

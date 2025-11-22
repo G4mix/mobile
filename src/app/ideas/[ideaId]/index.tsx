@@ -10,7 +10,9 @@ import {
 } from "react-native";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import { api } from "@/constants/api";
+import { RootState } from "@/constants/reduxStore";
 import { IdeaType } from "@/components/Idea";
 import { Comment, CommentType } from "@/components/CommentsScreen/Comment";
 import { useComments } from "@/hooks/useComments";
@@ -160,6 +162,8 @@ export default function IdeaScreen() {
   const { invalidateAllIdeas, invalidateIdeaQuery } = useFeedQueries();
   const { showToast } = useToast();
   const [isLoadingLike, setIsLoadingLike] = useState(false);
+  const [isCollaborating, setIsCollaborating] = useState(false);
+  const currentUserId = useSelector((state: RootState) => state.user.id);
 
   const { refreshControl } = usePullToRefresh({
     onRefresh: handleRefresh,
@@ -218,6 +222,29 @@ export default function IdeaScreen() {
         color: "error",
       });
     }
+  };
+
+  const handleCollaborate = async () => {
+    if (isCollaborating || !ideaId || !idea) return;
+    if (idea.author.id === currentUserId) return;
+
+    setIsCollaborating(true);
+    const result = await handleRequest({
+      requestFn: async () =>
+        api.post("/collaboration-request", {
+          ideaId,
+        }),
+      showToast,
+      setIsLoading: () => {},
+      ignoreErrors: false,
+    });
+
+    if (result) {
+      invalidateIdeaQuery(ideaId as string);
+      invalidateAllIdeas();
+    }
+
+    setIsCollaborating(false);
   };
 
   return (
@@ -355,12 +382,14 @@ export default function IdeaScreen() {
                   borderRadius: 20,
                   paddingVertical: 16,
                 }}
+                onPress={handleCollaborate}
+                disabled={idea.author.id === currentUserId || isCollaborating}
               >
                 <Text
                   lightColor="white"
                   style={{ fontWeight: "700", fontSize: 16 }}
                 >
-                  Quero Colaborar
+                  {isCollaborating ? "Enviando..." : "Quero Colaborar"}
                 </Text>
               </Button>
             </View>

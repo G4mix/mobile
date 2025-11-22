@@ -106,6 +106,7 @@ export function Idea({ alreadyVisualized, idea, onInView }: IdeaProps) {
           likes={idea.likes}
           comments={idea.comments}
           liked={idea.isLiked}
+          authorId={idea.author.id}
         />
       </View>
       {!alreadyVisualized && onInView && <InView onInView={onInView} />}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, View, RefreshControl } from "react-native";
+import { FlatList, View } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import { Notification } from "../../../components/Notification";
@@ -10,6 +10,7 @@ import { Colors } from "../../../constants/colors";
 import { useNotifications } from "@/hooks/useNotifications";
 import { NotificationDto } from "@/features/notifications/notificationsSlice";
 import { CollaborationRequestModal } from "@/components/CollaborationRequestModal";
+import { usePullToRefresh } from "@/hooks/usePullToRefresh";
 
 export default function NotificationScreen() {
   const navigation = useNavigation();
@@ -54,6 +55,14 @@ export default function NotificationScreen() {
     await deleteAllNotifications();
   };
 
+  const handleRefresh = async () => {
+    await refresh();
+  };
+
+  const { refreshControl } = usePullToRefresh({
+    onRefresh: handleRefresh,
+  });
+
   return (
     <View style={{ flex: 1 }}>
       <Header
@@ -77,9 +86,7 @@ export default function NotificationScreen() {
           paddingBottom: 100,
         }}
         style={{ backgroundColor: Colors.light.background }}
-        refreshControl={
-          <RefreshControl refreshing={isLoading} onRefresh={refresh} />
-        }
+        refreshControl={refreshControl}
         ListEmptyComponent={
           !isLoading ? (
             <View
@@ -104,7 +111,7 @@ export default function NotificationScreen() {
         onEndReached={loadMore}
         onEndReachedThreshold={0.5}
       />
-      {notifications.filter((n) => !n.read).length > 1 && (
+      {notifications.length > 0 && (
         <View
           style={{
             position: "absolute",
