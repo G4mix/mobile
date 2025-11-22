@@ -71,7 +71,11 @@ export function CollaborationRequestModal({
       return;
     }
 
-    const chat = await handleRequest<{ id: string }>({
+    const chat = await handleRequest<{
+      id: string;
+      title: string;
+      image: string | null;
+    }>({
       requestFn: async () =>
         api.post("/chat/start", {
           ideaId: collaborationRequest.ideaId,

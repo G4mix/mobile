@@ -90,10 +90,10 @@ export function ChatModal({
   const inputRef = useRef<TextInput>(null);
 
   const sendMessage = async ({ content }: { content: string }) => {
-    if (content.length < 3) return;
+    if (content.length < 3 || !chatId) return;
     const data = await handleRequest<unknown>({
       requestFn: async () =>
-        api.post("/message", {
+        api.post("/chat/send-message", {
           chatId,
           content,
         }),

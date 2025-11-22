@@ -1,27 +1,209 @@
-import React from "react";
-import { ScrollView } from "react-native";
-import { useNavigation } from "expo-router";
+import React, { useEffect, useRef, useCallback, useState } from "react";
+import { ScrollView, ActivityIndicator, View as RNView } from "react-native";
+import { useNavigation, useLocalSearchParams } from "expo-router";
 import { useRoute } from "@react-navigation/native";
-import { View } from "../../../components/Themed";
+import { useSelector } from "react-redux";
+import { useQueryClient } from "@tanstack/react-query";
+import { View, Text } from "../../../components/Themed";
 import { Colors } from "../../../constants/colors";
 import { ChatMessage } from "../../../components/ChatsScreen/ChatMessage";
 import { DateSeparator } from "../../../components/ChatsScreen/DateSeparator";
 import { ChatInput } from "../../../components/ChatsScreen/ChatInput";
 import { ChatHeader } from "../../../components/ChatsScreen/ChatHeader";
+import { Button } from "../../../components/Button";
+import { useChat } from "@/hooks/useChat";
+import { useChatSocket, NewMessageEvent } from "@/hooks/useChatSocket";
+import { RootState } from "@/constants/reduxStore";
+import { ChatDto } from "@/hooks/useChats";
+import { formatChatTime, groupMessagesByDate } from "@/utils/formatChatDate";
+import { api } from "@/constants/api";
+import { handleRequest } from "@/utils/handleRequest";
+import { useToast } from "@/hooks/useToast";
 
 export default function ChatScreen() {
   const route = useRoute();
   const navigation = useNavigation();
+  const { chatId } = useLocalSearchParams<{ chatId: string }>();
+  const { data: chat, isLoading } = useChat(chatId);
+  const currentUserId = useSelector((state: RootState) => state.user.id);
+  const scrollViewRef = useRef<ScrollView>(null);
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+  const [isHandlingApproval, setIsHandlingApproval] = useState(false);
+
+  const isOwner = chat?.ownerId === currentUserId;
+  const hasPendingRequest =
+    chat?.collaborationRequestId &&
+    chat?.collaborationRequestStatus === "Pending";
+  const showApprovalButtons =
+    isOwner && hasPendingRequest && !isHandlingApproval;
+
+  const handleNewMessage = useCallback(
+    (event: NewMessageEvent) => {
+      if (event.chatId !== chatId) return;
+
+      queryClient.setQueryData<ChatDto | null>(["chat", chatId], (oldData) => {
+        if (!oldData) return oldData;
+
+        const messageExists = oldData.messages.some(
+          (msg) =>
+            msg.senderId === event.message.senderId &&
+            msg.content === event.message.content &&
+            new Date(msg.timestamp).getTime() ===
+              new Date(event.message.timestamp).getTime(),
+        );
+
+        if (messageExists) return oldData;
+
+        return {
+          ...oldData,
+          messages: [
+            ...oldData.messages,
+            {
+              ...event.message,
+              timestamp: new Date(event.message.timestamp),
+            },
+          ],
+        };
+      });
+
+      queryClient.setQueriesData({ queryKey: ["chats"] }, (oldData: any) => {
+        if (!oldData || !oldData.data) return oldData;
+
+        return {
+          ...oldData,
+          data: oldData.data.map((c: ChatDto) => {
+            if (c.id === chatId) {
+              return {
+                ...c,
+                messages: [
+                  {
+                    ...event.message,
+                    timestamp: new Date(event.message.timestamp),
+                  },
+                ],
+              };
+            }
+            return c;
+          }),
+        };
+      });
+
+      setTimeout(() => {
+        scrollViewRef.current?.scrollToEnd({ animated: true });
+      }, 100);
+    },
+    [chatId, queryClient],
+  );
+
+  useChatSocket(chatId, handleNewMessage);
+
+  useEffect(() => {
+    if (chat?.messages && chat.messages.length > 0) {
+      setTimeout(() => {
+        scrollViewRef.current?.scrollToEnd({ animated: false });
+      }, 100);
+    }
+  }, [chat?.messages]);
+
+  const handleMessageSent = () => {
+    queryClient.invalidateQueries({ queryKey: ["chat", chatId] });
+    queryClient.invalidateQueries({ queryKey: ["chats"] });
+    setTimeout(() => {
+      scrollViewRef.current?.scrollToEnd({ animated: true });
+    }, 100);
+  };
+
+  const handleApprove = async () => {
+    if (!chat?.collaborationRequestId || isHandlingApproval) return;
+
+    setIsHandlingApproval(true);
+
+    const result = await handleRequest({
+      requestFn: async () =>
+        api.patch("/collaboration-approval", null, {
+          params: {
+            collaborationRequestId: chat.collaborationRequestId,
+            status: "Approved",
+          },
+        }),
+      showToast,
+      setIsLoading: () => {},
+      ignoreErrors: false,
+    });
+
+    if (result !== null) {
+      queryClient.invalidateQueries({ queryKey: ["chat", chatId] });
+      queryClient.invalidateQueries({ queryKey: ["chats"] });
+    }
+
+    setIsHandlingApproval(false);
+  };
+
+  const handleReject = async () => {
+    if (!chat?.collaborationRequestId || isHandlingApproval) return;
+
+    setIsHandlingApproval(true);
+
+    const result = await handleRequest({
+      requestFn: async () =>
+        api.patch(
+          "/collaboration-approval",
+          { feedback: "Rejeitado" },
+          {
+            params: {
+              collaborationRequestId: chat.collaborationRequestId,
+              status: "Rejected",
+            },
+          },
+        ),
+      showToast,
+      setIsLoading: () => {},
+      ignoreErrors: false,
+    });
+
+    if (result !== null) {
+      queryClient.invalidateQueries({ queryKey: ["chat", chatId] });
+      queryClient.invalidateQueries({ queryKey: ["chats"] });
+    }
+
+    setIsHandlingApproval(false);
+  };
+
+  if (isLoading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: Colors.light.tropicalIndigo,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <ActivityIndicator size="large" color={Colors.light.majorelleBlue} />
+      </View>
+    );
+  }
+
+  if (!chat) {
+    return null;
+  }
+
+  const groupedMessages = groupMessagesByDate(chat.messages);
+
   return (
     <View style={{ flex: 1, backgroundColor: Colors.light.tropicalIndigo }}>
       <ChatHeader
-        icon={null}
-        displayName="Lorem Ipsum"
+        icon={chat.image}
+        displayName={chat.title}
         options={{}}
         route={route}
         navigation={navigation as any}
       />
-      <ScrollView style={{ backgroundColor: Colors.light.tropicalIndigo }}>
+      <ScrollView
+        ref={scrollViewRef}
+        style={{ backgroundColor: Colors.light.tropicalIndigo }}
+      >
         <View
           style={{
             paddingHorizontal: 16,
@@ -31,16 +213,57 @@ export default function ChatScreen() {
             paddingBottom: 100,
           }}
         >
-          <DateSeparator date="26/10/2025" />
-          <ChatMessage
-            date="23:58"
-            isActualUser={false}
-            message="Lorem Ipsum"
-          />
-          <ChatMessage date="23:59" isActualUser message="Lorem Ipsum" />
+          {showApprovalButtons && (
+            <RNView
+              style={{
+                flexDirection: "row",
+                gap: 12,
+                marginBottom: 8,
+                backgroundColor: "transparent",
+              }}
+            >
+              <Button
+                onPress={handleApprove}
+                disabled={isHandlingApproval}
+                style={{
+                  flex: 1,
+                  backgroundColor: Colors.light.majorelleBlue,
+                }}
+              >
+                <Text style={{ color: Colors.light.background }}>Aceitar</Text>
+              </Button>
+              <Button
+                onPress={handleReject}
+                disabled={isHandlingApproval}
+                style={{
+                  flex: 1,
+                  backgroundColor: Colors.light.russianViolet,
+                }}
+              >
+                <Text style={{ color: Colors.light.background }}>Recusar</Text>
+              </Button>
+            </RNView>
+          )}
+          {groupedMessages.map((group) => (
+            <React.Fragment key={group.date}>
+              <DateSeparator date={group.date} />
+              {group.messages.map((message) => {
+                const isActualUser = message.senderId === currentUserId;
+                const messageKey = `${message.senderId}-${message.content}-${new Date(message.timestamp).getTime()}`;
+                return (
+                  <ChatMessage
+                    key={messageKey}
+                    date={formatChatTime(message.timestamp)}
+                    isActualUser={isActualUser}
+                    message={message.content}
+                  />
+                );
+              })}
+            </React.Fragment>
+          ))}
         </View>
       </ScrollView>
-      <ChatInput />
+      <ChatInput onMessageSent={handleMessageSent} />
     </View>
   );
 }

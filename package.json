@@ -68,6 +68,7 @@
     "react-native-webview": "13.12.5",
     "react-redux": "^9.2.0",
     "redux": "^5.0.1",
+    "socket.io-client": "^4.7.5",
     "zod": "^3.24.2",
     "babel-preset-expo": "~12.0.0"
   },
@@ -105,7 +106,8 @@
           "expo-checkbox",
           "zod",
           "@rneui/themed",
-          "react-native-controlled-mentions"
+          "react-native-controlled-mentions",
+          "socket.io-client"
         ]
       }
     }
