@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView } from "react-native";
+import { ImageBackground, ScrollView } from "react-native";
 import { useNavigation } from "expo-router";
 import { useRoute } from "@react-navigation/native";
 import { View } from "../../../components/Themed";
@@ -8,12 +8,18 @@ import { ChatMessage } from "../../../components/ChatsScreen/ChatMessage";
 import { DateSeparator } from "../../../components/ChatsScreen/DateSeparator";
 import { ChatInput } from "../../../components/ChatsScreen/ChatInput";
 import { ChatHeader } from "../../../components/ChatsScreen/ChatHeader";
+import background from "@/assets/images/BackgroundChat.png";
+
 
 export default function ChatScreen() {
   const route = useRoute();
   const navigation = useNavigation();
   return (
-    <View style={{ flex: 1, backgroundColor: Colors.light.tropicalIndigo }}>
+    <ImageBackground
+      source={background}
+      style={{
+        flex: 1
+    }}>
       <ChatHeader
         icon={null}
         displayName="Lorem Ipsum"
@@ -21,7 +27,7 @@ export default function ChatScreen() {
         route={route}
         navigation={navigation as any}
       />
-      <ScrollView style={{ backgroundColor: Colors.light.tropicalIndigo }}>
+      <ScrollView>
         <View
           style={{
             paddingHorizontal: 16,
@@ -41,6 +47,6 @@ export default function ChatScreen() {
         </View>
       </ScrollView>
       <ChatInput />
-    </View>
+    </ImageBackground>
   );
 }
