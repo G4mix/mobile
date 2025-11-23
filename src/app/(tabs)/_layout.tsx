@@ -138,11 +138,10 @@ export default function TabLayout() {
       size: 28,
     },
     {
-      name: "team",
-      href: "/team",
-      iconName: "user-group",
+      name: "projects",
+      href: "/projects",
+      iconName: "puzzle-piece",
       size: 28,
-      disabled: true,
     },
     {
       name: "profile",
