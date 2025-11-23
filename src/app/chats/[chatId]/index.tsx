@@ -1,5 +1,10 @@
 import React, { useEffect, useRef, useCallback, useState } from "react";
-import { ImageBackground, ScrollView, ActivityIndicator, View as RNView } from "react-native";
+import {
+  ImageBackground,
+  ScrollView,
+  ActivityIndicator,
+  View as RNView,
+} from "react-native";
 import { useNavigation, useLocalSearchParams, router } from "expo-router";
 import { useRoute } from "@react-navigation/native";
 import { useSelector } from "react-redux";
@@ -195,8 +200,9 @@ export default function ChatScreen() {
     <ImageBackground
       source={background}
       style={{
-        flex: 1
-    }}>
+        flex: 1,
+      }}
+    >
       <ChatHeader
         icon={chat.image}
         displayName={chat.title}
@@ -204,9 +210,7 @@ export default function ChatScreen() {
         route={route}
         navigation={navigation as any}
       />
-      <ScrollView
-        ref={scrollViewRef}
-      >
+      <ScrollView ref={scrollViewRef}>
         <View
           style={{
             paddingHorizontal: 16,
@@ -276,6 +280,6 @@ export default function ChatScreen() {
         isLoading={isHandlingApproval}
         isApproval={pendingAction === "approve"}
       />
-     </ImageBackground>
+    </ImageBackground>
   );
 }
