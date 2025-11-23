@@ -90,7 +90,7 @@ export function ChatModal({
   const inputRef = useRef<TextInput>(null);
 
   const sendMessage = async ({ content }: { content: string }) => {
-    if (content.length < 3 || !chatId) return;
+    if (content.length < 1 || !chatId) return;
     const data = await handleRequest<unknown>({
       requestFn: async () =>
         api.post("/chat/send-message", {
@@ -160,7 +160,7 @@ export function ChatModal({
                     }}
                     placeholder="Digite sua mensagem"
                     onSubmitEditing={
-                      !isLoading && content.length > 3 ? onSubmit : undefined
+                      !isLoading && content.length > 0 ? onSubmit : undefined
                     }
                     returnKeyType="done"
                     inputRef={inputRef}
@@ -187,9 +187,9 @@ export function ChatModal({
                 </View>
                 <TouchableOpacity
                   onPress={
-                    !isLoading && content.length > 3 ? onSubmit : undefined
+                    !isLoading && content.length > 0 ? onSubmit : undefined
                   }
-                  style={content.length > 3 ? { opacity: 1 } : { opacity: 0.7 }}
+                  style={content.length > 0 ? { opacity: 1 } : { opacity: 0.7 }}
                 >
                   <Icon
                     name="paper-airplane"
