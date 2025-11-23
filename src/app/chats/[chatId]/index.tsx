@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useCallback, useState } from "react";
-import { ScrollView, ActivityIndicator, View as RNView } from "react-native";
+import { ImageBackground, ScrollView, ActivityIndicator, View as RNView } from "react-native";
 import { useNavigation, useLocalSearchParams, router } from "expo-router";
 import { useRoute } from "@react-navigation/native";
 import { useSelector } from "react-redux";
@@ -10,6 +10,7 @@ import { ChatMessage } from "../../../components/ChatsScreen/ChatMessage";
 import { DateSeparator } from "../../../components/ChatsScreen/DateSeparator";
 import { ChatInput } from "../../../components/ChatsScreen/ChatInput";
 import { ChatHeader } from "../../../components/ChatsScreen/ChatHeader";
+import background from "@/assets/images/BackgroundChat.png";
 import { Button } from "../../../components/Button";
 import { CollaborationFeedbackModal } from "../../../components/CollaborationFeedbackModal";
 import { useChat } from "@/hooks/useChat";
@@ -191,7 +192,11 @@ export default function ChatScreen() {
   const groupedMessages = groupMessagesByDate(chat.messages);
 
   return (
-    <View style={{ flex: 1, backgroundColor: Colors.light.tropicalIndigo }}>
+    <ImageBackground
+      source={background}
+      style={{
+        flex: 1
+    }}>
       <ChatHeader
         icon={chat.image}
         displayName={chat.title}
@@ -201,7 +206,6 @@ export default function ChatScreen() {
       />
       <ScrollView
         ref={scrollViewRef}
-        style={{ backgroundColor: Colors.light.tropicalIndigo }}
       >
         <View
           style={{
@@ -272,6 +276,6 @@ export default function ChatScreen() {
         isLoading={isHandlingApproval}
         isApproval={pendingAction === "approve"}
       />
-    </View>
+     </ImageBackground>
   );
 }
