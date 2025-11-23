@@ -1,8 +1,11 @@
 import React from "react";
 import { StyleSheet, View, Image, TouchableOpacity } from "react-native";
 import { router } from "expo-router";
+import { useSelector } from "react-redux";
 import { Colors } from "@/constants/colors";
 import { Icon } from "./Icon";
+import { NotificationBadge } from "./NotificationBadge";
+import { RootState } from "@/constants/reduxStore";
 import logo from "@/assets/images/gamix-logo.png";
 
 const styles = StyleSheet.create({
@@ -28,6 +31,10 @@ const styles = StyleSheet.create({
 });
 
 export function FeedHeader() {
+  const unreadCount = useSelector(
+    (state: RootState) => state.notifications.unreadCount,
+  );
+
   return (
     <View style={styles.container}>
       <Image source={logo} style={styles.logo} />
@@ -39,8 +46,12 @@ export function FeedHeader() {
             color={Colors.light.russianViolet}
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => router.push("/notification" as any)}>
+        <TouchableOpacity
+          onPress={() => router.push("/notification" as any)}
+          style={{ position: "relative" }}
+        >
           <Icon name="bell" size={24} color={Colors.light.russianViolet} />
+          <NotificationBadge count={unreadCount} />
         </TouchableOpacity>
       </View>
     </View>

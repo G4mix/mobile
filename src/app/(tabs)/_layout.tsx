@@ -21,6 +21,7 @@ import { Colors } from "@/constants/colors";
 import { Icon, IconName } from "@/components/Icon";
 import { RootState } from "@/constants/reduxStore";
 import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
+import { NotificationBadge } from "@/components/NotificationBadge";
 
 interface TabBarIconProps extends React.PropsWithChildren, TabTriggerSlotProps {
   name: IconName;
@@ -29,47 +30,58 @@ interface TabBarIconProps extends React.PropsWithChildren, TabTriggerSlotProps {
   userIcon?: string;
 }
 
-const TabBarIcon = React.forwardRef<View, TabBarIconProps>((props, ref) => (
-  <Pressable
-    ref={ref}
-    {...props}
-    style={[
-      {
-        width: props.size,
-        height: props.size,
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-      },
-      props.style || {},
-    ]}
-  >
-    {props.userIcon ? (
-      <Image
-        source={{ uri: getImgWithTimestamp(props.userIcon) }}
-        style={{
-          borderRadius: 9999,
-          height: props.size,
+interface TabBarIconPropsWithBadge extends TabBarIconProps {
+  badgeCount?: number;
+}
+
+const TabBarIcon = React.forwardRef<View, TabBarIconPropsWithBadge>(
+  (props, ref) => (
+    <Pressable
+      ref={ref}
+      {...props}
+      style={[
+        {
           width: props.size,
-          borderWidth: 1,
-          borderColor: props.isFocused
-            ? Colors.light.majorelleBlue
-            : Colors.light.russianViolet,
-        }}
-      />
-    ) : (
-      <Icon
-        size={props.size}
-        name={props.name}
-        color={
-          props.isFocused
-            ? Colors.light.majorelleBlue
-            : Colors.light.russianViolet
-        }
-      />
-    )}
-  </Pressable>
-));
+          height: props.size,
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+        },
+        props.style || {},
+      ]}
+    >
+      {props.userIcon ? (
+        <Image
+          source={{ uri: getImgWithTimestamp(props.userIcon) }}
+          style={{
+            borderRadius: 9999,
+            height: props.size,
+            width: props.size,
+            borderWidth: 1,
+            borderColor: props.isFocused
+              ? Colors.light.majorelleBlue
+              : Colors.light.russianViolet,
+          }}
+        />
+      ) : (
+        <View style={{ position: "relative" }}>
+          <Icon
+            size={props.size}
+            name={props.name}
+            color={
+              props.isFocused
+                ? Colors.light.majorelleBlue
+                : Colors.light.russianViolet
+            }
+          />
+          {props.badgeCount !== undefined && props.badgeCount > 0 && (
+            <NotificationBadge count={props.badgeCount} />
+          )}
+        </View>
+      )}
+    </Pressable>
+  ),
+);
 
 const styles = StyleSheet.create({
   tabList: {
@@ -96,6 +108,9 @@ const styles = StyleSheet.create({
 
 export default function TabLayout() {
   const { icon, id } = useSelector((state: RootState) => state.user);
+  const unreadCount = useSelector(
+    (state: RootState) => state.notifications.unreadCount,
+  );
   const tabs: {
     name: string;
     href: Href;
@@ -175,6 +190,7 @@ export default function TabLayout() {
                   ? icon
                   : undefined
               }
+              badgeCount={name === "notifications" ? unreadCount : undefined}
             />
           </TabTrigger>
         ))}

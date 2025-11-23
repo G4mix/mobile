@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
 
 type ChatItemProps = {
   id: string;
-  icon?: string;
+  icon?: string | null;
   displayName: string;
   lastMessage?: string;
   date?: string;

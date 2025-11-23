@@ -1,6 +1,7 @@
 import { TouchableOpacity, StyleSheet } from "react-native";
 import { router } from "expo-router";
 import { useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import { Icon, IconName } from "../Icon";
 import { Text, View } from "../Themed";
 import { Colors } from "@/constants/colors";
@@ -11,6 +12,8 @@ import { debounce } from "@/utils/debounce";
 import { api } from "@/constants/api";
 import { useFeedQueries } from "@/hooks/useFeedQueries";
 import { Button } from "../Button";
+import { RootState } from "@/constants/reduxStore";
+import { CollaborationRequestFormModal } from "../CollaborationRequestFormModal";
 
 const styles = StyleSheet.create({
   actionContainer: {
@@ -38,6 +41,7 @@ type IdeaActionsProps = {
   likes: number;
   comments: number;
   liked: boolean;
+  authorId?: string;
 };
 
 export function IdeaActions({
@@ -45,12 +49,17 @@ export function IdeaActions({
   likes,
   comments,
   liked,
+  authorId,
 }: IdeaActionsProps) {
   const { showToast } = useToast();
   const [isLiked, setIsLiked] = useState(liked);
   const [currentLikesCount, setCurrentLikesCount] = useState(likes);
   const [isLoading, setIsLoading] = useState(false);
+  const [isCollaborating, setIsCollaborating] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const { invalidateAllIdeas } = useFeedQueries();
+  const currentUserId = useSelector((state: RootState) => state.user.id);
+  const isOwner = authorId && currentUserId === authorId;
 
   const likePostRequest = async () => {
     if (isLoading) return;
@@ -86,6 +95,34 @@ export function IdeaActions({
 
   const commentPost = async () => {
     router.push(`/ideas/${ideaId}`);
+  };
+
+  const handleCollaborate = () => {
+    if (isOwner) return;
+    setIsModalVisible(true);
+  };
+
+  const handleSendCollaborationRequest = async (message: string) => {
+    if (isCollaborating) return;
+
+    setIsCollaborating(true);
+    const data = await handleRequest({
+      requestFn: async () =>
+        api.post("/collaboration-request", {
+          ideaId,
+          message,
+        }),
+      showToast,
+      setIsLoading: () => {},
+      ignoreErrors: false,
+    });
+
+    if (data) {
+      invalidateAllIdeas();
+      setIsModalVisible(false);
+    }
+
+    setIsCollaborating(false);
   };
 
   const actions: {
@@ -139,9 +176,19 @@ export function IdeaActions({
           paddingHorizontal: 16,
           paddingVertical: 12,
         }}
+        onPress={handleCollaborate}
+        disabled={isOwner || isCollaborating}
       >
-        <Text lightColor="white">Quero Colaborar</Text>
+        <Text lightColor="white">
+          {isCollaborating ? "Enviando..." : "Quero Colaborar"}
+        </Text>
       </Button>
+      <CollaborationRequestFormModal
+        isVisible={isModalVisible}
+        setIsVisible={setIsModalVisible}
+        onConfirm={handleSendCollaborationRequest}
+        isLoading={isCollaborating}
+      />
     </View>
   );
 }
