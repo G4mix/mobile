@@ -11,6 +11,7 @@ import { DateSeparator } from "../../../components/ChatsScreen/DateSeparator";
 import { ChatInput } from "../../../components/ChatsScreen/ChatInput";
 import { ChatHeader } from "../../../components/ChatsScreen/ChatHeader";
 import { Button } from "../../../components/Button";
+import { CollaborationFeedbackModal } from "../../../components/CollaborationFeedbackModal";
 import { useChat } from "@/hooks/useChat";
 import { useChatSocket, NewMessageEvent } from "@/hooks/useChatSocket";
 import { RootState } from "@/constants/reduxStore";
@@ -30,6 +31,10 @@ export default function ChatScreen() {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
   const [isHandlingApproval, setIsHandlingApproval] = useState(false);
+  const [isFeedbackModalVisible, setIsFeedbackModalVisible] = useState(false);
+  const [pendingAction, setPendingAction] = useState<
+    "approve" | "reject" | null
+  >(null);
 
   const isOwner = chat?.ownerId === currentUserId;
   const hasPendingRequest =
@@ -114,49 +119,35 @@ export default function ChatScreen() {
     }, 100);
   };
 
-  const handleApprove = async () => {
+  const handleApproveClick = () => {
     if (!chat?.collaborationRequestId || isHandlingApproval) return;
-
-    setIsHandlingApproval(true);
-
-    const result = await handleRequest({
-      requestFn: async () =>
-        api.patch("/collaboration-approval", null, {
-          params: {
-            collaborationRequestId: chat.collaborationRequestId,
-            status: "Approved",
-          },
-        }),
-      showToast,
-      setIsLoading: () => {},
-      ignoreErrors: false,
-    });
-
-    if (result !== null) {
-      queryClient.invalidateQueries({ queryKey: ["chat", chatId] });
-      queryClient.invalidateQueries({ queryKey: ["chats"] });
-      setTimeout(() => {
-        router.back();
-      }, 500);
-    } else {
-      setIsHandlingApproval(false);
-    }
+    setPendingAction("approve");
+    setIsFeedbackModalVisible(true);
   };
 
-  const handleReject = async () => {
+  const handleRejectClick = () => {
     if (!chat?.collaborationRequestId || isHandlingApproval) return;
+    setPendingAction("reject");
+    setIsFeedbackModalVisible(true);
+  };
+
+  const handleFeedbackConfirm = async (feedback: string) => {
+    if (!chat?.collaborationRequestId || !pendingAction) return;
 
     setIsHandlingApproval(true);
+    setIsFeedbackModalVisible(false);
+
+    const status = pendingAction === "approve" ? "Approved" : "Rejected";
 
     const result = await handleRequest({
       requestFn: async () =>
         api.patch(
           "/collaboration-approval",
-          { feedback: "Rejeitado" },
+          { feedback },
           {
             params: {
               collaborationRequestId: chat.collaborationRequestId,
-              status: "Rejected",
+              status,
             },
           },
         ),
@@ -174,6 +165,8 @@ export default function ChatScreen() {
     } else {
       setIsHandlingApproval(false);
     }
+
+    setPendingAction(null);
   };
 
   if (isLoading) {
@@ -229,7 +222,7 @@ export default function ChatScreen() {
               }}
             >
               <Button
-                onPress={handleReject}
+                onPress={handleRejectClick}
                 disabled={isHandlingApproval}
                 style={{
                   flex: 1,
@@ -240,7 +233,7 @@ export default function ChatScreen() {
                 <Text style={{ color: Colors.light.background }}>Recusar</Text>
               </Button>
               <Button
-                onPress={handleApprove}
+                onPress={handleApproveClick}
                 disabled={isHandlingApproval}
                 style={{
                   flex: 1,
@@ -272,6 +265,13 @@ export default function ChatScreen() {
         </View>
       </ScrollView>
       <ChatInput onMessageSent={handleMessageSent} />
+      <CollaborationFeedbackModal
+        isVisible={isFeedbackModalVisible}
+        setIsVisible={setIsFeedbackModalVisible}
+        onConfirm={handleFeedbackConfirm}
+        isLoading={isHandlingApproval}
+        isApproval={pendingAction === "approve"}
+      />
     </View>
   );
 }

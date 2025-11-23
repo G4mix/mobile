@@ -9,6 +9,24 @@ export function formatNotificationMessage(
     notification.type === "Invite" &&
     notification.relatedEntityType === "COLLABORATION_REQUEST"
   ) {
+    if (notification.title === "REQUEST_COLLABORATION_APPROVED") {
+      if (notification.ideaTitle) {
+        return `${actorName || "Um usuário"} aceitou sua solicitação de colaboração na ideia "${notification.ideaTitle}"`;
+      }
+      return actorName
+        ? `${actorName} aceitou sua solicitação de colaboração`
+        : "Sua solicitação de colaboração foi aceita";
+    }
+
+    if (notification.title === "REQUEST_COLLABORATION_REJECTED") {
+      if (notification.ideaTitle) {
+        return `${actorName || "Um usuário"} recusou sua solicitação de colaboração na ideia "${notification.ideaTitle}"`;
+      }
+      return actorName
+        ? `${actorName} recusou sua solicitação de colaboração`
+        : "Sua solicitação de colaboração foi recusada";
+    }
+
     if (notification.ideaTitle) {
       return `${actorName || "Um usuário"} deseja colaborar na ideia "${notification.ideaTitle}"`;
     }

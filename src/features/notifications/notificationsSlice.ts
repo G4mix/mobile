@@ -36,6 +36,7 @@ export interface NotificationDto {
   ideaId?: string;
   ideaTitle?: string;
   requesterId?: string;
+  collaborationRequestStatus?: string;
 }
 
 interface NotificationsState {

@@ -3,9 +3,11 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
   View,
+  ActivityIndicator,
 } from "react-native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { router } from "expo-router";
+import { useSelector } from "react-redux";
 import { Button } from "./Button";
 import { Text } from "./Themed";
 import { Colors } from "@/constants/colors";
@@ -14,7 +16,7 @@ import { api } from "@/constants/api";
 import { handleRequest } from "@/utils/handleRequest";
 import { useToast } from "@/hooks/useToast";
 import { useNotifications } from "@/hooks/useNotifications";
-import { formatNotificationMessage } from "@/utils/formatNotificationMessage";
+import { RootState } from "@/constants/reduxStore";
 
 const styles = StyleSheet.create({
   container: {
@@ -24,6 +26,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     gap: 24,
     justifyContent: "center",
+    maxWidth: "90%",
     padding: 16,
   },
   root: {
@@ -33,7 +36,29 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 16,
   },
+  section: {
+    gap: 8,
+  },
+  sectionContent: {
+    color: Colors.light.russianViolet,
+    fontSize: 13.33,
+    textAlign: "justify",
+  },
+  sectionTitle: {
+    color: Colors.light.russianViolet,
+    fontSize: 14,
+    fontWeight: "bold",
+  },
 });
+
+interface CollaborationRequestData {
+  message: string;
+  feedback: string | null;
+  status: string;
+  ideaTitle: string;
+  requesterId: string;
+  ideaId: string;
+}
 
 export function CollaborationRequestModal({
   isVisible,
@@ -46,17 +71,17 @@ export function CollaborationRequestModal({
 }) {
   const { showToast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingData, setIsLoadingData] = useState(false);
+  const [collaborationRequest, setCollaborationRequest] =
+    useState<CollaborationRequestData | null>(null);
   const { markNotificationAsRead } = useNotifications();
+  const currentUserId = useSelector((state: RootState) => state.user.id);
 
-  const handleStartChat = async () => {
-    if (isLoading || !notification.relatedEntityId) return;
+  const loadCollaborationRequest = async () => {
+    if (!notification.relatedEntityId) return;
 
-    setIsLoading(true);
-
-    const collaborationRequest = await handleRequest<{
-      ideaId: string;
-      requesterId: string;
-    }>({
+    setIsLoadingData(true);
+    const data = await handleRequest<CollaborationRequestData>({
       requestFn: async () =>
         api.get(`/get-collaboration-request`, {
           params: { collaborationRequestId: notification.relatedEntityId },
@@ -66,10 +91,27 @@ export function CollaborationRequestModal({
       ignoreErrors: false,
     });
 
-    if (!collaborationRequest) {
-      setIsLoading(false);
-      return;
+    if (data) {
+      setCollaborationRequest(data);
     }
+    setIsLoadingData(false);
+  };
+
+  useEffect(() => {
+    if (isVisible && notification.relatedEntityId) {
+      loadCollaborationRequest();
+    }
+  }, [isVisible, notification.relatedEntityId]);
+
+  const isRequester = collaborationRequest?.requesterId === currentUserId;
+  const isPending = collaborationRequest?.status === "Pending";
+  const showActions = !isRequester && isPending;
+
+  const handleStartChat = async () => {
+    if (isLoading || !notification.relatedEntityId || !collaborationRequest)
+      return;
+
+    setIsLoading(true);
 
     const chat = await handleRequest<{
       id: string;
@@ -95,8 +137,19 @@ export function CollaborationRequestModal({
     setIsLoading(false);
   };
 
-  const handleCancel = () => {
+  const handleClose = () => {
     setIsVisible(false);
+    setCollaborationRequest(null);
+  };
+
+  const getTitle = () => {
+    if (notification.title === "REQUEST_COLLABORATION_APPROVED") {
+      return "Solicitação Aceita";
+    }
+    if (notification.title === "REQUEST_COLLABORATION_REJECTED") {
+      return "Solicitação Recusada";
+    }
+    return "Solicitação de Colaboração";
   };
 
   return (
@@ -104,50 +157,92 @@ export function CollaborationRequestModal({
       visible={isVisible}
       transparent
       animationType="slide"
-      onRequestClose={() => setIsVisible(false)}
+      onRequestClose={handleClose}
     >
-      <TouchableWithoutFeedback onPress={() => setIsVisible(false)}>
+      <TouchableWithoutFeedback onPress={handleClose}>
         <View style={{ flex: 1, backgroundColor: "rgba(0, 0, 0, 0.3)" }}>
           <TouchableWithoutFeedback onPress={() => {}}>
             <View style={styles.root}>
               <View style={styles.container}>
-                <View style={{ gap: 12 }}>
-                  <Text
-                    style={{
-                      textAlign: "justify",
-                      fontWeight: "medium",
-                      fontSize: 16,
-                      color: Colors.light.russianViolet,
-                    }}
-                  >
-                    Solicitação de Colaboração
-                  </Text>
-                  <Text
-                    style={{
-                      textAlign: "justify",
-                      fontSize: 13.33,
-                      color: Colors.light.russianViolet,
-                    }}
-                  >
-                    {formatNotificationMessage(notification)}
-                  </Text>
-                </View>
-                <View style={{ gap: 8 }}>
-                  <Button
-                    style={{ backgroundColor: Colors.light.majorelleBlue }}
-                    onPress={handleStartChat}
-                    disabled={isLoading}
-                  >
-                    <Text style={{ color: Colors.light.background }}>
-                      {isLoading ? "Carregando..." : "Iniciar Chat"}
-                    </Text>
-                  </Button>
-                  <Button onPress={handleCancel} disabled={isLoading}>
-                    <Text style={{ color: Colors.light.background }}>
-                      Cancelar
-                    </Text>
-                  </Button>
-                </View>
+                {isLoadingData ? (
+                  <ActivityIndicator
+                    size="large"
+                    color={Colors.light.majorelleBlue}
+                  />
+                ) : collaborationRequest ? (
+                  <>
+                    <View style={{ gap: 16 }}>
+                      <Text
+                        style={{
+                          textAlign: "center",
+                          fontWeight: "bold",
+                          fontSize: 18,
+                          color: Colors.light.russianViolet,
+                        }}
+                      >
+                        {getTitle()}
+                      </Text>
+
+                      <View style={styles.section}>
+                        <Text style={styles.sectionTitle}>Ideia:</Text>
+                        <Text style={styles.sectionContent}>
+                          {collaborationRequest.ideaTitle}
+                        </Text>
+                      </View>
+
+                      {collaborationRequest.message && (
+                        <View style={styles.section}>
+                          <Text style={styles.sectionTitle}>
+                            {isRequester
+                              ? "Sua mensagem:"
+                              : "Mensagem do solicitante:"}
+                          </Text>
+                          <Text style={styles.sectionContent}>
+                            {collaborationRequest.message}
+                          </Text>
+                        </View>
+                      )}
+
+                      {collaborationRequest.feedback && (
+                        <View style={styles.section}>
+                          <Text style={styles.sectionTitle}>Feedback:</Text>
+                          <Text style={styles.sectionContent}>
+                            {collaborationRequest.feedback}
+                          </Text>
+                        </View>
+                      )}
+                    </View>
+
+                    <View style={{ gap: 8 }}>
+                      {showActions ? (
+                        <>
+                          <Button
+                            style={{
+                              backgroundColor: Colors.light.majorelleBlue,
+                            }}
+                            onPress={handleStartChat}
+                            disabled={isLoading}
+                          >
+                            <Text style={{ color: Colors.light.background }}>
+                              {isLoading ? "Carregando..." : "Iniciar Chat"}
+                            </Text>
+                          </Button>
+                          <Button onPress={handleClose} disabled={isLoading}>
+                            <Text style={{ color: Colors.light.background }}>
+                              Cancelar
+                            </Text>
+                          </Button>
+                        </>
+                      ) : (
+                        <Button onPress={handleClose}>
+                          <Text style={{ color: Colors.light.background }}>
+                            Fechar
+                          </Text>
+                        </Button>
+                      )}
+                    </View>
+                  </>
+                ) : null}
               </View>
             </View>
           </TouchableWithoutFeedback>
