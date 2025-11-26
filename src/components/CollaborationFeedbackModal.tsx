@@ -5,6 +5,7 @@ import {
   View,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
 } from "react-native";
 import { useState } from "react";
 import { Button } from "./Button";
@@ -19,7 +20,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1,
     gap: 24,
-    justifyContent: "center",
+    maxHeight: "40%",
     maxWidth: "90%",
     padding: 16,
   },
@@ -30,8 +31,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 16,
   },
+  scrollContent: {
+    gap: 24,
+  },
   textArea: {
-    minHeight: 100,
+    maxHeight: 85,
+    minHeight: 85,
   },
 });
 
@@ -79,59 +84,67 @@ export function CollaborationFeedbackModal({
           <TouchableWithoutFeedback onPress={() => {}}>
             <View style={styles.root}>
               <View style={styles.container}>
-                <View style={{ gap: 12 }}>
-                  <Text
-                    style={{
-                      textAlign: "justify",
-                      fontWeight: "medium",
-                      fontSize: 16,
-                      color: Colors.light.russianViolet,
-                    }}
-                  >
-                    {isApproval ? "Aprovar Solicitação" : "Recusar Solicitação"}
-                  </Text>
-                  <Text
-                    style={{
-                      textAlign: "justify",
-                      fontSize: 13.33,
-                      color: Colors.light.russianViolet,
-                    }}
-                  >
-                    {isApproval
-                      ? "Envie um feedback para o solicitante sobre sua aprovação."
-                      : "Envie um feedback explicando o motivo da recusa."}
-                  </Text>
-                </View>
-                <TextArea
-                  placeholder={
-                    isApproval
-                      ? "Ex: Bem-vindo à equipe! Estou animado para trabalhar com você."
-                      : "Ex: Infelizmente não podemos aceitar sua solicitação no momento."
-                  }
-                  value={feedback}
-                  onChangeText={setFeedback}
-                  style={styles.textArea}
-                />
-                <View style={{ gap: 8 }}>
-                  <Button
-                    style={{ backgroundColor: Colors.light.majorelleBlue }}
-                    onPress={handleConfirm}
-                    disabled={isLoading || feedback.trim().length < 3}
-                  >
-                    <Text style={{ color: Colors.light.background }}>
-                      {isLoading
-                        ? "Enviando..."
-                        : isApproval
-                          ? "Aprovar"
-                          : "Recusar"}
+                <ScrollView
+                  contentContainerStyle={styles.scrollContent}
+                  keyboardShouldPersistTaps="handled"
+                  showsVerticalScrollIndicator={false}
+                >
+                  <View style={{ gap: 12 }}>
+                    <Text
+                      style={{
+                        textAlign: "justify",
+                        fontWeight: "medium",
+                        fontSize: 16,
+                        color: Colors.light.russianViolet,
+                      }}
+                    >
+                      {isApproval
+                        ? "Aprovar Solicitação"
+                        : "Recusar Solicitação"}
                     </Text>
-                  </Button>
-                  <Button onPress={handleCancel} disabled={isLoading}>
-                    <Text style={{ color: Colors.light.background }}>
-                      Cancelar
+                    <Text
+                      style={{
+                        textAlign: "justify",
+                        fontSize: 13.33,
+                        color: Colors.light.russianViolet,
+                      }}
+                    >
+                      {isApproval
+                        ? "Envie um feedback para o solicitante sobre sua aprovação."
+                        : "Envie um feedback explicando o motivo da recusa."}
                     </Text>
-                  </Button>
-                </View>
+                  </View>
+                  <TextArea
+                    placeholder={
+                      isApproval
+                        ? "Ex: Bem-vindo à equipe! Estou animado para trabalhar com você."
+                        : "Ex: Infelizmente não podemos aceitar sua solicitação no momento."
+                    }
+                    value={feedback}
+                    onChangeText={setFeedback}
+                    style={styles.textArea}
+                  />
+                  <View style={{ gap: 8 }}>
+                    <Button
+                      style={{ backgroundColor: Colors.light.majorelleBlue }}
+                      onPress={handleConfirm}
+                      disabled={isLoading || feedback.trim().length < 3}
+                    >
+                      <Text style={{ color: Colors.light.background }}>
+                        {isLoading
+                          ? "Enviando..."
+                          : isApproval
+                            ? "Aprovar"
+                            : "Recusar"}
+                      </Text>
+                    </Button>
+                    <Button onPress={handleCancel} disabled={isLoading}>
+                      <Text style={{ color: Colors.light.background }}>
+                        Cancelar
+                      </Text>
+                    </Button>
+                  </View>
+                </ScrollView>
               </View>
             </View>
           </TouchableWithoutFeedback>

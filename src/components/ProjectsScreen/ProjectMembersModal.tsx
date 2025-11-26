@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { Text, View } from "../Themed";
 import { Colors } from "@/constants/colors";
 import { Icon } from "../Icon";
@@ -16,6 +17,7 @@ import { handleRequest } from "@/utils/handleRequest";
 import { api } from "@/constants/api";
 import { useConfirmationModal } from "@/hooks/useConfirmationModal";
 import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
+import { RootState } from "@/constants/reduxStore";
 
 const styles = StyleSheet.create({
   avatar: {
@@ -102,6 +104,10 @@ export function ProjectMembersModal({
   const { showToast } = useToast();
   const { showConfirmationModal } = useConfirmationModal();
   const [removingMemberId, setRemovingMemberId] = useState<string | null>(null);
+  const currentUserId = useSelector((state: RootState) => state.user.id);
+  const filteredMembers = members.filter(
+    (member) => member.id !== currentUserId,
+  );
 
   const handleRemoveMember = (memberId: string, memberName: string) => {
     showConfirmationModal({
@@ -148,7 +154,7 @@ export function ProjectMembersModal({
                 </TouchableOpacity>
               </View>
               <ScrollView>
-                {members.map((member) => {
+                {filteredMembers.map((member) => {
                   const firstLetter = member.displayName
                     .charAt(0)
                     .toUpperCase();

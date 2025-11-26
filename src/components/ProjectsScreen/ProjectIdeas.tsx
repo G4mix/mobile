@@ -63,27 +63,36 @@ type IdeaPageable = {
 
 export function ProjectIdeas({ projectId }: { projectId: string }) {
   const { data: project } = useProject(projectId);
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    isFetching,
+  } = useInfiniteQuery({
+    queryKey: ["ideas", { projectId }],
+    queryFn: async ({ pageParam }) =>
+      (
+        await api.get<IdeaPageable>("/idea", {
+          params: {
+            page: pageParam,
+            projectId,
+            quantity: 10,
+          },
+        })
+      ).data,
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => lastPage?.nextPage,
+    enabled: !!projectId && !!project,
+  });
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useInfiniteQuery({
-      queryKey: ["ideas", { projectId }],
-      queryFn: async ({ pageParam }) =>
-        (
-          await api.get<IdeaPageable>("/idea", {
-            params: {
-              page: pageParam,
-              projectId,
-              quantity: 10,
-            },
-          })
-        ).data,
-      initialPageParam: 0,
-      getNextPageParam: (lastPage) => lastPage?.nextPage,
-      enabled: !!projectId,
-    });
-
-  const ideas = data?.pages?.flatMap((page) => page?.data || []) || [];
+  const ideas =
+    data?.pages
+      ?.flatMap((page) => page?.data || [])
+      .filter((idea) => idea != null) || [];
   const isMember = project?.isMember || false;
+  const isLoadingIdeas = isLoading || isFetching;
 
   return (
     <View style={styles.ideas}>
@@ -99,7 +108,14 @@ export function ProjectIdeas({ projectId }: { projectId: string }) {
           </Button>
         )}
       </View>
-      {ideas.length === 0 && !isFetchingNextPage && (
+      {isLoadingIdeas && !data && (
+        <>
+          {[1, 2, 3].map((idea) => (
+            <IdeaLoading key={`idea-loading-initial-${idea}`} />
+          ))}
+        </>
+      )}
+      {!isLoadingIdeas && ideas.length === 0 && !isFetchingNextPage && (
         <Text
           style={{
             color: Colors.light.jet,

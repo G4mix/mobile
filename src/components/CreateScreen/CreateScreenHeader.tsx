@@ -37,12 +37,19 @@ export function CreateScreenHeader({
   data: { title, content, images, links },
   post,
 }: CreateScreenHeaderProps) {
-  const isReadyToSubmit = !!(
+  const singleModification = !!(
     isValidPostTitle(title) === "valid" ||
     isValidPostContent(content) === "valid" ||
     (images && images.length > 0) ||
     (links && links.length > 0)
   );
+  const multipleModification = !!(
+    isValidPostTitle(title) === "valid" &&
+    isValidPostContent(content) === "valid" &&
+    images &&
+    images.length > 0
+  );
+  const isReadyToSubmit = post ? singleModification : multipleModification;
 
   return (
     <View style={styles.header}>

@@ -10,6 +10,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { useEffect, useRef, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
+import { useQueryClient } from "@tanstack/react-query";
 import { Text, View } from "@/components/Themed";
 import { styles as feedStyles } from "../../feed";
 import { Colors } from "@/constants/colors";
@@ -28,6 +29,7 @@ import { api } from "@/constants/api";
 import { useFeedQueries } from "@/hooks/useFeedQueries";
 import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
 import { ProjectMembersModal } from "@/components/ProjectsScreen/ProjectMembersModal";
+import { usePullToRefresh } from "@/hooks/usePullToRefresh";
 
 export const styles = StyleSheet.create({
   ...feedStyles,
@@ -70,6 +72,7 @@ export default function ProjectsScreen() {
   const route = useRoute();
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
   const { projectId } = useLocalSearchParams<{ projectId: string }>();
   const { data: project, isLoading, refetch } = useProject(projectId);
   const { showToast } = useToast();
@@ -78,11 +81,57 @@ export default function ProjectsScreen() {
   const [isMembersModalVisible, setIsMembersModalVisible] = useState(false);
   const { invalidateProjectQuery, invalidateProjectsQuery } = useFeedQueries();
 
+  const actualTab = useSelector(
+    (state: any) => state.projects.actualTab,
+  ) as Tab<"project">["key"];
+  const tabs: Tab<"project">[] = [
+    { name: "Ideias", key: "ideas" },
+    { name: "Sobre", key: "about" },
+  ];
+
+  const tabComponents = {
+    ideas: ProjectIdeas,
+    about: ProjectAbout,
+  };
+
+  const tabKeys = tabs.map((tab) => tab.key);
+  const actualTabRef = useRef(actualTab);
   useEffect(() => {
     if (project) {
       setIsFollowing(project.isFollowing);
     }
   }, [project]);
+
+  useEffect(() => {
+    actualTabRef.current = actualTab;
+  }, [actualTab]);
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: (_, gestureState) =>
+        Math.abs(gestureState.dx) > 20 && Math.abs(gestureState.dy) < 20,
+      onPanResponderRelease: (_, gestureState) => {
+        const currentIndex = tabKeys.indexOf(actualTabRef.current);
+        if (gestureState.dx < -50 && currentIndex < tabKeys.length - 1) {
+          dispatch(setActualTab(tabKeys[currentIndex + 1]));
+        } else if (gestureState.dx > 50 && currentIndex > 0) {
+          dispatch(setActualTab(tabKeys[currentIndex - 1]));
+        }
+      },
+    }),
+  ).current;
+
+  const handleRefresh = async () => {
+    await queryClient.invalidateQueries({ queryKey: ["project", projectId] });
+    await queryClient.invalidateQueries({
+      queryKey: ["ideas", { projectId }],
+    });
+    await refetch();
+  };
+
+  const { refreshControl } = usePullToRefresh({
+    onRefresh: handleRefresh,
+  });
 
   const handleFollow = async () => {
     if (isLoadingFollow || !projectId) return;
@@ -138,39 +187,6 @@ export default function ProjectsScreen() {
   const createdBy = project.owner?.displayName || "Desconhecido";
   const createdById = project.ownerId;
 
-  const actualTab = useSelector(
-    (state: any) => state.projects.actualTab,
-  ) as Tab<"project">["key"];
-  const tabs: Tab<"project">[] = [
-    { name: "Ideias", key: "ideas" },
-    { name: "Sobre", key: "about" },
-  ];
-
-  const tabComponents = {
-    ideas: ProjectIdeas,
-    about: ProjectAbout,
-  };
-
-  const tabKeys = tabs.map((tab) => tab.key);
-  const actualTabRef = useRef(actualTab);
-  useEffect(() => {
-    actualTabRef.current = actualTab;
-  }, [actualTab]);
-  const panResponder = useRef(
-    PanResponder.create({
-      onMoveShouldSetPanResponder: (_, gestureState) =>
-        Math.abs(gestureState.dx) > 20 && Math.abs(gestureState.dy) < 20,
-      onPanResponderRelease: (_, gestureState) => {
-        const currentIndex = tabKeys.indexOf(actualTabRef.current);
-        if (gestureState.dx < -50 && currentIndex < tabKeys.length - 1) {
-          dispatch(setActualTab(tabKeys[currentIndex + 1]));
-        } else if (gestureState.dx > 50 && currentIndex > 0) {
-          dispatch(setActualTab(tabKeys[currentIndex - 1]));
-        }
-      },
-    }),
-  ).current;
-
   const ActualTab = tabComponents[actualTab];
 
   return (
@@ -181,7 +197,11 @@ export default function ProjectsScreen() {
         navigation={navigation as any}
         options={{}}
       />
-      <ScrollView style={styles.scroll} {...panResponder.panHandlers}>
+      <ScrollView
+        style={styles.scroll}
+        refreshControl={refreshControl}
+        {...panResponder.panHandlers}
+      >
         <View style={styles.projects}>
           <View style={styles.root}>
             <View style={styles.backgroundContainer}>
