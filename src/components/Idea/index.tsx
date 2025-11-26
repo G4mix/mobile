@@ -43,6 +43,7 @@ type IdeaProps = {
   alreadyVisualized?: boolean;
   idea?: IdeaType;
   onInView?: () => void;
+  short?: boolean;
 };
 
 const styles = StyleSheet.create({
@@ -72,16 +73,24 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 0,
   },
+  shortIdeaContainer: {
+    minHeight: 290,
+  },
 });
 
-export function Idea({ alreadyVisualized, idea, onInView }: IdeaProps) {
+export function Idea({
+  alreadyVisualized,
+  idea,
+  onInView,
+  short = false,
+}: IdeaProps) {
   // const [isDeleting, setIsDeleting] = useState(false);
   // if (isDeleting) return <IdeaLoading />;
   if (!idea) return null;
   const firstImage =
     idea.images && idea.images.length > 0 ? idea.images[0] : null;
   return (
-    <View style={styles.ideaContainer}>
+    <View style={[styles.ideaContainer, short && styles.shortIdeaContainer]}>
       {firstImage && (
         <Image
           source={{ uri: getImgWithTimestamp(firstImage) }}
@@ -100,14 +109,17 @@ export function Idea({ alreadyVisualized, idea, onInView }: IdeaProps) {
           title={idea.title}
           content={idea.content}
           tags={idea.tags}
+          short={short}
         />
-        <IdeaActions
-          ideaId={idea.id}
-          likes={idea.likes}
-          comments={idea.comments}
-          liked={idea.isLiked}
-          authorId={idea.author.id}
-        />
+        {!short && (
+          <IdeaActions
+            ideaId={idea.id}
+            likes={idea.likes}
+            comments={idea.comments}
+            liked={idea.isLiked}
+            authorId={idea.author.id}
+          />
+        )}
       </View>
       {!alreadyVisualized && onInView && <InView onInView={onInView} />}
     </View>

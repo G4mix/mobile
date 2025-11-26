@@ -4,11 +4,13 @@ import { userReducer } from "@/features/auth/userSlice";
 import { commentsReducer } from "@/features/comments/commentsSlice";
 import { profileReducer } from "@/features/profile/profileSlice";
 import { notificationsReducer } from "@/features/notifications/notificationsSlice";
+import { projectsReducer } from "../features/projects/projectsSlice";
 
 export const reduxStore = configureStore({
   reducer: {
     comments: commentsReducer,
     profile: profileReducer,
+    projects: projectsReducer,
     feed: feedReducer,
     user: userReducer,
     notifications: notificationsReducer,

@@ -78,9 +78,17 @@ export default function CreateScreen() {
   const [isCameraVisible, setIsCameraVisible] = useState(false);
   const [isSuccessVisible, setIsSuccessVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { invalidateAllIdeas, invalidateIdeaQuery, invalidateUserQuery } =
-    useFeedQueries();
-  const { ideaId } = useLocalSearchParams<{ ideaId: string }>();
+  const {
+    invalidateAllIdeas,
+    invalidateIdeaQuery,
+    invalidateUserQuery,
+    invalidateProjectIdeasQuery,
+    invalidateProjectQuery,
+  } = useFeedQueries();
+  const { ideaId, projectId } = useLocalSearchParams<{
+    ideaId?: string;
+    projectId?: string;
+  }>();
   const user = useSelector((state: RootState) => state.user);
 
   const { watch, setValue, handleSubmit } = useForm<CreateScreenFormData>();
@@ -154,16 +162,16 @@ export default function CreateScreen() {
     });
 
     const data = await handleRequest<IdeaType>({
-      requestFn: async () =>
-        api[idea && ideaId ? "patch" : "post"](
-          `/idea${idea && ideaId ? `/${ideaId}` : ""}`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
+      requestFn: async () => {
+        const url = `/idea${idea && ideaId ? `/${ideaId}` : ""}`;
+        const params = projectId ? { projectId } : {};
+        return api[idea && ideaId ? "patch" : "post"](url, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
           },
-        ),
+          params,
+        });
+      },
       showToast,
       setIsLoading,
     });
@@ -172,12 +180,20 @@ export default function CreateScreen() {
       invalidateIdeaQuery(ideaId);
     }
     invalidateAllIdeas();
+    if (projectId) {
+      invalidateProjectIdeasQuery(projectId);
+      invalidateProjectQuery(projectId);
+    }
     invalidateUserQuery(user.id);
     clearFields();
     setIsSuccessVisible(true);
     await timeout(1000);
     setIsSuccessVisible(false);
-    router.push("/(tabs)/feed");
+    if (projectId) {
+      router.push(`/(tabs)/projects/${projectId}`);
+    } else {
+      router.push("/(tabs)/feed");
+    }
   };
 
   const onSubmit = handleSubmit(createOrUpdatePost);

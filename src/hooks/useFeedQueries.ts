@@ -39,10 +39,40 @@ export const useFeedQueries = () => {
     );
   };
 
+  const invalidateProjectsQuery = () => {
+    queryClient.invalidateQueries(
+      { queryKey: ["projects"] },
+      {
+        cancelRefetch: true,
+      },
+    );
+  };
+
+  const invalidateProjectQuery = (projectId: string) => {
+    queryClient.invalidateQueries(
+      { queryKey: ["project", projectId] },
+      {
+        cancelRefetch: true,
+      },
+    );
+  };
+
+  const invalidateProjectIdeasQuery = (projectId: string) => {
+    queryClient.invalidateQueries(
+      { queryKey: ["ideas", { projectId }] },
+      {
+        cancelRefetch: true,
+      },
+    );
+  };
+
   return {
     invalidateAllIdeas,
     invalidateIdeaQuery,
     invalidateUserQuery,
     invalidateCommentsQuery,
+    invalidateProjectsQuery,
+    invalidateProjectQuery,
+    invalidateProjectIdeasQuery,
   };
 };

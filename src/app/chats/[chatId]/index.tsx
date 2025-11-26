@@ -165,6 +165,9 @@ export default function ChatScreen() {
     if (result !== null) {
       queryClient.invalidateQueries({ queryKey: ["chat", chatId] });
       queryClient.invalidateQueries({ queryKey: ["chats"] });
+      if (status === "Approved") {
+        queryClient.invalidateQueries({ queryKey: ["projects"] });
+      }
       setTimeout(() => {
         router.back();
       }, 500);

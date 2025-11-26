@@ -39,9 +39,16 @@ type IdeaBodyProps = {
   title?: string;
   content?: string;
   tags?: string[];
+  short?: boolean;
 };
 
-export function IdeaBody({ author, title, content, tags }: IdeaBodyProps) {
+export function IdeaBody({
+  author,
+  title,
+  content,
+  tags,
+  short = false,
+}: IdeaBodyProps) {
   const [displayText, setDisplayText] = useState(content);
   const [truncated, setTruncated] = useState(false);
 
@@ -101,23 +108,25 @@ export function IdeaBody({ author, title, content, tags }: IdeaBodyProps) {
         })()}
       </View>
 
-      <View style={styles.postDescriptionContainer}>
-        {content && (
-          <Text
-            style={styles.postDescription}
-            onTextLayout={() => {
-              if (content.length > 300 && !truncated && content) {
-                const truncatedText = `${content.slice(0, 300).trim()}...`;
-                setDisplayText(truncatedText);
-                setTruncated(true);
-              }
-            }}
-          >
-            {displayText}{" "}
-            {truncated && <Text style={styles.seeMore}>ver mais</Text>}
-          </Text>
-        )}
-      </View>
+      {!short && (
+        <View style={styles.postDescriptionContainer}>
+          {content && (
+            <Text
+              style={styles.postDescription}
+              onTextLayout={() => {
+                if (content.length > 300 && !truncated && content) {
+                  const truncatedText = `${content.slice(0, 300).trim()}...`;
+                  setDisplayText(truncatedText);
+                  setTruncated(true);
+                }
+              }}
+            >
+              {displayText}{" "}
+              {truncated && <Text style={styles.seeMore}>ver mais</Text>}
+            </Text>
+          )}
+        </View>
+      )}
     </>
   );
 }

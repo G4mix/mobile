@@ -11,7 +11,9 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { Text } from "@/components/Themed";
 import { Colors } from "@/constants/colors";
-import { setActualTab } from "@/features/profile/profileSlice";
+import { setActualTab as setProfileTab } from "@/features/profile/profileSlice";
+import { setActualTab as setProjectsTab } from "@/features/projects/projectsSlice";
+import { setActualTab as setFeedTab } from "@/features/feed/feedSlice";
 
 const styles = StyleSheet.create({
   actualTab: {
@@ -43,7 +45,9 @@ export type Tab<T extends string = "feed"> = {
     ? "following" | "recommendations" | "highlights"
     : T extends "profile"
       ? "ideas" | "about"
-      : undefined;
+      : T extends "project"
+        ? "ideas" | "about"
+        : undefined;
   disabled?: boolean;
 };
 
@@ -53,14 +57,31 @@ export function ContentTabs({
   contentTabStyles = {},
 }: {
   tabs: Tab<any>[];
-  tabType: "feed" | "profile";
+  tabType: "feed" | "profile" | "project";
   contentTabStyles?: StyleProp<ViewStyle>;
 }) {
-  const actualTab = useSelector((state: any) => state[tabType].actualTab);
+  const stateKey = tabType === "project" ? "projects" : tabType;
+  const actualTab = useSelector((state: any) => {
+    const tabState = state[stateKey];
+    if (!tabState || !tabState.actualTab) {
+      return tabType === "project"
+        ? "ideas"
+        : tabType === "profile"
+          ? "ideas"
+          : "recommendations";
+    }
+    return tabState.actualTab;
+  });
   const dispatch = useDispatch();
 
   const handlePress = (key: Tab<any>["key"]) => {
-    dispatch(setActualTab(key));
+    if (tabType === "profile") {
+      dispatch(setProfileTab(key));
+    } else if (tabType === "project") {
+      dispatch(setProjectsTab(key));
+    } else if (tabType === "feed") {
+      dispatch(setFeedTab(key));
+    }
   };
 
   return (
