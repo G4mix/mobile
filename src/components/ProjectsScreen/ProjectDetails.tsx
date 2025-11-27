@@ -103,7 +103,9 @@ export function ProjectDetails({
               </View>
               {topFollowers[0] && (
                 <Text style={styles.followersText}>
-                  {topFollowers[0].name} e mais {followersCount - 1} seguem
+                  {followersCount === 1
+                    ? `${topFollowers[0].name} está seguindo`
+                    : `${topFollowers[0].name} e mais ${followersCount - 1} seguem`}
                 </Text>
               )}
             </View>

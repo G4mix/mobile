@@ -299,8 +299,9 @@ export default function ProjectsScreen() {
                     </View>
                     {project.topFollowers[0] && (
                       <Text style={styles.followersText}>
-                        {project.topFollowers[0].name} e mais{" "}
-                        {project.followersCount - 1} seguem
+                        {project.followersCount === 1
+                          ? `${project.topFollowers[0].name} está seguindo`
+                          : `${project.topFollowers[0].name} e mais ${project.followersCount - 1} seguem`}
                       </Text>
                     )}
                   </View>
