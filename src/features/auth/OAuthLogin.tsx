@@ -10,9 +10,10 @@ WebBrowser.maybeCompleteAuthSession();
 
 type OAuthLoginProps = {
   provider: "google" | "github" | "linkedin";
+  disabled?: boolean;
 };
 
-export function OAuthLogin({ provider }: OAuthLoginProps) {
+export function OAuthLogin({ provider, disabled = false }: OAuthLoginProps) {
   const providers = {
     google: { image: googleIcon },
     linkedin: { image: linkedinIcon },
@@ -25,13 +26,14 @@ export function OAuthLogin({ provider }: OAuthLoginProps) {
   const handleAuth = useOAuth({ provider });
 
   return (
-    <Pressable onPress={handleAuth}>
+    <Pressable onPress={disabled ? undefined : handleAuth} disabled={disabled}>
       <View
         style={{
           borderRadius: 8,
           borderWidth: 1,
           borderColor: Colors.light.tropicalIndigo,
           padding: 6,
+          opacity: disabled ? 0.7 : 1,
         }}
       >
         <Image

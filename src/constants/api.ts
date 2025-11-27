@@ -1,13 +1,12 @@
 import axios, { AxiosInstance } from "axios";
 import { getItem, setItem } from "./storage";
 import { authEventEmitter } from "./authEventEmitter";
-import { env } from "./env";
 
 const globalForAxios = globalThis as unknown as {
   axiosInstance?: AxiosInstance;
 };
 
-const baseURL = `https://${env.EXPO_PUBLIC_API_URL}/v1`;
+const baseURL = `https://${process.env.EXPO_PUBLIC_API_URL}/v1`;
 
 if (!globalForAxios.axiosInstance) {
   globalForAxios.axiosInstance = axios.create({

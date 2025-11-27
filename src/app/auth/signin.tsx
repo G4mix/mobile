@@ -101,6 +101,7 @@ export default function LoginScreen() {
           <OAuthLogin
             provider={provider as any}
             key={`handle-login-with-${provider}`}
+            disabled
           />
         ))}
       </View>
@@ -127,8 +128,8 @@ export default function LoginScreen() {
           returnKeyType="done"
           ref={passwordRef}
         />
-        <Link href="/auth/forget-password">
-          <Text style={{ color: Colors.light.tropicalIndigo }}>
+        <Link href="/auth/forget-password" disabled>
+          <Text style={{ color: Colors.light.tropicalIndigo, opacity: 0.7 }}>
             Esqueci minha senha
           </Text>
         </Link>
