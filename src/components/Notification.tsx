@@ -1,7 +1,8 @@
-import { View, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { Image } from "expo-image";
 import { Colors } from "@/constants/colors";
 import { Text } from "./Themed";
-import { getImgWithTimestamp } from "../utils/getImgWithTimestamp";
+import { getCachedImageUrl } from "../utils/getCachedImageUrl";
 import { NotificationDto } from "@/features/notifications/notificationsSlice";
 import { formatNotificationMessage } from "@/utils/formatNotificationMessage";
 
@@ -96,8 +97,10 @@ export function Notification({
       <View style={{ position: "relative" }}>
         {icon ? (
           <Image
-            source={{ uri: getImgWithTimestamp(icon) }}
+            source={{ uri: getCachedImageUrl(icon) }}
             style={styles.imageProfile}
+            cachePolicy="memory-disk"
+            contentFit="cover"
           />
         ) : (
           <View

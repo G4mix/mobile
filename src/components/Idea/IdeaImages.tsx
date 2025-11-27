@@ -1,7 +1,8 @@
 import React from "react";
-import { View, StyleSheet, Dimensions, FlatList, Image } from "react-native";
+import { View, StyleSheet, Dimensions, FlatList } from "react-native";
+import { Image } from "expo-image";
 import { IdeaType } from "@/components/Idea";
-import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
+import { getCachedImageUrl } from "@/utils/getCachedImageUrl";
 
 const { width } = Dimensions.get("window");
 
@@ -51,8 +52,10 @@ export function IdeaImages({
         initialScrollIndex={0}
         renderItem={({ item }) => (
           <Image
-            source={{ uri: getImgWithTimestamp(item) }}
+            source={{ uri: getCachedImageUrl(item) }}
             style={styles.image}
+            contentFit="cover"
+            cachePolicy="memory-disk"
           />
         )}
         getItemLayout={(_data, index) => ({

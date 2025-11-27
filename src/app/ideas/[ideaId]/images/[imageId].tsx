@@ -5,9 +5,9 @@ import {
   StyleSheet,
   Dimensions,
   FlatList,
-  Image,
   Animated,
 } from "react-native";
+import { Image } from "expo-image";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 import { api } from "@/constants/api";
@@ -15,7 +15,7 @@ import { IdeaType } from "@/components/Idea";
 import { Loading } from "@/components/Loading";
 import { Colors } from "@/constants/colors";
 import { Icon } from "@/components/Icon";
-import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
+import { getCachedImageUrl } from "@/utils/getCachedImageUrl";
 
 const { width } = Dimensions.get("window");
 
@@ -109,8 +109,10 @@ export default function IdeaImageScreen() {
         )}
         renderItem={({ item }) => (
           <Image
-            source={{ uri: getImgWithTimestamp(item) }}
+            source={{ uri: getCachedImageUrl(item) }}
             style={styles.image}
+            contentFit="contain"
+            cachePolicy="memory-disk"
           />
         )}
         getItemLayout={(_data, index) => ({

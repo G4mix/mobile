@@ -1,8 +1,9 @@
-import { Image, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
+import { Image } from "expo-image";
 import { Text } from "../Themed";
 import { Colors } from "@/constants/colors";
 import { Icon } from "../Icon";
-import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
+import { getCachedImageUrl } from "@/utils/getCachedImageUrl";
 import { styles as projectItemStyles } from "./ProjectItem";
 
 export function ProjectHeader({
@@ -50,13 +51,14 @@ export function ProjectHeader({
         )}
         {backgroundImage ? (
           <Image
-            source={{ uri: getImgWithTimestamp(backgroundImage) }}
+            source={{ uri: getCachedImageUrl(backgroundImage) }}
             style={{
               width: "100%",
               minHeight: 140,
               borderRadius: 16,
             }}
-            resizeMode="cover"
+            contentFit="cover"
+            cachePolicy="memory-disk"
           />
         ) : (
           <Text
@@ -95,8 +97,10 @@ export function ProjectHeader({
             />
           )}
           <Image
-            source={{ uri: getImgWithTimestamp(icon) }}
+            source={{ uri: getCachedImageUrl(icon) }}
             style={projectItemStyles.iconImage}
+            cachePolicy="memory-disk"
+            contentFit="cover"
           />
         </EditableComponent>
       ) : (

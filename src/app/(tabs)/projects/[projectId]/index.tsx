@@ -1,10 +1,10 @@
 import {
-  Image,
   PanResponder,
   ScrollView,
   StyleSheet,
   ActivityIndicator,
 } from "react-native";
+import { Image } from "expo-image";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useEffect, useRef, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
@@ -26,7 +26,7 @@ import { useToast } from "@/hooks/useToast";
 import { handleRequest } from "@/utils/handleRequest";
 import { api } from "@/constants/api";
 import { useFeedQueries } from "@/hooks/useFeedQueries";
-import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
+import { getCachedImageUrl } from "@/utils/getCachedImageUrl";
 import { ProjectMembersModal } from "@/components/ProjectsScreen/ProjectMembersModal";
 import { ProjectOptions } from "@/components/ProjectsScreen/ProjectOptions";
 import { usePullToRefresh } from "@/hooks/usePullToRefresh";
@@ -209,8 +209,10 @@ export default function ProjectsScreen() {
               {project.icon ? (
                 <View style={styles.iconContainer}>
                   <Image
-                    source={{ uri: getImgWithTimestamp(project.icon) }}
+                    source={{ uri: getCachedImageUrl(project.icon) }}
                     style={styles.iconImage}
+                    cachePolicy="memory-disk"
+                    contentFit="cover"
                   />
                 </View>
               ) : (
@@ -222,9 +224,10 @@ export default function ProjectsScreen() {
               )}
               {project.backgroundImage ? (
                 <Image
-                  source={{ uri: getImgWithTimestamp(project.backgroundImage) }}
+                  source={{ uri: getCachedImageUrl(project.backgroundImage) }}
                   style={styles.backgroundImage}
-                  resizeMode="cover"
+                  contentFit="cover"
+                  cachePolicy="memory-disk"
                 />
               ) : (
                 <Text
@@ -283,8 +286,10 @@ export default function ProjectsScreen() {
                               {follower.icon ? (
                                 <Image
                                   source={{
-                                    uri: getImgWithTimestamp(follower.icon),
+                                    uri: getCachedImageUrl(follower.icon),
                                   }}
+                                  cachePolicy="memory-disk"
+                                  contentFit="cover"
                                   style={styles.avatarImage}
                                 />
                               ) : (

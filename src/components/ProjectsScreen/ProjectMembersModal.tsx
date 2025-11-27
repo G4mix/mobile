@@ -4,9 +4,9 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   ScrollView,
-  Image,
   ActivityIndicator,
 } from "react-native";
+import { Image } from "expo-image";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Text, View } from "../Themed";
@@ -16,7 +16,7 @@ import { useToast } from "@/hooks/useToast";
 import { handleRequest } from "@/utils/handleRequest";
 import { api } from "@/constants/api";
 import { useConfirmationModal } from "@/hooks/useConfirmationModal";
-import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
+import { getCachedImageUrl } from "@/utils/getCachedImageUrl";
 import { RootState } from "@/constants/reduxStore";
 
 const styles = StyleSheet.create({
@@ -165,8 +165,10 @@ export function ProjectMembersModal({
                       <View style={styles.memberInfo}>
                         {member.icon ? (
                           <Image
-                            source={{ uri: getImgWithTimestamp(member.icon) }}
+                            source={{ uri: getCachedImageUrl(member.icon) }}
                             style={styles.avatarImage}
+                            cachePolicy="memory-disk"
+                            contentFit="cover"
                           />
                         ) : (
                           <View style={styles.avatar}>

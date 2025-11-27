@@ -1,4 +1,5 @@
-import { ScrollView, Image, Pressable, StyleSheet } from "react-native";
+import { ScrollView, Pressable, StyleSheet } from "react-native";
+import { Image } from "expo-image";
 import { MentionSuggestionsProps } from "react-native-controlled-mentions";
 import { Portal } from "react-native-paper";
 import { Text, View } from "../Themed";
@@ -7,7 +8,7 @@ import { useUsers } from "@/hooks/useUsers";
 import { InView } from "../InView";
 import { Icon } from "../Icon";
 import { RenderUserSugestionsLoading } from "./RenderUserSugestionsLoading";
-import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
+import { getCachedImageUrl } from "@/utils/getCachedImageUrl";
 
 const styles = StyleSheet.create({
   imageProfile: {
@@ -59,8 +60,10 @@ export function RenderUserSuggestions({
             >
               {user.icon ? (
                 <Image
-                  source={{ uri: getImgWithTimestamp(user.icon) }}
+                  source={{ uri: getCachedImageUrl(user.icon) }}
                   style={styles.imageProfile}
+                  cachePolicy="memory-disk"
+                  contentFit="cover"
                 />
               ) : (
                 <Icon

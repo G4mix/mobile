@@ -1,6 +1,7 @@
-import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { Image } from "expo-image";
 import { Icon } from "../Icon";
-import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
+import { getCachedImageUrl } from "@/utils/getCachedImageUrl";
 
 const styles = StyleSheet.create({
   postContentImage: {
@@ -43,10 +44,10 @@ export function CreateScreenImage({
   return (
     <View style={styles.postContentImageRoot}>
       <Image
-        style={styles.postContentImage}
-        src={getImgWithTimestamp(src)}
-        width={284}
-        height={146}
+        style={[styles.postContentImage, { width: 284, height: 146 }]}
+        source={{ uri: getCachedImageUrl(src) }}
+        cachePolicy="memory-disk"
+        contentFit="cover"
       />
       <TouchableOpacity
         style={styles.postContentImageCancelRoot}

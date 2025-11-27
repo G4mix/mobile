@@ -1,7 +1,8 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image } from "expo-image";
 import { Button } from "@/components/Button";
 import { Icon } from "@/components/Icon";
 import { api } from "@/constants/api";
@@ -10,7 +11,7 @@ import { UserState } from "@/features/auth/userSlice";
 import { useToast } from "@/hooks/useToast";
 import { debounce } from "@/utils/debounce";
 import { formatFollowers } from "@/utils/formatFollowers";
-import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
+import { getCachedImageUrl } from "@/utils/getCachedImageUrl";
 import { handleRequest } from "@/utils/handleRequest";
 
 const styles = StyleSheet.create({
@@ -144,9 +145,11 @@ export function UserListItem({ userId }: { userId: string }) {
               {data.icon ? (
                 <Image
                   source={{
-                    uri: getImgWithTimestamp(data.icon),
+                    uri: getCachedImageUrl(data.icon),
                   }}
                   style={styles.imageProfile}
+                  cachePolicy="memory-disk"
+                  contentFit="cover"
                 />
               ) : (
                 <Icon

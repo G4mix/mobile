@@ -10,7 +10,7 @@ import { Colors } from "@/constants/colors";
 import { ProfileHeader } from "@/components/ProfileScreen/ProfileHeader";
 import { api } from "@/constants/api";
 import { UserState } from "@/features/auth/userSlice";
-import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
+import { getCachedImageUrl } from "@/utils/getCachedImageUrl";
 import { setActualTab } from "@/features/profile/profileSlice";
 import { ProfileHeaderLoading } from "@/components/ProfileScreen/ProfileHeaderLoading";
 import { usePullToRefresh } from "@/hooks/usePullToRefresh";
@@ -102,9 +102,9 @@ export default function ProfileScreen() {
         {!isLoading && data && (
           <ProfileHeader
             isFollowing={data.isFollowing}
-            icon={getImgWithTimestamp(data.icon!)}
+            icon={getCachedImageUrl(data.icon!)}
             displayName={data.displayName}
-            backgroundImage={getImgWithTimestamp(data.backgroundImage!)}
+            backgroundImage={getCachedImageUrl(data.backgroundImage!)}
             username={data.user.username}
             id={data.id}
             userProfileId={data.id}

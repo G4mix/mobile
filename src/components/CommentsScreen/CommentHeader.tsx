@@ -1,10 +1,11 @@
-import { Image, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { Image } from "expo-image";
 import { Icon } from "../Icon";
 import { Text } from "../Themed";
 import { Colors } from "@/constants/colors";
 import { formatDate } from "@/utils/formatDate";
 import { IdeaType } from "../Idea";
-import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
+import { getCachedImageUrl } from "@/utils/getCachedImageUrl";
 
 export const styles = StyleSheet.create({
   firstRow: {
@@ -50,8 +51,10 @@ export function CommentHeader({ author, createdAt }: CommentHeaderProps) {
         <View style={styles.postUserInformation}>
           {author.icon ? (
             <Image
-              source={{ uri: getImgWithTimestamp(author.icon) }}
+              source={{ uri: getCachedImageUrl(author.icon) }}
               style={styles.imageProfile}
+              cachePolicy="memory-disk"
+              contentFit="cover"
             />
           ) : (
             <Icon size={18} name="user-circle" color={Colors.dark.background} />

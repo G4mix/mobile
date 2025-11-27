@@ -1,7 +1,8 @@
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
-import { Image, View } from "react-native";
+import { View } from "react-native";
+import { Image } from "expo-image";
 import { Header } from "../Header";
-import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
+import { getCachedImageUrl } from "@/utils/getCachedImageUrl";
 import { Text } from "../Themed";
 import { styles } from "./ChatItem";
 
@@ -15,12 +16,14 @@ function UserIcon({
   if (icon) {
     return (
       <Image
-        source={{ uri: getImgWithTimestamp(icon) }}
+        source={{ uri: getCachedImageUrl(icon) }}
         style={{
           ...styles.imageProfile,
           width: 32,
           height: 32,
         }}
+        cachePolicy="memory-disk"
+        contentFit="cover"
       />
     );
   }

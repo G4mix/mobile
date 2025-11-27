@@ -22,7 +22,10 @@ import { setItem } from "@/constants/storage";
 import { SpinLoading } from "@/components/SpinLoading";
 import { SuccessModal } from "@/components/SuccessModal";
 import { getDate } from "@/utils/getDate";
-import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
+import {
+  getCachedImageUrl,
+  invalidateImageCache,
+} from "@/utils/getCachedImageUrl";
 import { Camera } from "@/components/Camera";
 
 const styles = StyleSheet.create({
@@ -133,6 +136,19 @@ export default function ConfigProfileScreen() {
     });
     if (!data) return;
 
+    if (icon?.uri && icon.uri !== user.icon) {
+      await invalidateImageCache(icon.uri);
+    }
+    if (backgroundImage?.uri && backgroundImage.uri !== user.backgroundImage) {
+      await invalidateImageCache(backgroundImage.uri);
+    }
+    if (data.icon && data.icon !== user.icon) {
+      await invalidateImageCache(data.icon);
+    }
+    if (data.backgroundImage && data.backgroundImage !== user.backgroundImage) {
+      await invalidateImageCache(data.backgroundImage);
+    }
+
     await setItem("user", JSON.stringify(data));
     dispatch(setUser(data));
     queryClient.setQueryData(["user", user.id], data);
@@ -159,8 +175,8 @@ export default function ConfigProfileScreen() {
     setIsCameraVisible(true);
   };
 
-  const iconUri = getImgWithTimestamp(icon?.uri);
-  const bgUri = getImgWithTimestamp(backgroundImage?.uri);
+  const iconUri = getCachedImageUrl(icon?.uri);
+  const bgUri = getCachedImageUrl(backgroundImage?.uri);
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: Colors.light.background }}>

@@ -1,11 +1,12 @@
-import { Image, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
+import { Image } from "expo-image";
 import { useSelector } from "react-redux";
 import { Text, View } from "../Themed";
 import { Icon } from "../Icon";
 import { Colors } from "@/constants/colors";
 import { styles as postHeaderStyles } from "@/components/CommentsScreen/CommentHeader";
 import { RootState } from "@/constants/reduxStore";
-import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
+import { getCachedImageUrl } from "@/utils/getCachedImageUrl";
 
 const styles = StyleSheet.create({
   imageProfile: {
@@ -44,8 +45,10 @@ export function CreateScreenAuthor() {
     <View style={styles.postUserInformation}>
       {user.icon ? (
         <Image
-          source={{ uri: getImgWithTimestamp(user?.icon) }}
+          source={{ uri: getCachedImageUrl(user?.icon) }}
           style={styles.imageProfile}
+          cachePolicy="memory-disk"
+          contentFit="cover"
         />
       ) : (
         <View style={{ position: "relative", width: 24, height: 24 }}>

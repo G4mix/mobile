@@ -7,20 +7,20 @@ import {
   TabTriggerSlotProps,
 } from "expo-router/ui";
 import {
-  Image,
   Pressable,
   StyleProp,
   StyleSheet,
   View,
   ViewStyle,
 } from "react-native";
+import { Image } from "expo-image";
 
 import { Href } from "expo-router";
 import { useSelector } from "react-redux";
 import { Colors } from "@/constants/colors";
 import { Icon, IconName } from "@/components/Icon";
 import { RootState } from "@/constants/reduxStore";
-import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
+import { getCachedImageUrl } from "@/utils/getCachedImageUrl";
 import { NotificationBadge } from "@/components/NotificationBadge";
 
 interface TabBarIconProps extends React.PropsWithChildren, TabTriggerSlotProps {
@@ -52,7 +52,7 @@ const TabBarIcon = React.forwardRef<View, TabBarIconPropsWithBadge>(
     >
       {props.userIcon ? (
         <Image
-          source={{ uri: getImgWithTimestamp(props.userIcon) }}
+          source={{ uri: getCachedImageUrl(props.userIcon) }}
           style={{
             borderRadius: 9999,
             height: props.size,
@@ -62,6 +62,8 @@ const TabBarIcon = React.forwardRef<View, TabBarIconPropsWithBadge>(
               ? Colors.light.majorelleBlue
               : Colors.light.russianViolet,
           }}
+          cachePolicy="memory-disk"
+          contentFit="cover"
         />
       ) : (
         <View style={{ position: "relative" }}>

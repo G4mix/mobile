@@ -1,10 +1,11 @@
 import React from "react";
-import { View, StyleSheet, Dimensions, Image } from "react-native";
+import { View, StyleSheet, Dimensions } from "react-native";
+import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { InView } from "../InView";
 import { IdeaBody } from "./IdeaBody";
 import { IdeaActions } from "./IdeaActions";
-import { getImgWithTimestamp } from "../../utils/getImgWithTimestamp";
+import { getCachedImageUrl } from "../../utils/getCachedImageUrl";
 
 export type IdeaType = {
   id: string;
@@ -93,8 +94,10 @@ export function Idea({
     <View style={[styles.ideaContainer, short && styles.shortIdeaContainer]}>
       {firstImage && (
         <Image
-          source={{ uri: getImgWithTimestamp(firstImage) }}
+          source={{ uri: getCachedImageUrl(firstImage) }}
           style={styles.image}
+          contentFit="cover"
+          cachePolicy="memory-disk"
         />
       )}
       <LinearGradient

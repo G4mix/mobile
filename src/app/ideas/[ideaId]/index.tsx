@@ -2,12 +2,12 @@ import { Link, router, useLocalSearchParams } from "expo-router";
 import {
   View,
   ScrollView,
-  Image,
   StyleSheet,
   TouchableOpacity,
   Dimensions,
   Share,
 } from "react-native";
+import { Image } from "expo-image";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
@@ -22,7 +22,7 @@ import { IdeaLoading } from "@/components/Idea/IdeaLoading";
 import { CommentLoading } from "@/components/CommentsScreen/CommentLoading";
 import { Colors } from "@/constants/colors";
 import { usePullToRefresh } from "@/hooks/usePullToRefresh";
-import { getImgWithTimestamp } from "../../../utils/getImgWithTimestamp";
+import { getCachedImageUrl } from "../../../utils/getCachedImageUrl";
 import { Icon } from "../../../components/Icon";
 import { Text } from "../../../components/Themed";
 import { abbreviateNumber } from "../../../utils/abbreviateNumber";
@@ -275,8 +275,10 @@ export default function IdeaScreen() {
           <View style={styles.ideaContainer}>
             <View style={styles.imageContainer}>
               <Image
-                source={{ uri: getImgWithTimestamp(idea.images[0]) }}
+                source={{ uri: getCachedImageUrl(idea.images[0]) }}
                 style={styles.image}
+                cachePolicy="memory-disk"
+                contentFit="cover"
               />
               <TouchableOpacity
                 key="post-action-hand-thumb-up"
@@ -329,7 +331,7 @@ export default function IdeaScreen() {
                     >
                       <Image
                         source={{
-                          uri: getImgWithTimestamp(idea.author.icon),
+                          uri: getCachedImageUrl(idea.author.icon),
                         }}
                         style={{
                           borderRadius: 9999,
@@ -337,6 +339,8 @@ export default function IdeaScreen() {
                           width: 24,
                           borderWidth: 1,
                         }}
+                        cachePolicy="memory-disk"
+                        contentFit="cover"
                       />
                       <Text
                         style={{

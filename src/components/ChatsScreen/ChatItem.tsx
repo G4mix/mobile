@@ -1,6 +1,7 @@
-import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { Image } from "expo-image";
 import { router } from "expo-router";
-import { getImgWithTimestamp } from "../../utils/getImgWithTimestamp";
+import { getCachedImageUrl } from "../../utils/getCachedImageUrl";
 import { Text } from "../Themed";
 import { Colors } from "../../constants/colors";
 
@@ -42,8 +43,10 @@ export function ChatItem({
     >
       {icon ? (
         <Image
-          source={{ uri: getImgWithTimestamp(icon) }}
+          source={{ uri: getCachedImageUrl(icon) }}
           style={styles.imageProfile}
+          cachePolicy="memory-disk"
+          contentFit="cover"
         />
       ) : (
         <View

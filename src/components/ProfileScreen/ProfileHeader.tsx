@@ -1,4 +1,5 @@
-import { Image, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
+import { Image } from "expo-image";
 import { router } from "expo-router";
 import { useSelector } from "react-redux";
 import { useRef, useState } from "react";
@@ -9,7 +10,7 @@ import { Colors } from "@/constants/colors";
 import { Icon } from "../Icon";
 import { Button } from "../Button";
 import { RootState } from "@/constants/reduxStore";
-import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
+import { getCachedImageUrl } from "@/utils/getCachedImageUrl";
 import { handleRequest } from "@/utils/handleRequest";
 import { api } from "@/constants/api";
 import { useToast } from "@/hooks/useToast";
@@ -131,13 +132,14 @@ export function ProfileHeader({
         )}
         {backgroundImage && (
           <Image
-            source={{ uri: getImgWithTimestamp(backgroundImage) }}
+            source={{ uri: getCachedImageUrl(backgroundImage) }}
             style={{
               width: "100%",
               height: 100,
               borderRadius: !onlyView ? 16 : 0,
             }}
-            resizeMode="cover"
+            contentFit="cover"
+            cachePolicy="memory-disk"
           />
         )}
       </EditableComponent>
@@ -312,12 +314,14 @@ export function ProfileHeader({
           onPress={!onlyView ? onPressIcon : undefined}
         >
           <Image
-            source={{ uri: getImgWithTimestamp(icon) }}
+            source={{ uri: getCachedImageUrl(icon) }}
             style={{
               ...styles.imageProfile,
               width: 80,
               height: 80,
             }}
+            cachePolicy="memory-disk"
+            contentFit="cover"
           />
         </EditableComponent>
       ) : (

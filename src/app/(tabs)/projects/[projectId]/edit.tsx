@@ -15,7 +15,10 @@ import { api } from "@/constants/api";
 import { SpinLoading } from "@/components/SpinLoading";
 import { SuccessModal } from "@/components/SuccessModal";
 import { getDate } from "@/utils/getDate";
-import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
+import {
+  getCachedImageUrl,
+  invalidateImageCache,
+} from "@/utils/getCachedImageUrl";
 import { Camera } from "@/components/Camera";
 import { useProject } from "@/hooks/useProject";
 import { ProjectDto } from "@/types/project";
@@ -141,6 +144,25 @@ export default function EditProjectScreen() {
     });
     if (!data) return;
 
+    if (icon?.uri && icon.uri !== project.icon) {
+      await invalidateImageCache(icon.uri);
+    }
+    if (
+      backgroundImage?.uri &&
+      backgroundImage.uri !== project.backgroundImage
+    ) {
+      await invalidateImageCache(backgroundImage.uri);
+    }
+    if (data.icon && data.icon !== project.icon) {
+      await invalidateImageCache(data.icon);
+    }
+    if (
+      data.backgroundImage &&
+      data.backgroundImage !== project.backgroundImage
+    ) {
+      await invalidateImageCache(data.backgroundImage);
+    }
+
     invalidateProjectQuery(projectId);
     invalidateProjectsQuery();
     setIsSuccessVisible(true);
@@ -166,9 +188,9 @@ export default function EditProjectScreen() {
     setIsCameraVisible(true);
   };
 
-  const iconUri = icon?.uri ? getImgWithTimestamp(icon.uri) : undefined;
+  const iconUri = icon?.uri ? getCachedImageUrl(icon.uri) : undefined;
   const bgUri = backgroundImage?.uri
-    ? getImgWithTimestamp(backgroundImage.uri)
+    ? getCachedImageUrl(backgroundImage.uri)
     : undefined;
 
   if (isLoadingProject) {

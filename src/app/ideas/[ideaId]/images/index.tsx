@@ -1,12 +1,13 @@
 import { Link, router, useLocalSearchParams } from "expo-router";
-import { View, Image, StyleSheet, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
+import { Image } from "expo-image";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/constants/api";
 import { IdeaType } from "@/components/Idea";
 import { Loading } from "@/components/Loading";
 import { Icon } from "@/components/Icon";
 import { Colors } from "@/constants/colors";
-import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
+import { getCachedImageUrl } from "@/utils/getCachedImageUrl";
 
 const styles = StyleSheet.create({
   ideaImage: {
@@ -52,20 +53,19 @@ export default function IdeaImageScreen() {
               <Icon name="photo" size={64} color={Colors.light.background} />
             </Loading>
           ))}
-        {idea?.images.map(({ src, alt, id: imageId }) => (
+        {idea?.images.map((src) => (
           <Link
             href={{
               pathname: "/ideas/[ideaId]/images/[imageId]",
-              params: { ideaId, imageId },
+              params: { ideaId, imageId: src },
             }}
-            key={`idea-image-${imageId}`}
+            key={`idea-image-${src}`}
           >
             <Image
-              style={styles.ideaImage}
-              source={{ uri: getImgWithTimestamp(src) }}
-              width={360}
-              height={451}
-              alt={alt}
+              style={[styles.ideaImage, { width: 360, height: 451 }]}
+              source={{ uri: getCachedImageUrl(src) }}
+              cachePolicy="memory-disk"
+              contentFit="cover"
             />
           </Link>
         ))}

@@ -28,6 +28,7 @@ import { isValidPostContent, isValidPostTitle } from "@/constants/validations";
 import { RootState } from "@/constants/reduxStore";
 import { SuccessModal } from "@/components/SuccessModal";
 import { timeout } from "@/utils/timeout";
+import { invalidateImageCache } from "@/utils/getCachedImageUrl";
 
 const styles = StyleSheet.create({
   container: {
@@ -176,6 +177,13 @@ export default function CreateScreen() {
       setIsLoading,
     });
     if (!data) return;
+
+    if (images && images.length > 0 && data.images) {
+      await Promise.all(
+        data.images.map((imageUrl) => invalidateImageCache(imageUrl)),
+      );
+    }
+
     if (idea && ideaId) {
       invalidateIdeaQuery(ideaId);
     }
