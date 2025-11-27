@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "@/constants/api";
 import { ChatDto } from "./useChats";
 
-export function useChat(chatId: string | undefined) {
+export function useChat(chatId: string | undefined, refetchInterval?: number) {
   return useQuery({
     queryKey: ["chat", chatId],
     queryFn: async () => {
@@ -21,5 +21,6 @@ export function useChat(chatId: string | undefined) {
       };
     },
     enabled: !!chatId,
+    refetchInterval,
   });
 }

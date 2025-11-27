@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   ImageBackground,
   ScrollView,
@@ -19,9 +19,7 @@ import background from "@/assets/images/BackgroundChat.png";
 import { Button } from "../../../components/Button";
 import { CollaborationFeedbackModal } from "../../../components/CollaborationFeedbackModal";
 import { useChat } from "@/hooks/useChat";
-import { useChatSocket, NewMessageEvent } from "@/hooks/useChatSocket";
 import { RootState } from "@/constants/reduxStore";
-import { ChatDto } from "@/hooks/useChats";
 import { formatChatTime, groupMessagesByDate } from "@/utils/formatChatDate";
 import { api } from "@/constants/api";
 import { handleRequest } from "@/utils/handleRequest";
@@ -31,7 +29,7 @@ export default function ChatScreen() {
   const route = useRoute();
   const navigation = useNavigation();
   const { chatId } = useLocalSearchParams<{ chatId: string }>();
-  const { data: chat, isLoading } = useChat(chatId);
+  const { data: chat, isLoading } = useChat(chatId, 5000);
   const currentUserId = useSelector((state: RootState) => state.user.id);
   const scrollViewRef = useRef<ScrollView>(null);
   const queryClient = useQueryClient();
@@ -48,66 +46,6 @@ export default function ChatScreen() {
     chat?.collaborationRequestStatus === "Pending";
   const showApprovalButtons =
     isOwner && hasPendingRequest && !isHandlingApproval;
-
-  const handleNewMessage = useCallback(
-    (event: NewMessageEvent) => {
-      if (event.chatId !== chatId) return;
-
-      queryClient.setQueryData<ChatDto | null>(["chat", chatId], (oldData) => {
-        if (!oldData) return oldData;
-
-        const messageExists = oldData.messages.some(
-          (msg) =>
-            msg.senderId === event.message.senderId &&
-            msg.content === event.message.content &&
-            new Date(msg.timestamp).getTime() ===
-              new Date(event.message.timestamp).getTime(),
-        );
-
-        if (messageExists) return oldData;
-
-        return {
-          ...oldData,
-          messages: [
-            ...oldData.messages,
-            {
-              ...event.message,
-              timestamp: new Date(event.message.timestamp),
-            },
-          ],
-        };
-      });
-
-      queryClient.setQueriesData({ queryKey: ["chats"] }, (oldData: any) => {
-        if (!oldData || !oldData.data) return oldData;
-
-        return {
-          ...oldData,
-          data: oldData.data.map((c: ChatDto) => {
-            if (c.id === chatId) {
-              return {
-                ...c,
-                messages: [
-                  {
-                    ...event.message,
-                    timestamp: new Date(event.message.timestamp),
-                  },
-                ],
-              };
-            }
-            return c;
-          }),
-        };
-      });
-
-      setTimeout(() => {
-        scrollViewRef.current?.scrollToEnd({ animated: true });
-      }, 100);
-    },
-    [chatId, queryClient],
-  );
-
-  useChatSocket(chatId, handleNewMessage);
 
   useEffect(() => {
     if (chat?.messages && chat.messages.length > 0) {
