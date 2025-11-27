@@ -114,9 +114,9 @@ export default function ConfigProfileScreen() {
     }
 
     const formData = objectToFormData({
-      autobiography,
+      autobiography: autobiography.length > 0 ? autobiography : undefined,
       backgroundImage,
-      displayName,
+      displayName: displayName.length > 0 ? displayName : undefined,
       icon,
       links,
     });

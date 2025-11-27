@@ -170,6 +170,13 @@ export default function TabLayout() {
       size: 28,
       hidden: true,
     },
+    {
+      name: "project",
+      href: `/projects/${id}/edit`,
+      iconName: "puzzle-piece",
+      size: 28,
+      hidden: true,
+    },
   ];
   return (
     <Tabs>

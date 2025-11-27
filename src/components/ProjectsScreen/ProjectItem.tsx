@@ -71,9 +71,6 @@ export const styles = StyleSheet.create({
     fontSize: 13.33,
     fontWeight: 400,
   },
-  ellipsisVertical: {
-    color: Colors.light.russianViolet,
-  },
   followersText: {
     color: Colors.light.silver,
     fontSize: 11.11,
@@ -200,11 +197,6 @@ export function ProjectItem({
           <View style={styles.header}>
             <View style={styles.titleContainer}>
               <Text style={styles.title}>{title}</Text>
-              <Icon
-                name="ellipsis-vertical"
-                size={24}
-                style={styles.ellipsisVertical}
-              />
             </View>
             <Text
               style={styles.description}

@@ -4,7 +4,6 @@ import {
   ScrollView,
   StyleSheet,
   ActivityIndicator,
-  TouchableOpacity,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useEffect, useRef, useState } from "react";
@@ -29,6 +28,7 @@ import { api } from "@/constants/api";
 import { useFeedQueries } from "@/hooks/useFeedQueries";
 import { getImgWithTimestamp } from "@/utils/getImgWithTimestamp";
 import { ProjectMembersModal } from "@/components/ProjectsScreen/ProjectMembersModal";
+import { ProjectOptions } from "@/components/ProjectsScreen/ProjectOptions";
 import { usePullToRefresh } from "@/hooks/usePullToRefresh";
 
 export const styles = StyleSheet.create({
@@ -79,6 +79,7 @@ export default function ProjectsScreen() {
   const [isFollowing, setIsFollowing] = useState(false);
   const [isLoadingFollow, setIsLoadingFollow] = useState(false);
   const [isMembersModalVisible, setIsMembersModalVisible] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const { invalidateProjectQuery, invalidateProjectsQuery } = useFeedQueries();
 
   const actualTab = useSelector(
@@ -240,24 +241,15 @@ export default function ProjectsScreen() {
                 <View style={styles.titleContainer}>
                   <Text style={styles.title}>{project.title}</Text>
                   {project.isOwner && (
-                    <TouchableOpacity
-                      onPress={() => setIsMembersModalVisible(true)}
-                    >
-                      <Icon
-                        name="ellipsis-vertical"
-                        size={24}
-                        style={styles.ellipsisVertical}
-                      />
-                    </TouchableOpacity>
+                    <ProjectOptions
+                      projectId={projectId}
+                      projectName={project.title}
+                      isDeleting={isDeleting}
+                      setIsDeleting={setIsDeleting}
+                      onOpenMembersModal={() => setIsMembersModalVisible(true)}
+                    />
                   )}
                 </View>
-                <Text
-                  style={styles.description}
-                  numberOfLines={2}
-                  ellipsizeMode="tail"
-                >
-                  {project.description}
-                </Text>
                 <Text style={styles.createdByContainer}>
                   Criado por:{" "}
                   <Text

@@ -1,3 +1,10 @@
+const isReactNativeImageObject = (value: any): boolean =>
+  typeof value === "object" &&
+  value !== null &&
+  typeof value.uri === "string" &&
+  typeof value.name === "string" &&
+  typeof value.type === "string";
+
 export const objectToFormData = (
   obj: Record<string, any>,
   form?: FormData,
@@ -19,7 +26,7 @@ export const objectToFormData = (
             (e) =>
               e instanceof File ||
               e instanceof Blob ||
-              (typeof e === "object" && e !== null),
+              isReactNativeImageObject(e),
           )
         ) {
           value.forEach((element) => {
@@ -28,6 +35,8 @@ export const objectToFormData = (
         } else {
           formData.append(key, JSON.stringify(value));
         }
+      } else if (isReactNativeImageObject(value)) {
+        formData.append(key, value);
       } else if (typeof value === "object") {
         formData.append(key, JSON.stringify(value));
       } else {
