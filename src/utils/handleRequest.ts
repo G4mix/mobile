@@ -36,39 +36,20 @@ export const handleRequest = async <T>({
       const status = error.response?.status;
 
       let errorMessage = message ? messages[message] : undefined;
-
+      const statuses = {
+        400: messages.BAD_REQUEST,
+        401: messages.UNAUTHORIZED,
+        403: messages.FORBIDDEN,
+        404: messages.NOT_FOUNDED_DATA,
+        409: messages.CONFLICT,
+        413: messages.EXCEEDED_MAX_SIZE,
+        422: messages.UNPROCESSABLE_ENTITY,
+        429: messages.TOO_MANY_REQUESTS,
+        500: messages.INTERNAL_SERVER_ERROR,
+        503: messages.SERVICE_UNAVAILABLE,
+      };
       if (!errorMessage) {
-        switch (status) {
-          case 400:
-            errorMessage = messages.BAD_REQUEST;
-            break;
-          case 401:
-            errorMessage = messages.UNAUTHORIZED;
-            break;
-          case 403:
-            errorMessage = messages.FORBIDDEN;
-            break;
-          case 404:
-            errorMessage = messages.NOT_FOUNDED_DATA;
-            break;
-          case 409:
-            errorMessage = messages.CONFLICT;
-            break;
-          case 422:
-            errorMessage = messages.UNPROCESSABLE_ENTITY;
-            break;
-          case 429:
-            errorMessage = messages.TOO_MANY_REQUESTS;
-            break;
-          case 500:
-            errorMessage = messages.INTERNAL_SERVER_ERROR;
-            break;
-          case 503:
-            errorMessage = messages.SERVICE_UNAVAILABLE;
-            break;
-          default:
-            errorMessage = "Ocorreu um erro inesperado.";
-        }
+        errorMessage = statuses[status as keyof typeof statuses];
       }
 
       showToast({ message: errorMessage, color: "warn" });
