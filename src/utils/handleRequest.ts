@@ -52,7 +52,10 @@ export const handleRequest = async <T>({
         errorMessage = statuses[status as keyof typeof statuses];
       }
 
-      showToast({ message: errorMessage, color: "warn" });
+      showToast({
+        message: errorMessage || "Erro desconhecido",
+        color: "warn",
+      });
     } else {
       showToast({
         message: "Erro ao tentar realizar a ação",

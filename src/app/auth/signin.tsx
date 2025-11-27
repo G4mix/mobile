@@ -1,4 +1,4 @@
-import { Image, StyleSheet } from "react-native";
+import { Image, StyleSheet, ScrollView } from "react-native";
 import { useForm } from "react-hook-form";
 import { Link, router } from "expo-router";
 import { useRef, useState } from "react";
@@ -92,8 +92,29 @@ export default function LoginScreen() {
   const isReadyToLogin = email.length > 0 && password.length > 0;
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container} style={{ flex: 1 }}>
       {isLoading && <SpinLoading message="Conectando-se..." />}
+      <View
+        style={{
+          backgroundColor: "#ff0000",
+          padding: 10,
+          width: "100%",
+          marginBottom: 16,
+        }}
+      >
+        <Text style={{ color: "#fff", fontSize: 12 }}>
+          API URL: {process.env.EXPO_PUBLIC_API_URL || "VAZIO"}
+        </Text>
+        <Text style={{ color: "#fff", fontSize: 12 }}>
+          GitHub ID: {process.env.EXPO_PUBLIC_GITHUB_CLIENT_ID || "VAZIO"}
+        </Text>
+        <Text style={{ color: "#fff", fontSize: 12 }}>
+          Google ID: {process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID || "VAZIO"}
+        </Text>
+        <Text style={{ color: "#fff", fontSize: 12 }}>
+          LinkedIn ID: {process.env.EXPO_PUBLIC_LINKEDIN_CLIENT_ID || "VAZIO"}
+        </Text>
+      </View>
       <Image source={favIcon} style={{ maxWidth: 120, maxHeight: 120 }} />
       <Text style={styles.title}>Entrar</Text>
       <View style={styles.connectionMethodsContainer}>
@@ -146,6 +167,6 @@ export default function LoginScreen() {
         </Text>
         <Text style={{ color: Colors.light.tropicalIndigo }}> Criar conta</Text>
       </Link>
-    </View>
+    </ScrollView>
   );
 }
