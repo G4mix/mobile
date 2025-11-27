@@ -8,7 +8,7 @@ jobs:
   build:
     name: Build Expo App
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout do código
         uses: actions/checkout@v4
@@ -17,7 +17,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: "npm"
 
       - name: Instalar dependências
         run: npm install
@@ -27,7 +27,7 @@ jobs:
 
       - name: Autenticar no Expo
         run: echo "EXPO_TOKEN=${{ secrets.EXPO_TOKEN }}" >> $GITHUB_ENV
-      
+
       - name: Prebuildar app
         run: expo prebuild --platform android --non-interactive
 
@@ -35,7 +35,7 @@ jobs:
         id: versioning
         run: |
           LAST_TAG=$(curl -s https://api.github.com/repos/G4mix/mobile/tags | jq -r '.[0].name')
-      
+
           if [[ -z "$LAST_TAG" ]]; then
             NEW_VERSION="v1.0.0"
           else
@@ -43,7 +43,7 @@ jobs:
             MAJOR=$(echo $LAST_TAG | cut -d. -f1)
             MINOR=$(echo $LAST_TAG | cut -d. -f2)
             PATCH=$(echo $LAST_TAG | cut -d. -f3)
-      
+
             if ! [[ "$MAJOR" =~ ^[0-9]+$ ]] || ! [[ "$MINOR" =~ ^[0-9]+$ ]] || ! [[ "$PATCH" =~ ^[0-9]+$ ]]; then
               NEW_VERSION="v1.0.0"
             else
@@ -61,18 +61,17 @@ jobs:
               NEW_VERSION="v$MAJOR.$MINOR.$PATCH"
             fi
           fi
-      
+
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
-          echo "Nova versão será: $NEW_VERSION"      
-      
-      - name: env config
-        run: |
-          echo "EXPO_PUBLIC_API_URL=${{ secrets.EXPO_PUBLIC_API_URL }}" >> .env && \
-          echo "EXPO_PUBLIC_GITHUB_CLIENT_ID=${{ secrets.EXPO_PUBLIC_GITHUB_CLIENT_ID }}" >> .env && \
-          echo "EXPO_PUBLIC_LINKEDIN_CLIENT_ID=${{ secrets.EXPO_PUBLIC_LINKEDIN_CLIENT_ID }}" >> .env && \
-          echo "EXPO_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.EXPO_PUBLIC_GOOGLE_CLIENT_ID }}" >> .env
+          echo "Nova versão será: $NEW_VERSION"
 
       - name: Build app
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          EXPO_PUBLIC_API_URL: ${{ secrets.EXPO_PUBLIC_API_URL }}
+          EXPO_PUBLIC_GITHUB_CLIENT_ID: ${{ secrets.EXPO_PUBLIC_GITHUB_CLIENT_ID }}
+          EXPO_PUBLIC_LINKEDIN_CLIENT_ID: ${{ secrets.EXPO_PUBLIC_LINKEDIN_CLIENT_ID }}
+          EXPO_PUBLIC_GOOGLE_CLIENT_ID: ${{ secrets.EXPO_PUBLIC_GOOGLE_CLIENT_ID }}
         run: eas build --platform android --profile production --non-interactive --local --output=gamix.apk
 
       - name: Criar Release no GitHub
