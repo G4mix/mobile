@@ -1,4 +1,4 @@
-import { Image, StyleSheet } from "react-native";
+import { Image, StyleSheet, ScrollView } from "react-native";
 import { useForm } from "react-hook-form";
 import { Link, router } from "expo-router";
 import { useRef, useState } from "react";
@@ -92,60 +92,88 @@ export default function LoginScreen() {
   const isReadyToLogin = email.length > 0 && password.length > 0;
 
   return (
-    <View style={styles.container}>
-      {isLoading && <SpinLoading message="Conectando-se..." />}
-      <Image source={favIcon} style={{ maxWidth: 120, maxHeight: 120 }} />
-      <Text style={styles.title}>Entrar</Text>
-      <View style={styles.connectionMethodsContainer}>
-        {providers.map((provider) => (
-          <OAuthLogin
-            provider={provider as any}
-            key={`handle-login-with-${provider}`}
-            disabled
-          />
-        ))}
-      </View>
-      <Text style={{ color: Colors.dark.background, fontWeight: "medium" }}>
-        OU
-      </Text>
-      <Input
-        icon="envelope"
-        label="E-mail"
-        isPasswordInput={false}
-        placeholder="Digite seu e-mail aqui"
-        onChangeText={(value: string) => setValue("email", value)}
-        onSubmitEditing={() => passwordRef.current?.focus()}
-        returnKeyType="next"
-      />
-      <View style={styles.passwordContainer}>
+    <ScrollView style={{ flex: 1 }}>
+      <View style={styles.container}>
+        {isLoading && <SpinLoading message="Conectando-se..." />}
+        <View
+          style={{
+            backgroundColor: "#ff0000",
+            padding: 10,
+            width: "100%",
+            marginBottom: 16,
+          }}
+        >
+          <Text style={{ color: "#fff", fontSize: 12 }}>
+            API URL: {process.env.EXPO_PUBLIC_API_URL || "VAZIO"}
+          </Text>
+          <Text style={{ color: "#fff", fontSize: 12 }}>
+            GitHub ID: {process.env.EXPO_PUBLIC_GITHUB_CLIENT_ID || "VAZIO"}
+          </Text>
+          <Text style={{ color: "#fff", fontSize: 12 }}>
+            Google ID: {process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID || "VAZIO"}
+          </Text>
+          <Text style={{ color: "#fff", fontSize: 12 }}>
+            LinkedIn ID: {process.env.EXPO_PUBLIC_LINKEDIN_CLIENT_ID || "VAZIO"}
+          </Text>
+        </View>
+        <Image source={favIcon} style={{ maxWidth: 120, maxHeight: 120 }} />
+        <Text style={styles.title}>Entrar</Text>
+        <View style={styles.connectionMethodsContainer}>
+          {providers.map((provider) => (
+            <OAuthLogin
+              provider={provider as any}
+              key={`handle-login-with-${provider}`}
+              disabled
+            />
+          ))}
+        </View>
+        <Text style={{ color: Colors.dark.background, fontWeight: "medium" }}>
+          OU
+        </Text>
         <Input
-          icon="lock-closed"
-          label="Senha"
-          isPasswordInput
-          placeholder="Digite a sua senha"
-          onChangeText={(value: string) => setValue("password", value)}
-          onSubmitEditing={isReadyToLogin && !isLoading ? onSubmit : undefined}
-          returnKeyType="done"
-          ref={passwordRef}
+          icon="envelope"
+          label="E-mail"
+          isPasswordInput={false}
+          placeholder="Digite seu e-mail aqui"
+          onChangeText={(value: string) => setValue("email", value)}
+          onSubmitEditing={() => passwordRef.current?.focus()}
+          returnKeyType="next"
         />
-        <Link href="/auth/forget-password" disabled>
-          <Text style={{ color: Colors.light.tropicalIndigo, opacity: 0.7 }}>
-            Esqueci minha senha
+        <View style={styles.passwordContainer}>
+          <Input
+            icon="lock-closed"
+            label="Senha"
+            isPasswordInput
+            placeholder="Digite a sua senha"
+            onChangeText={(value: string) => setValue("password", value)}
+            onSubmitEditing={
+              isReadyToLogin && !isLoading ? onSubmit : undefined
+            }
+            returnKeyType="done"
+            ref={passwordRef}
+          />
+          <Link href="/auth/forget-password" disabled>
+            <Text style={{ color: Colors.light.tropicalIndigo, opacity: 0.7 }}>
+              Esqueci minha senha
+            </Text>
+          </Link>
+        </View>
+        <Button
+          onPress={isReadyToLogin && !isLoading ? onSubmit : undefined}
+          disabled={!isReadyToLogin || isLoading}
+        >
+          <Text style={{ color: Colors.light.white }}>Conectar-se</Text>
+        </Button>
+        <Link href="/auth/signup">
+          <Text style={{ color: Colors.light.russianViolet }}>
+            Ainda não tem uma conta?
+          </Text>
+          <Text style={{ color: Colors.light.tropicalIndigo }}>
+            {" "}
+            Criar conta
           </Text>
         </Link>
       </View>
-      <Button
-        onPress={isReadyToLogin && !isLoading ? onSubmit : undefined}
-        disabled={!isReadyToLogin || isLoading}
-      >
-        <Text style={{ color: Colors.light.white }}>Conectar-se</Text>
-      </Button>
-      <Link href="/auth/signup">
-        <Text style={{ color: Colors.light.russianViolet }}>
-          Ainda não tem uma conta?
-        </Text>
-        <Text style={{ color: Colors.light.tropicalIndigo }}> Criar conta</Text>
-      </Link>
-    </View>
+    </ScrollView>
   );
 }
