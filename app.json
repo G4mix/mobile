@@ -8,7 +8,7 @@
     "scheme": "com.gamix",
     "owner": "g4mix",
     "platforms": ["ios", "android"],
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
       "image": "./src/assets/images/splash.png",
