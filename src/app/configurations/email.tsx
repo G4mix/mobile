@@ -54,10 +54,12 @@ export default function EmailScreen() {
     }
 
     const formData = objectToFormData({
-      email,
+      user: { email },
     });
 
-    const data = await handleRequest<UserState>({
+    const data = await handleRequest<
+      UserState & { accessToken?: string; refreshToken?: string }
+    >({
       requestFn: async () =>
         api.patch("/user", formData, {
           headers: {
@@ -71,7 +73,11 @@ export default function EmailScreen() {
 
     await setItem("user", JSON.stringify(data));
     dispatch(setUser(data));
-    queryClient.setQueryData(["user", user.id], data);
+    if (data.accessToken && data.refreshToken) {
+      await setItem("accessToken", data.accessToken);
+      await setItem("refreshToken", data.refreshToken);
+    }
+    queryClient.invalidateQueries({ queryKey: ["user", user.id] });
     setIsSuccessVisible(true);
     await timeout(1000);
     setIsSuccessVisible(false);
@@ -89,7 +95,7 @@ export default function EmailScreen() {
         color={Colors.light.jet}
         borderWidth={2}
         editable={false}
-        value={email}
+        value={user.email || ""}
       />
       <Input
         placeholder={user.email || "Insira o seu e-mail"}

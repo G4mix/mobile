@@ -124,7 +124,9 @@ export default function ConfigProfileScreen() {
       links,
     });
 
-    const data = await handleRequest<UserState>({
+    const data = await handleRequest<
+      UserState & { accessToken?: string; refreshToken?: string }
+    >({
       requestFn: async () =>
         api.patch("/user", formData, {
           headers: {
@@ -151,7 +153,12 @@ export default function ConfigProfileScreen() {
 
     await setItem("user", JSON.stringify(data));
     dispatch(setUser(data));
+    if (data.accessToken && data.refreshToken) {
+      await setItem("accessToken", data.accessToken);
+      await setItem("refreshToken", data.refreshToken);
+    }
     queryClient.setQueryData(["user", user.id], data);
+    queryClient.invalidateQueries({ queryKey: ["user", user.id] });
     setIsSuccessVisible(true);
     await timeout(1000);
     setIsSuccessVisible(false);
