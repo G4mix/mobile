@@ -87,7 +87,7 @@ export default function PasswordScreen() {
     setIsSuccessVisible(true);
     await timeout(1000);
     setIsSuccessVisible(false);
-    router.push(`/configurations/account`);
+    router.back();
   };
   const onSubmit = handleSubmit(updatePassword);
   return (

@@ -81,7 +81,7 @@ export default function EmailScreen() {
     setIsSuccessVisible(true);
     await timeout(1000);
     setIsSuccessVisible(false);
-    router.push(`/configurations/account`);
+    router.back();
   };
   const onSubmit = handleSubmit(updateUser);
   const email = watch("email");

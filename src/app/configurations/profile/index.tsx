@@ -162,7 +162,7 @@ export default function ConfigProfileScreen() {
     setIsSuccessVisible(true);
     await timeout(1000);
     setIsSuccessVisible(false);
-    router.push(`/profile/${user.id}`);
+    router.back();
   };
   const onSubmit = handleSubmit(updateUser);
 
