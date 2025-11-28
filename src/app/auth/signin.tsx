@@ -95,27 +95,6 @@ export default function LoginScreen() {
     <ScrollView style={{ flex: 1 }}>
       <View style={styles.container}>
         {isLoading && <SpinLoading message="Conectando-se..." />}
-        <View
-          style={{
-            backgroundColor: "#ff0000",
-            padding: 10,
-            width: "100%",
-            marginBottom: 16,
-          }}
-        >
-          <Text style={{ color: "#fff", fontSize: 12 }}>
-            API URL: {process.env.EXPO_PUBLIC_API_URL || "VAZIO"}
-          </Text>
-          <Text style={{ color: "#fff", fontSize: 12 }}>
-            GitHub ID: {process.env.EXPO_PUBLIC_GITHUB_CLIENT_ID || "VAZIO"}
-          </Text>
-          <Text style={{ color: "#fff", fontSize: 12 }}>
-            Google ID: {process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID || "VAZIO"}
-          </Text>
-          <Text style={{ color: "#fff", fontSize: 12 }}>
-            LinkedIn ID: {process.env.EXPO_PUBLIC_LINKEDIN_CLIENT_ID || "VAZIO"}
-          </Text>
-        </View>
         <Image source={favIcon} style={{ maxWidth: 120, maxHeight: 120 }} />
         <Text style={styles.title}>Entrar</Text>
         <View style={styles.connectionMethodsContainer}>

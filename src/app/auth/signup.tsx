@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text } from "react-native";
+import { Image, ScrollView, StyleSheet, Text } from "react-native";
 import { useRef, useState } from "react";
 import { Link, router } from "expo-router";
 import { useForm } from "react-hook-form";
@@ -172,68 +172,72 @@ export default function RegisterScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      {isLoading && <SpinLoading message="Registrando-se..." />}
-      {isSuccessVisible && <SuccessModal message="Conta criada!" />}
-      <Image source={favIcon} style={{ maxWidth: 120, maxHeight: 120 }} />
-      <Text style={styles.title}>Criar uma conta</Text>
-      <Input
-        icon="user"
-        label="Nome de Usuário"
-        isPasswordInput={false}
-        placeholder="Digite seu nome de usuário aqui"
-        onChangeText={validateUsername}
-        isValid={isUsernameValid}
-        onSubmitEditing={() => emailRef.current?.focus()}
-        returnKeyType="next"
-      />
-      <Input
-        icon="envelope"
-        label="E-mail"
-        isPasswordInput={false}
-        placeholder="Digite seu e-mail aqui"
-        invalidPhrase={invalidEmailPhrase}
-        onChangeText={validateEmail}
-        isValid={isEmailValid}
-        onSubmitEditing={() => passwordRef.current?.focus()}
-        ref={emailRef}
-        returnKeyType="next"
-      />
-      <ChangePasswordInputs
-        onSubmit={onSubmit}
-        setValue={setValue as any}
-        watch={watch as any}
-        setIsConfirmPasswordValid={setIsConfirmPasswordValid}
-        isConfirmPasswordValid={isConfirmPasswordValid}
-        setIsPasswordValid={setIsPasswordValid}
-        isPasswordValid={isPasswordValid}
-        ref={passwordRef}
-      />
-      <View style={styles.termsContainer}>
-        <Checkbox isChecked={isChecked} setIsChecked={setIsChecked} />
-        <Text style={{ flex: 1, wordWrap: "break-word", textAlign: "justify" }}>
-          Eu li e concordo com os{" "}
-          <Link
-            asChild
-            href="/terms"
-            style={{ color: Colors.light.majorelleBlue }}
+    <ScrollView style={{ flex: 1 }}>
+      <View style={styles.container}>
+        {isLoading && <SpinLoading message="Registrando-se..." />}
+        {isSuccessVisible && <SuccessModal message="Conta criada!" />}
+        <Image source={favIcon} style={{ maxWidth: 120, maxHeight: 120 }} />
+        <Text style={styles.title}>Criar uma conta</Text>
+        <Input
+          icon="user"
+          label="Nome de Usuário"
+          isPasswordInput={false}
+          placeholder="Digite seu nome de usuário aqui"
+          onChangeText={validateUsername}
+          isValid={isUsernameValid}
+          onSubmitEditing={() => emailRef.current?.focus()}
+          returnKeyType="next"
+        />
+        <Input
+          icon="envelope"
+          label="E-mail"
+          isPasswordInput={false}
+          placeholder="Digite seu e-mail aqui"
+          invalidPhrase={invalidEmailPhrase}
+          onChangeText={validateEmail}
+          isValid={isEmailValid}
+          onSubmitEditing={() => passwordRef.current?.focus()}
+          ref={emailRef}
+          returnKeyType="next"
+        />
+        <ChangePasswordInputs
+          onSubmit={onSubmit}
+          setValue={setValue as any}
+          watch={watch as any}
+          setIsConfirmPasswordValid={setIsConfirmPasswordValid}
+          isConfirmPasswordValid={isConfirmPasswordValid}
+          setIsPasswordValid={setIsPasswordValid}
+          isPasswordValid={isPasswordValid}
+          ref={passwordRef}
+        />
+        <View style={styles.termsContainer}>
+          <Checkbox isChecked={isChecked} setIsChecked={setIsChecked} />
+          <Text
+            style={{ flex: 1, wordWrap: "break-word", textAlign: "justify" }}
           >
-            <Text>termos e política de privacidade</Text>
-          </Link>
-        </Text>
+            Eu li e concordo com os{" "}
+            <Link
+              asChild
+              href="/terms"
+              style={{ color: Colors.light.majorelleBlue }}
+            >
+              <Text>termos e política de privacidade</Text>
+            </Link>
+          </Text>
+        </View>
+        <Button
+          onPress={readyToRegister && !isLoading ? onSubmit : undefined}
+          disabled={!readyToRegister || isLoading}
+        >
+          <Text style={{ color: Colors.light.background }}>Registrar-se</Text>
+        </Button>
+        <Link href="/auth/signin">
+          <Text style={{ color: Colors.light.russianViolet }}>
+            Já tem uma conta?
+          </Text>
+          <Text style={{ color: Colors.light.tropicalIndigo }}> Entrar</Text>
+        </Link>
       </View>
-      <Button
-        onPress={readyToRegister && !isLoading ? onSubmit : undefined}
-        disabled={!readyToRegister || isLoading}
-      >
-        <Text style={{ color: Colors.light.background }}>Registrar-se</Text>
-      </Button>
-      <Link href="/auth/signin">
-        <Text style={{ color: Colors.light.russianViolet }}>
-          Já tem uma conta?
-        </Text>
-        <Text style={{ color: Colors.light.tropicalIndigo }}> Entrar</Text>
-      </Link>
-    </View>
+    </ScrollView>
   );
 }
