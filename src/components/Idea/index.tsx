@@ -105,7 +105,7 @@ export function Idea({
       <LinearGradient
         colors={["rgba(0,0,0,.8)", "transparent"]}
         style={styles.gradient}
-        start={{ x: 0.5, y: 0.85 }}
+        start={{ x: 0.5, y: 0.9 }}
         end={{ x: 0.5, y: 0 }}
       />
       <View style={styles.overlayContainer}>

@@ -44,7 +44,7 @@ export function CreateScreenImage({
   return (
     <View style={styles.postContentImageRoot}>
       <Image
-        style={[styles.postContentImage, { width: 284, height: 146 }]}
+        style={styles.postContentImage}
         source={{ uri: getCachedImageUrl(src) }}
         cachePolicy="memory-disk"
         contentFit="cover"
