@@ -403,7 +403,12 @@ export default function IdeaScreen() {
                   paddingVertical: 16,
                 }}
                 onPress={handleCollaborate}
-                disabled={idea.author.id === currentUserId || isCollaborating}
+                disabled={
+                  idea.author.id === currentUserId ||
+                  isCollaborating ||
+                  idea.hasPendingCollaborationRequest ||
+                  idea.isProjectMember
+                }
               >
                 <Text
                   lightColor="white"

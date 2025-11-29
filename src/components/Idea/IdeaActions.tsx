@@ -42,6 +42,8 @@ type IdeaActionsProps = {
   comments: number;
   liked: boolean;
   authorId?: string;
+  hasPendingCollaborationRequest?: boolean;
+  isProjectMember?: boolean;
 };
 
 export function IdeaActions({
@@ -50,6 +52,8 @@ export function IdeaActions({
   comments,
   liked,
   authorId,
+  hasPendingCollaborationRequest,
+  isProjectMember,
 }: IdeaActionsProps) {
   const { showToast } = useToast();
   const [isLiked, setIsLiked] = useState(liked);
@@ -177,7 +181,12 @@ export function IdeaActions({
           paddingVertical: 12,
         }}
         onPress={handleCollaborate}
-        disabled={isOwner || isCollaborating}
+        disabled={
+          isOwner ||
+          isCollaborating ||
+          hasPendingCollaborationRequest ||
+          isProjectMember
+        }
       >
         <Text lightColor="white">
           {isCollaborating ? "Enviando..." : "Quero Colaborar"}

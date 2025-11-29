@@ -18,6 +18,8 @@ export type IdeaType = {
   updatedAt: string;
   isLiked: boolean;
   isViewed: boolean;
+  hasPendingCollaborationRequest?: boolean;
+  isProjectMember?: boolean;
   author: {
     id: string;
     displayName: string;
@@ -121,6 +123,8 @@ export function Idea({
             comments={idea.comments}
             liked={idea.isLiked}
             authorId={idea.author.id}
+            hasPendingCollaborationRequest={idea.hasPendingCollaborationRequest}
+            isProjectMember={idea.isProjectMember}
           />
         )}
       </View>
