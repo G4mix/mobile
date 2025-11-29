@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
   },
   ideaContainer: {
-    backgroundColor: "transparent",
+    backgroundColor: "black",
     display: "flex",
     flex: 1,
     gap: 8,
@@ -97,7 +97,7 @@ export function Idea({
       {firstImage && (
         <Image
           source={{ uri: getCachedImageUrl(firstImage) }}
-          style={styles.image}
+          style={[styles.image, !short ? { maxHeight: "78%" } : {}]}
           contentFit="cover"
           cachePolicy="memory-disk"
         />
@@ -105,7 +105,7 @@ export function Idea({
       <LinearGradient
         colors={["rgba(0,0,0,.8)", "transparent"]}
         style={styles.gradient}
-        start={{ x: 0.5, y: 0.6 }}
+        start={{ x: 0.5, y: 0.85 }}
         end={{ x: 0.5, y: 0 }}
       />
       <View style={styles.overlayContainer}>
