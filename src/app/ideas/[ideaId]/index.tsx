@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { Image } from "expo-image";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { api } from "@/constants/api";
 import { RootState } from "@/constants/reduxStore";
@@ -147,6 +147,13 @@ export default function IdeaScreen() {
     refetch: refetchComments,
   } = useComments();
   const comments = data?.pages?.flatMap((page) => page?.data || []) || [];
+
+  useEffect(() => {
+    if (idea) {
+      setIsLiked(idea.isLiked);
+      setCurrentLikesCount(idea.likes);
+    }
+  }, [idea]);
 
   const commentReply = async (commentId: string) => {
     router.push(`/ideas/${ideaId}/comments/${commentId}`);
