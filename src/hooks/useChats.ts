@@ -3,6 +3,7 @@ import { api } from "@/constants/api";
 
 export interface ChatMessage {
   senderId: string;
+  senderName?: string;
   content: string;
   timestamp: string | Date;
 }

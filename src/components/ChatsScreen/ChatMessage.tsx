@@ -5,10 +5,12 @@ export function ChatMessage({
   message,
   date,
   isActualUser = false,
+  senderName,
 }: {
   message: string;
   date: string;
   isActualUser: boolean;
+  senderName?: string;
 }) {
   return (
     <View
@@ -23,11 +25,10 @@ export function ChatMessage({
         backgroundColor: isActualUser
           ? Colors.light.background
           : Colors.light.russianViolet,
-        position: "relative",
         maxWidth: "70%",
         alignSelf: isActualUser ? "flex-end" : "flex-start",
-        flexDirection: "row",
-        gap: 4,
+        flexDirection: "column",
+        gap: 2,
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.15,
@@ -35,29 +36,53 @@ export function ChatMessage({
         elevation: 4,
       }}
     >
-      <Text
+      {senderName && !isActualUser && (
+        <Text
+          style={{
+            color: isActualUser
+              ? Colors.light.russianViolet
+              : Colors.light.background,
+            fontWeight: 500,
+            fontSize: 11.11,
+            textAlign: "left",
+          }}
+        >
+          {senderName}
+        </Text>
+      )}
+      <View
         style={{
-          color: isActualUser
-            ? Colors.light.russianViolet
-            : Colors.light.background,
-          fontWeight: 400,
-          fontSize: 13.33,
-          textAlign: "left",
+          flexDirection: "row",
+          gap: 4,
+          alignItems: "flex-start",
+          backgroundColor: "transparent",
         }}
       >
-        {message}
-      </Text>
-      <Text
-        style={{
-          color: Colors.light.silver,
-          fontWeight: 400,
-          fontSize: 11.11,
-          marginTop: 4,
-          alignSelf: "flex-end",
-        }}
-      >
-        {date}
-      </Text>
+        <Text
+          style={{
+            color: isActualUser
+              ? Colors.light.russianViolet
+              : Colors.light.background,
+            fontWeight: 400,
+            fontSize: 13.33,
+            textAlign: "left",
+            flexShrink: 1,
+          }}
+        >
+          {message}
+        </Text>
+        <Text
+          style={{
+            color: Colors.light.silver,
+            fontWeight: 400,
+            fontSize: 11.11,
+            alignSelf: "flex-end",
+            marginTop: 6,
+          }}
+        >
+          {date}
+        </Text>
+      </View>
     </View>
   );
 }

@@ -200,12 +200,14 @@ export default function ChatScreen() {
               {group.messages.map((message) => {
                 const isActualUser = message.senderId === currentUserId;
                 const messageKey = `${message.senderId}-${message.content}-${new Date(message.timestamp).getTime()}`;
+                const isProjectChat = chat.ownerId !== null;
                 return (
                   <ChatMessage
                     key={messageKey}
                     date={formatChatTime(message.timestamp)}
                     isActualUser={isActualUser}
                     message={message.content}
+                    senderName={isProjectChat ? message.senderName : undefined}
                   />
                 );
               })}

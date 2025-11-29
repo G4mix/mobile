@@ -14,13 +14,19 @@ export interface GroupedMessage {
   date: string;
   messages: {
     senderId: string;
+    senderName?: string;
     content: string;
     timestamp: Date;
   }[];
 }
 
 export const groupMessagesByDate = (
-  messages: { senderId: string; content: string; timestamp: Date }[],
+  messages: {
+    senderId: string;
+    senderName?: string;
+    content: string;
+    timestamp: Date;
+  }[],
 ): GroupedMessage[] => {
   const grouped: { [key: string]: GroupedMessage } = {};
 
