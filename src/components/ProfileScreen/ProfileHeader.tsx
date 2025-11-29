@@ -154,7 +154,8 @@ export function ProfileHeader({
               top: 114,
               width: "100%",
               alignItems: "center",
-              zIndex: 2,
+              zIndex: 10,
+              backgroundColor: "transparent",
             }}
           >
             <Button
@@ -217,7 +218,7 @@ export function ProfileHeader({
             />
           </View>
         ))}
-      <View style={{ gap: 12 }}>
+      <View style={{ gap: 12 }} pointerEvents="box-none">
         {(displayName || username) && (
           <Text
             style={[
