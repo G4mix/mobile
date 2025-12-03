@@ -12,7 +12,8 @@ import { Text } from "./Themed";
 import { TextArea } from "./TextArea";
 import { Colors } from "@/constants/colors";
 
-const DEFAULT_MESSAGE = "Gostaria de colaborar com esta ideia!";
+const MIN_MESSAGE_LENGTH = 3;
+const MAX_MESSAGE_LENGTH = 255;
 
 const styles = StyleSheet.create({
   container: {
@@ -51,8 +52,22 @@ export function CollaborationRequestFormModal({
 }) {
   const [message, setMessage] = useState("");
 
+  const isValidMessage = (value: string) => {
+    const trimmed = value.trim();
+    return (
+      trimmed.length >= MIN_MESSAGE_LENGTH &&
+      trimmed.length <= MAX_MESSAGE_LENGTH &&
+      /^[^{}]+$/.test(trimmed)
+    );
+  };
+
+  const isMessageValid = isValidMessage(message);
+
   const handleConfirm = () => {
-    const finalMessage = message.trim() || DEFAULT_MESSAGE;
+    if (!isMessageValid) {
+      return;
+    }
+    const finalMessage = message.trim();
     onConfirm(finalMessage);
     setMessage("");
   };
@@ -100,16 +115,18 @@ export function CollaborationRequestFormModal({
                   </Text>
                 </View>
                 <TextArea
-                  placeholder={DEFAULT_MESSAGE}
+                  placeholder="Ex: Tenho experiência em backend e adoraria ajudar..."
                   value={message}
-                  onChangeText={setMessage}
+                  onChangeText={(value) =>
+                    setMessage(value.slice(0, MAX_MESSAGE_LENGTH))
+                  }
                   style={styles.textArea}
                 />
                 <View style={{ gap: 8 }}>
                   <Button
                     style={{ backgroundColor: Colors.light.majorelleBlue }}
                     onPress={handleConfirm}
-                    disabled={isLoading}
+                    disabled={isLoading || !isMessageValid}
                   >
                     <Text style={{ color: Colors.light.background }}>
                       {isLoading ? "Enviando..." : "Enviar Solicitação"}
