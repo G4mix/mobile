@@ -13,6 +13,9 @@ import { Text } from "./Themed";
 import { TextArea } from "./TextArea";
 import { Colors } from "@/constants/colors";
 
+const MIN_FEEDBACK_LENGTH = 3;
+const MAX_FEEDBACK_LENGTH = 255;
+
 const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.light.background,
@@ -55,11 +58,21 @@ export function CollaborationFeedbackModal({
 }) {
   const [feedback, setFeedback] = useState("");
 
+  const isValidFeedback = (value: string) => {
+    const trimmed = value.trim();
+    return (
+      trimmed.length >= MIN_FEEDBACK_LENGTH &&
+      trimmed.length <= MAX_FEEDBACK_LENGTH
+    );
+  };
+
+  const isFeedbackValid = isValidFeedback(feedback);
+
   const handleConfirm = () => {
-    const finalFeedback = feedback.trim();
-    if (finalFeedback.length < 3) {
+    if (!isFeedbackValid) {
       return;
     }
+    const finalFeedback = feedback.trim();
     onConfirm(finalFeedback);
     setFeedback("");
   };
@@ -121,14 +134,16 @@ export function CollaborationFeedbackModal({
                         : "Ex: Infelizmente não podemos aceitar sua solicitação no momento."
                     }
                     value={feedback}
-                    onChangeText={setFeedback}
+                    onChangeText={(value) =>
+                      setFeedback(value.slice(0, MAX_FEEDBACK_LENGTH))
+                    }
                     style={styles.textArea}
                   />
                   <View style={{ gap: 8 }}>
                     <Button
                       style={{ backgroundColor: Colors.light.majorelleBlue }}
                       onPress={handleConfirm}
-                      disabled={isLoading || feedback.trim().length < 3}
+                      disabled={isLoading || !isFeedbackValid}
                     >
                       <Text style={{ color: Colors.light.background }}>
                         {isLoading
